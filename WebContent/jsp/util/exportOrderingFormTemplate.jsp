@@ -49,10 +49,17 @@ function setOrderingFormType(type){
 							
 									<input type="button" onclick="setOrderingFormType('c')" value="Generate form for Commissary" />
 						</td>
-						<td>
-									<input type="button" onclick="setOrderingFormType('s')" value="Generate form for Stores" />
-						</td>
 					</tr>
+					</table>
+					<table>
+						<tr>
+							<td>
+								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="custpo.customer.customerNo"></sx:autocompleter>
+							</td>
+							<td>
+								<input type="button" onclick="setOrderingFormType('s')" value="Generate form for Stores" />
+							</td>
+						</tr>
 				</table>
 			</p>
 		</div>

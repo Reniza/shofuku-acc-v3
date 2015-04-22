@@ -939,8 +939,11 @@
 		
 		<!-- TOOLS FUNCTIONS MODULE -->
 
-
-		<action name="showExportOrderingFormTemplate">
+		<action name="listCustomer" method="listCustomer" class="com.shofuku.accsystem.action.ExportOrderingFormTemplateAction">
+			<result name="listCustomer" type="tiles">showExportOrderingFormTemplate.tiles</result>
+		</action>
+		
+		<action name="showExportOrderingFormTemplate" >
 			<result type="tiles">showExportOrderingFormTemplate.tiles</result>
 		</action>
 		<action name="showUserAccountForm">

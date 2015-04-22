@@ -22,6 +22,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
@@ -47,9 +48,11 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	String orderingFormType;
 	
 	Customer customer;
+	List customerNoList;
 	
 	
 	InventoryManager manager=new InventoryManager();
+	CustomerManager customerManager = new CustomerManager();
 	
 	HashMap<String,HashMap<String,ArrayList<Item>>> itemMap = new HashMap<String,HashMap<String,ArrayList<Item>>>(); 
 	
@@ -70,10 +73,17 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		return SUCCESS;
 	}
 
+	public String listCustomer(){
+		Session session = getSession();
+		customerNoList = customerManager.listAllCustomerNo(session);
+		
+		return "listCustomer";
+		
+	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private HashMap<String,HashMap<String,ArrayList<Item>>> getAllItemList(Session session) {
 		Iterator iterator = null;
-		
+		customerNoList = customerManager.listAllCustomerNo(session);
 		//START: 2015 - PHASE 3a - stock level per customer
 		
 		//temp value: CMJCC01
@@ -525,4 +535,13 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	public void setOrderingFormType(String orderingFormType) {
 		this.orderingFormType = orderingFormType;
 	}
+
+	public List getCustomerNoList() {
+		return customerNoList;
+	}
+
+	public void setCustomerNoList(List customerNoList) {
+		this.customerNoList = customerNoList;
+	}
+	
 }

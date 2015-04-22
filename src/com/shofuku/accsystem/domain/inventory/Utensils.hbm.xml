@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 	<class name="com.shofuku.accsystem.domain.inventory.Utensils"
-		table="t301_traded_items">
+		table="t301_utensils">
 
 		<id name="itemCode" 						type="string" 	column="ITEM_CODE"></id>
 		<property name="classification" 				type="string" 	column="CLASSIFICATION" />

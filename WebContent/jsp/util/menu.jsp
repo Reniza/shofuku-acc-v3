@@ -39,6 +39,7 @@
 	      <li id="inventoryMenu0"><a href="loadLookUpItems.action?requestingModule=rawMaterial">RAW MATERIALS</a></li>
 	      <li id="inventoryMenu2"><a href="loadLookUpItems.action?requestingModule=finishedGood">FINISHED GOODS</a></li>
 	      <li id="inventoryMenu1"><a href="loadLookUpItems.action?requestingModule=tradedItems">TRADED ITEMS</a></li>
+	      <li id="inventoryMenu4"><a href="loadLookUpItems.action?requestingModule=utensils">UTENSILS</a></li>
 	      <li id="inventoryMenu6"><a href="<s:url action="newInventoryEntryAction"><s:param name="subModule" value="%{'rf'}"/></s:url>">ORDER REQUISITION</a></li>
 	      <li id="inventoryMenu3"><a href="<s:url action="newInventoryEntryAction"><s:param name="subModule" value="%{'fpts'}"/></s:url>">FP TRANSFER SLIP</a></li>
 	      <li id="inventoryMenu7"><a href="<s:url action="newInventoryEntryAction"><s:param name="subModule" value="%{'returnSlip'}"/></s:url>">RETURN SLIPS</a></li>
@@ -76,7 +77,7 @@
 	  </li>
 	  <li>TOOLS
 	    <ol id="toolsMenu">
-	      <li id="toolsMenu0"><a href="showExportOrderingFormTemplate.action">Template Generator</a></li>
+	      <li id="toolsMenu0"><a href="<s:url action="listCustomer.action"><s:param name="subModule" value="%{'template'}"/></s:url>">Template Generator</a></li>
 	      <li id="toolsMenu1"><a href="<s:url action="loadRoleListAction"><s:param name="securityModule" value="%{'userAccount'}"/></s:url>">User Account</a></li>
 	      <li id="toolsMenu2"><a href="showUserRoleForm.action">User Role</a></li>
 	      <li id="toolsMenu3"><a href="showSearchSecurityForm.action">-=Search=-</a></li>
