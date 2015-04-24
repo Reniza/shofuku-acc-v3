@@ -42,6 +42,8 @@ import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
 import com.shofuku.accsystem.domain.inventory.Memo;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
+import com.shofuku.accsystem.domain.inventory.RawMaterial;
+import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -566,5 +568,60 @@ public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 		} 
 		return false;
 	}
+
+	public List listInventoryItemsByStatus(String subModule,
+			String searchByStatus, Session session) {
+		Transaction tx = null;
+		try {
+			tx = getCurrentTransaction(session);
+
+			List list = new ArrayList();
+			String orderBy = "";
+
+			Class clazz = null;
+
+			if (subModule.equalsIgnoreCase("RawMaterials")) {
+				clazz = RawMaterial.class;
+				orderBy = "itemCode";
+			} else if (subModule.equalsIgnoreCase("TradedItems")) {
+				clazz = TradedItem.class;
+				orderBy = "itemCode";
+			} else if (subModule.equalsIgnoreCase("FinishedGoods")) {
+				clazz = FinishedGood.class;
+				orderBy = "productCode";
+			}
+
+			Criteria criteria = session.createCriteria(clazz);
+			criteria.addOrder(Order.asc(orderBy));
+
+			switch (searchByStatus) {
+			case "A":
+				searchByStatus = "B";
+				criteria.add(Restrictions.or(Restrictions.or(
+						Restrictions.eq("template", "S"),
+						Restrictions.eq("template", "B")), Restrictions.eq(
+						"template", "C")));
+				break;
+			case "I":
+				searchByStatus = "N";
+				criteria.add(Restrictions.eq("template", "N"));
+				break;
+			case "B":
+				searchByStatus = "";
+				break;
+
+			}
+
+			return criteria.list();
+		} catch (RuntimeException re) {
+			tx.rollback();
+			re.printStackTrace();
+		} finally {
+
+		}
+		return null;
+
+	}
+	
 
 }

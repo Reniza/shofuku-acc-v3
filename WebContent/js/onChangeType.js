@@ -68,12 +68,18 @@ function clearParameterValue(){
 function showSearchByDate(){
 	
 	var searchByDate=document.getElementById("searchByDateTbl");
+	var searchByStatus=document.getElementById("searchByStatusTbl");
 	searchByDate.style.display = 'none';
+	searchByStatus.style.display = 'none';
 	
 	if (document.getElementById("inventoryModule").value == 'FinishedProductTransferSlip' || document.getElementById("inventoryModule").value == 'OrderRequisition' 
 		|| document.getElementById("inventoryModule").value == 'ReturnSlip'){
 		searchByDate.style.display = 'block';
+		searchByStatus.style.display = 'none';
 		
+	}else if (document.getElementById("inventoryModule").value == 'FinishedGoods' || document.getElementById("inventoryModule").value == 'RawMaterials' ||document.getElementById("inventoryModule").value == 'TradedItems' ){
+			searchByStatus.style.display = 'block';
+			searchByDate.style.display = 'none';
 	}
 	
 }

@@ -34,6 +34,9 @@ public class SASConstants {
 	//ordering form filename
 	public final static String ORDERING_FORM_FILENAME = "OrderingFormTemplate.xls";
 	
+	//BASE HIBERNATE CONSTANTS
+	public static final String ORDER = "ORDER";
+	
 	//POI CONSTANTS
 	public final static int ORDERING_FORM_FIRST_ROW = 11;
 	public final static int ORDERING_FORM_FIRST_COLUMN = 0;
@@ -463,5 +466,6 @@ public class SASConstants {
 	public static final String JOURNAL_ENTRIES_FILENAME = "Journal Entry Report - ";
 	public static final int JOURNAL_ENTRIES_VARIABLES_COLUMN_START = 3;
 	public static final int JOURNAL_ENTRIES_VALUES_COLUMN = 2;
+	
 	
 }

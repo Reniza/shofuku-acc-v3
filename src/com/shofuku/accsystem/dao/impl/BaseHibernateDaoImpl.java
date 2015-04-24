@@ -1,13 +1,16 @@
 package com.shofuku.accsystem.dao.impl;
 
 import org.hibernate.type.*;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
@@ -29,6 +32,7 @@ import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.SASConstants;
 
 @SuppressWarnings("rawtypes")
 public class BaseHibernateDaoImpl extends HibernateUtil implements
@@ -152,20 +156,6 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 		return false;
 	}
 
-	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
-		Transaction tx = null;
-		try {
-			tx=getCurrentTransaction(session);
-			Criteria criteria = session.createCriteria(clazz);
-			criteria.addOrder(Order.asc(parameter));
-			return criteria.list();
-		} catch (RuntimeException re) {
-			tx.rollback();
-			re.printStackTrace();
-		}
-		return null;
-	}
-	
 	
 	public List getCustomerSalesInvoiceByCustomers(String dateFrom, String dateTo,List customerList,Session session) {
 		if(session.isOpen()){
@@ -290,6 +280,37 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 		return null;
 
 	}
+	
+	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
+		Transaction tx = null;
+		try {
+			tx=getCurrentTransaction(session);
+			Criteria criteria = session.createCriteria(clazz);
+			criteria.addOrder(Order.asc(parameter));
+			return criteria.list();
+		} catch (RuntimeException re) {
+			tx.rollback();
+			re.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List listByParameters(Criteria criteria,Session session) {
+
+		Transaction tx = null;
+		try {
+			tx=getCurrentTransaction(session);
+			return criteria.list();
+		} catch (RuntimeException re) {
+			tx.rollback();
+			re.printStackTrace();
+		}finally{
+			
+		}
+		return null;
+
+	}
+
 
 	public List getBetweenDates(Date startDate, Date endDate, String className,
 			String field,Session session,String orderBy) {

@@ -20,12 +20,17 @@ import java.util.TreeSet;
 import javax.servlet.ServletContext;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
 import com.shofuku.accsystem.dao.impl.CustomerDaoImpl;
+import com.shofuku.accsystem.dao.impl.InventoryDaoImpl;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
@@ -51,6 +56,7 @@ import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.ExportSearchResultsHelper;
 import com.shofuku.accsystem.utils.POIUtil;
+import com.shofuku.accsystem.utils.SASConstants;
 
 @SuppressWarnings("rawtypes")
 public class ReportAndSummaryManager {
@@ -476,6 +482,31 @@ private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(Set s
 		} catch (IOException ioex) {
 			logger.debug("generateSummary" + ioex.toString());
 			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public InputStream generateInventorySummaryByStatus(ServletContext servletContext,
+			String dateFrom, String dateTo, String subModule,String searchByStatus,Session session) {
+
+		try {
+			List list = new ArrayList();
+			InventoryDaoImpl dao = new InventoryDaoImpl();
+			
+			list= dao.listInventoryItemsByStatus(subModule,searchByStatus,session);
+			
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("generateInventorySummaryByStatus" + ioex.toString());
+			ioex.printStackTrace();
+		}catch (NullPointerException npe) {
+			logger.debug("generateInventorySummaryByStatus" + npe.toString());
+			npe.printStackTrace();
 		}
 
 		return null;

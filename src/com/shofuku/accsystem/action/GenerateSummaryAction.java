@@ -61,20 +61,15 @@ public class GenerateSummaryAction extends ActionSupport {
 	List cashCheckList;
 	String referenceNo;
 	String pettyCashSearchType;
+	String searchByStatus;
 	
-	public String getPettyCashSearchType() {
-		return pettyCashSearchType;
-	}
-
-	public void setPettyCashSearchType(String pettyCashSearchType) {
-		this.pettyCashSearchType = pettyCashSearchType;
-	}
 
 	boolean byRef = false;
 	
 	boolean itemsSoldReport = false;
 	boolean itemsPurchasedReport = false;
 	boolean soaReport = false;
+	boolean isInventorySummaryReport=false;
 
 	LookupManager lookUpManager = new LookupManager();
 
@@ -95,6 +90,7 @@ public class GenerateSummaryAction extends ActionSupport {
 			subModule = customerModule;
 		} else if (null != inventoryModule) {
 			subModule = inventoryModule;
+			isInventorySummaryReport=true;
 		} else if (null != disbursementModule) {
 			if (disbursementModule.equalsIgnoreCase("PettyCash")) {
 				if (null != pettyCashSearchType) {
@@ -259,6 +255,9 @@ public class GenerateSummaryAction extends ActionSupport {
 							excelStream = reportSummaryMgr.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
 						}
+					}else if(isInventorySummaryReport) {
+						excelStream = reportSummaryMgr.generateInventorySummaryByStatus(servletContext,
+								dateFrom, dateTo, subModule,searchByStatus,session);
 					}else {
 						excelStream = reportSummaryMgr.generateSummary(servletContext,
 								dateFrom, dateTo, subModule,session);
@@ -489,6 +488,21 @@ public class GenerateSummaryAction extends ActionSupport {
 		this.cashCheckList = cashCheckList;
 	}
 
+	public String getSearchByStatus() {
+		return searchByStatus;
+	}
+
+	public void setSearchByStatus(String searchByStatus) {
+		this.searchByStatus = searchByStatus;
+	}
+
+	public String getPettyCashSearchType() {
+		return pettyCashSearchType;
+	}
+
+	public void setPettyCashSearchType(String pettyCashSearchType) {
+		this.pettyCashSearchType = pettyCashSearchType;
+	}
 	
 	
 }
