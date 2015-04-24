@@ -9,6 +9,7 @@
 		<id name="id" type="int" column="id">
          <generator class="native"/>
         </id>
+        
 		<property name="itemCode" 						type="string" 	column="ITEM_CODE"></property>
 		<property name="classification" 				type="string" 	column="CLASSIFICATION" />
 		<property name="description" 				type="string" 	column="DESCRIPTION" />
