@@ -16,6 +16,8 @@ import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -36,6 +38,8 @@ public class SearchInventoryAction extends ActionSupport{
 	RawMaterial rm;
 	FinishedGood fg;
 	TradedItem ti;
+	Utensils u;
+	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
 	List<Item> resultList = new ArrayList<Item>();
@@ -54,25 +58,41 @@ public class SearchInventoryAction extends ActionSupport{
 			if (getClicked().equals("true")) {
 
 				if ((null != getModuleParameter()&& getSubModule().equalsIgnoreCase("rawMat")) 
-						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("tradedItems"))) {
+						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("tradedItems"))
+						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("utensil"))
+						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("unlistedItems"))) {
 				
 					if (getModuleParameter().equalsIgnoreCase("description")) {
 						if (getSubModule().equalsIgnoreCase("rawMat")){
 						inventoryList = manager.listInventoryByParameterLike(RawMaterial.class, moduleParameter, moduleParameterValue,session);
-						}else{
+						}else if (getSubModule().equalsIgnoreCase("tradedItems")){
 							inventoryList = manager.listInventoryByParameterLike(TradedItem.class, moduleParameter, moduleParameterValue,session);
+						}else if (getSubModule().equalsIgnoreCase("utensils")){
+							inventoryList = manager.listInventoryByParameterLike(Utensils.class, moduleParameter, moduleParameterValue,session);
+						}else{
+							inventoryList = manager.listInventoryByParameterLike(UnlistedItem.class, moduleParameter, moduleParameterValue,session);
 						}
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
 						if (getSubModule().equalsIgnoreCase("rawMat")){
-						inventoryList = manager.listAlphabeticalAscByParameter(RawMaterial.class, "itemCode",session);
-						}else{
+							inventoryList = manager.listAlphabeticalAscByParameter(RawMaterial.class, "itemCode",session);
+						}else if (getSubModule().equalsIgnoreCase("tradedItems")){
 							inventoryList = manager.listAlphabeticalAscByParameter(TradedItem.class, "itemCode",session);
+						}else if (getSubModule().equalsIgnoreCase("utensils")){
+							inventoryList = manager.listAlphabeticalAscByParameter(Utensils.class, "itemCode",session);
+						}else{
+							inventoryList = manager.listAlphabeticalAscByParameter(UnlistedItem.class, "itemCode",session);
 						}
 						moduleParameterValue="all";
 					}else {
 						if (getSubModule().equalsIgnoreCase("rawMat")){
 						inventoryList = manager.listInventoryByParameter(RawMaterial.class,
 										moduleParameter, moduleParameterValue,session);
+						}else if (getSubModule().equalsIgnoreCase("utensils")){
+							inventoryList = manager.listInventoryByParameter(Utensils.class,
+									moduleParameter, moduleParameterValue,session);
+						}else if (getSubModule().equalsIgnoreCase("unlisteditems")){
+						inventoryList = manager.listInventoryByParameter(UnlistedItem.class,
+								moduleParameter, moduleParameterValue,session);
 						}else{
 							inventoryList = manager.listInventoryByParameter(TradedItem.class,
 									moduleParameter, moduleParameterValue,session);
@@ -84,6 +104,10 @@ public class SearchInventoryAction extends ActionSupport{
 					
 					if (getSubModule().equalsIgnoreCase("rawMat")){
 						return "rawMat";
+					}else if (getSubModule().equalsIgnoreCase("utensils")){
+						return "utensils";
+					}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
+						return "unlistedItems";
 					}else {
 						return "tradedItems";
 					}
@@ -194,6 +218,10 @@ public class SearchInventoryAction extends ActionSupport{
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				return "fpts";
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
@@ -298,6 +326,16 @@ public class SearchInventoryAction extends ActionSupport{
 	public void setResultList(List<Item> resultList) {
 		this.resultList = resultList;
 	}
-	
-	
+	public Utensils getU() {
+		return u;
+	}
+	public void setU(Utensils u) {
+		this.u = u;
+	}
+	public UnlistedItem getUnl() {
+		return unl;
+	}
+	public void setUnl(UnlistedItem unl) {
+		this.unl = unl;
+	}
 }

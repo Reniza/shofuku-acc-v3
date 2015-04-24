@@ -18,6 +18,8 @@ import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
@@ -28,6 +30,8 @@ public class PrintInventoryAction {
 	RawMaterial rm;
 	FinishedGood fg;
 	TradedItem ti;
+	Utensils u;
+	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
 	ReturnSlip rs;
@@ -74,6 +78,23 @@ public String execute() throws Exception{
 				this.setTi(ti);
 				forWhat="print";
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")){
+				
+				Utensils u = new Utensils();
+				u = (Utensils) manager.listInventoryByParameter(
+						Utensils.class, "itemCode",
+						getItemNo(),session).get(0);
+				this.setU(u);
+				forWhat="print";
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
+				
+				UnlistedItem unl = new UnlistedItem();
+				unl = (UnlistedItem) manager.listInventoryByParameterLike(UnlistedItem.class, "description",
+						this.unl.getDescription(),session).get(0);
+				this.setUnl(unl);
+				forWhat="print";
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")){
 				
 				FPTS fpts = new FPTS();
@@ -160,6 +181,10 @@ public String execute() throws Exception{
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				return "fpts";
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
@@ -191,8 +216,6 @@ public FinishedGood getFg() {
 public void setFg(FinishedGood fg) {
 	this.fg = fg;
 }
-
-
 
 public String getProductNo() {
 	return productNo;
@@ -300,6 +323,18 @@ public List getItemCodeList() {
 }
 public void setItemCodeList(List itemCodeList) {
 	this.itemCodeList = itemCodeList;
+}
+public Utensils getU() {
+	return u;
+}
+public void setU(Utensils u) {
+	this.u = u;
+}
+public UnlistedItem getUnl() {
+	return unl;
+}
+public void setUnl(UnlistedItem unl) {
+	this.unl = unl;
 }
 
 

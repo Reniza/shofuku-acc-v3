@@ -30,6 +30,7 @@ import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
@@ -59,6 +60,7 @@ public class AddInventoryAction extends ActionSupport {
 	RequisitionForm rf;
 	ReturnSlip rs;
 	Utensils u;
+	UnlistedItem unl;
 
 	String returnSlipToValue;
 	
@@ -259,6 +261,35 @@ public class AddInventoryAction extends ActionSupport {
 					}
 				}
 				return "utensils";
+			} else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				
+				if (isValidateUnlistedItems()) {
+				} else {
+				
+					if (isExistingInAllItems(getUnl()
+							.getItemCode())) {
+						addActionMessage(SASConstants.EXISTS);
+					} else {
+						if (otherUOMSelected)
+							if (lookupManager.addNewUOM(new UnitOfMeasurements(
+									unl.getUom(), "GENERAL"),
+									session)) {
+								session = getSession();
+								loadLookLists();
+							}
+						//processItemPricing(session, u);
+						addResult = manager.addInventoryObject(unl, session);
+
+						if (addResult == true) {
+							addActionMessage(SASConstants.ADD_SUCCESS);
+							forWhat = "true";
+							forWhatDisplay = "edit";
+						} else {
+							addActionError(SASConstants.FAILED);
+						}
+					}
+				}
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 				return addReturnSlip();
 						
@@ -323,6 +354,8 @@ public class AddInventoryAction extends ActionSupport {
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				return "fpts";
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
@@ -361,6 +394,7 @@ public class AddInventoryAction extends ActionSupport {
 		
 		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
 		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
@@ -387,7 +421,15 @@ public class AddInventoryAction extends ActionSupport {
 				item.setItemType("tradedItems");
 				tempList.add(item);
 		}
-		
+		iterator = utensilsList.iterator();
+		while(iterator.hasNext()) {
+			Utensils utensils = (Utensils) iterator.next();
+				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				Item item = new Item(utensils.getItemCode(), utensils.getDescription(), utensils.getUnitOfMeasurement(),utensils.getClassification(), utensils.getSubClassification(),utensils.getIsVattable());
+				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				item.setItemType("tradedItems");
+				tempList.add(item);
+		}
 		
 		iterator = finList.iterator();
 		while(iterator.hasNext()){
@@ -863,6 +905,8 @@ public class AddInventoryAction extends ActionSupport {
 		Session session = getSession();
 		UOMList = generateUOMStrings(lookupManager.getLookupElements(
 				UnitOfMeasurements.class, "GENERAL", session));
+		rm = new RawMaterial();
+		forWhatDisplay = "new";
 		return "rawMat";
 	}
 	
@@ -872,6 +916,8 @@ public class AddInventoryAction extends ActionSupport {
 	
 		UOMList = generateUOMStrings(lookupManager.getLookupElements(
 				UnitOfMeasurements.class, "GENERAL", session));
+		ti = new TradedItem();
+		forWhatDisplay = "new";
 		return "tradedItems";
 	}
 	public String loadLookListsInUtensils() {
@@ -880,7 +926,18 @@ public class AddInventoryAction extends ActionSupport {
 	
 		UOMList = generateUOMStrings(lookupManager.getLookupElements(
 				UnitOfMeasurements.class, "GENERAL", session));
+		u = new Utensils();
+		forWhatDisplay = "new";
 		return "utensils";
+	}
+	public String loadLookListsInUnlistedItems() {
+		Session session = getSession();
+		
+		UOMList = generateUOMStrings(lookupManager.getLookupElements(
+				UnitOfMeasurements.class, "GENERAL", session));
+		unl = new UnlistedItem();
+		forWhatDisplay = "new";
+		return "unlistedItems";
 	}
 	
 
@@ -895,7 +952,6 @@ public class AddInventoryAction extends ActionSupport {
 				
 			}else {
 				itemCodeList = manager.loadItemListFromRawAndFin(session);
-				
 			}
 			
 		} catch (Exception e) {
@@ -905,6 +961,8 @@ public class AddInventoryAction extends ActionSupport {
 					return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils") || getRequestingModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems") || getRequestingModule().equalsIgnoreCase("unlistedItems")) {
+					return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("returnSlip") || getRequestingModule().equalsIgnoreCase("returnSlip")) {
 				return "returnSlip";
 			}else if (getSubModule().equalsIgnoreCase("finishedGood") || getRequestingModule().equalsIgnoreCase("finishedGood")){
@@ -937,6 +995,9 @@ public class AddInventoryAction extends ActionSupport {
 		}else if (requestingModule != null
 				&& requestingModule.equalsIgnoreCase("utensils")) {
 			return "utensils";
+		} else if (requestingModule != null
+				&& requestingModule.equalsIgnoreCase("unlistedItems")) {
+			return "unlistedItems";
 		} else if (requestingModule != null
 				&& requestingModule.equalsIgnoreCase("returnSlip")) {
 			return "returnSlip";
@@ -974,6 +1035,15 @@ public class AddInventoryAction extends ActionSupport {
 				u.setItemCode(u.getItemCode());
 			}
 			return "utensils";
+		}else if (getSubModule().equals("unlistedItems")) {
+			setItemNo(itemNo);
+			
+			if (!itemNo.equals("")){
+				unl.setItemCode(itemNo);
+			}else{
+				unl.setItemCode(unl.getItemCode());
+			}
+			return "unlistedItems";
 		}else if (getSubModule().equals("rawMat")) {
 			setItemNo(itemNo);
 			
@@ -1382,6 +1452,52 @@ public class AddInventoryAction extends ActionSupport {
 		}
 		if (u.getUnitOfMeasurement().equalsIgnoreCase("OTHERS")) {
 			addFieldError("u.unitOfMeasurementText", "REQUIRED");
+		}
+
+		return errorFound;
+	}
+	
+	private boolean isValidateUnlistedItems() {
+		loadLookLists();
+		boolean errorFound = false;
+		/*if ("".equals(getUnl().getItemCode())) {
+			addFieldError("unl.itemCode", "REQUIRED");
+			errorFound = true;
+		} else {
+			if (getUnl().getItemCode().length() > 45) {
+				addFieldError("unl.itemCode", "item code too long");
+				errorFound = true;
+			}
+		}*/
+		if ("".equals(getUnl().getDescription())) {
+			addFieldError("unl.description", "REQUIRED");
+			errorFound = true;
+		} else {
+			if (getUnl().getDescription().trim().length() > 200) {
+				addFieldError("unl.description",
+						"MAXIMUM LENGTH: 200 characters");
+			}
+		}
+		if (unl.getUom() == null) {
+		}
+
+		else {
+			if (unl.getUom().indexOf(", ") > -1) {
+				if ("".equals(unl.getUom().substring(
+						unl.getUom().indexOf(", ")))) {
+					addFieldError("unl.uom", "REQUIRED");
+					errorFound = true;
+				} else {
+					otherUOMSelected = true;
+					unl.setUom(unl
+							.getUom()
+							.substring(
+									unl.getUom().indexOf(", ") + 2));
+				}
+			}
+		}
+		if (unl.getUom().equalsIgnoreCase("OTHERS")) {
+			addFieldError("unl.unitOfMeasurementText", "REQUIRED");
 		}
 
 		return errorFound;
@@ -1809,6 +1925,14 @@ public class AddInventoryAction extends ActionSupport {
 
 		public void setU(Utensils u) {
 			this.u = u;
+		}
+
+		public UnlistedItem getUnl() {
+			return unl;
+		}
+
+		public void setUnl(UnlistedItem unl) {
+			this.unl = unl;
 		}
 		
 }

@@ -672,6 +672,12 @@
 		<action name="showTradedItemsForm">
 			<result type="tiles">showTradedItemsForm.tiles</result>
 		</action>
+		<action name="showUtensilsForm">
+			<result type="tiles">showUtensilsForm.tiles</result>
+		</action>
+		<action name="showUnlistedItemsForm">
+			<result type="tiles">showUnlistedItemsForm.tiles</result>
+		</action>
 		<action name="showFinishedProductTransferSlipForm">
 			<result type="tiles">showFinishedProductTransferSlipForm.tiles
 			</result>
@@ -706,6 +712,8 @@
 			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
@@ -718,6 +726,7 @@
 			method="loadItemSubClassificationList">
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 		</action>
 		
@@ -730,6 +739,10 @@
 			<result name="finGood" type="tiles">showSearchInventoryForm.tiles
 			</result>
 			<result name="tradedItems" type="tiles">showSearchInventoryForm.tiles
+			</result>
+			<result name="utensils" type="tiles">showSearchInventoryForm.tiles
+			</result>
+			<result name="unlistedItems" type="tiles">showSearchInventoryForm.tiles
 			</result>
 			<result name="returnSlip" type="tiles">showSearchInventoryForm.tiles
 			</result>
@@ -745,6 +758,10 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
+			</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles
 			</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
@@ -757,6 +774,10 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
+			</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 			<result name="rf" type="tiles">showOrderRequisitionForm.tiles</result>
@@ -768,6 +789,10 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
+			</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="input" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
@@ -780,6 +805,10 @@
 			class="com.shofuku.accsystem.action.inventory.PrintInventoryAction"
 			method="execute">
 			<result name="tradedItems">/jsp/inventory/tradedItemsForm.jsp</result>
+			<result name="utensils">/jsp/inventory/utensilsForm.jsp
+			</result>
+			<result name="unlistedItems">/jsp/inventory/unlistedItemsForm.jsp
+			</result>
 			<result name="rawMat">/jsp/inventory/rawMaterialsForm.jsp</result>
 			<result name="finGood">/jsp/inventory/finishedGoodsForm.jsp</result>
 			<result name="fpts">/jsp/inventory/finishedProductTransferSlipForm.jsp</result>
@@ -793,6 +822,10 @@
 			method="loadLookLists">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles
+			</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
 			</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="returnSlip" type="tiles">showReturnSlipForm.tiles
@@ -813,7 +846,18 @@
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles
 			</result>
 		</action>
-
+		<action name="loadLookUpItemsInUtensils"
+			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
+			method="loadLookListsInUtensils">
+			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+		</action>
+		<action name="loadLookUpItemsInUnlistedItems"
+			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
+			method="loadLookListsInUnlistedItems">
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
+			</result>
+		</action>
 
 		<action name="addIngredientAction"
 			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"

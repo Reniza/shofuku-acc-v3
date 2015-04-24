@@ -13,8 +13,8 @@
 		<property name="itemCode" 						type="string" 	column="ITEM_CODE"></property>
 		<property name="classification" 				type="string" 	column="CLASSIFICATION" />
 		<property name="description" 				type="string" 	column="DESCRIPTION" />
-		<property name="unitOfMeasurement" 			type="string" 	column="UNIT_OF_MEASUREMENT" />
-		<property name="isActive" 				type="string" 	column="IS_ACTIVE" />
+		<property name="uom" 			type="string" 	column="UOM" />
+		<property name="template" 				type="string" 	column="TEMPLATE" />
 
 	</class>
 </hibernate-mapping>

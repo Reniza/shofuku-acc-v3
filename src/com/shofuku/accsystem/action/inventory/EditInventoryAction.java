@@ -25,6 +25,8 @@ import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
@@ -42,6 +44,8 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	RawMaterial rm;
 	FinishedGood fg;
 	TradedItem ti;
+	Utensils u;
+	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
 	ReturnSlip rs;
@@ -114,6 +118,10 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}
 			else {
 				return "finGood";
@@ -136,6 +144,10 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			return "rawMat";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("tradedItems")){
 			return "tradedItems";
+		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("utensils")){
+			return "utensils";
+		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("unlistedItems")){
+			return "unlistedItems";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("fpts")){
 			return "fpts";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("rf")){
@@ -146,10 +158,6 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			return "finGood";
 		}
 	}
-	
-	
-	
-	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
@@ -167,6 +175,14 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 						//di ako sure
 						this.setTi(new TradedItem());
 						this.getTi().setItemCode(itemCode);
+					}else if(subModule.equalsIgnoreCase("utensils")){
+						//di ako sure
+						this.setU(new Utensils());
+						this.getU().setItemCode(itemCode);
+					}else if(subModule.equalsIgnoreCase("unlistedItems")){
+						//di ako sure
+						this.setUnl(new UnlistedItem());
+						this.getUnl().setItemCode(itemCode);
 					}else if(subModule.equalsIgnoreCase("finGood")){
 						//di ako sure
 						this.setFg(new FinishedGood());
@@ -201,6 +217,24 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						ti.getClassification(), session);
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				Utensils ti = new Utensils();
+				u = (Utensils) manager.listInventoryByParameter(Utensils.class, "itemCode",
+						this.getU().getItemCode(),session).get(0);
+				
+				this.setU(u);
+				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
+						u.getClassification(), session);
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				UnlistedItem unl = new UnlistedItem();
+				unl = (UnlistedItem) manager.listInventoryByParameterLike(UnlistedItem.class, "description",
+						this.getUnl().getDescription(),session).get(0);
+				
+				this.setUnl(unl);
+				//itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
+				//		ti.getClassification(), session);
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				
 				FPTS fpts = new FPTS();
@@ -382,6 +416,10 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				return "fpts";
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
@@ -530,7 +568,19 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			public void setTransactions(List<Transaction> transactions) {
 				this.transactions = transactions;
 			}
-			
 			//END 2013 - PHASE 3 : PROJECT 1: MARK
+			public Utensils getU() {
+				return u;
+			}
+			public void setU(Utensils u) {
+				this.u = u;
+			}
+			public UnlistedItem getUnl() {
+				return unl;
+			}
+			public void setUnl(UnlistedItem unl) {
+				this.unl = unl;
+			}
+			
 
 }

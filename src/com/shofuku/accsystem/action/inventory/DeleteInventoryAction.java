@@ -14,6 +14,8 @@ import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -28,6 +30,8 @@ public class DeleteInventoryAction extends ActionSupport{
 	RawMaterial rm;
 	FinishedGood fg;
 	TradedItem ti;
+	Utensils u;
+	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
 	ReturnSlip rs;
@@ -71,6 +75,22 @@ public class DeleteInventoryAction extends ActionSupport{
 					addActionError(SASConstants.NON_DELETED);
 				}
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				deleteResult = manager.deleteInventoryByParameter(getItemNo(), Utensils.class,session);
+				if (deleteResult == true) {
+					addActionMessage(SASConstants.DELETED);
+				} else {
+					addActionError(SASConstants.NON_DELETED);
+				}
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItem")) {
+				deleteResult = manager.deleteInventoryByParameter(this.unl.getDescription(), UnlistedItem.class,session);
+				if (deleteResult == true) {
+					addActionMessage(SASConstants.DELETED);
+				} else {
+					addActionError(SASConstants.NON_DELETED);
+				}
+				return "unlistedItem";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				updateInventoryCountForDelete(getSubModule(),getFptsNo(),session);
 				session = getSession();
@@ -117,6 +137,10 @@ public class DeleteInventoryAction extends ActionSupport{
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				return "fpts";
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
