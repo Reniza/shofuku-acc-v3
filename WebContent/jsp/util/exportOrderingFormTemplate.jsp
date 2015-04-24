@@ -37,24 +37,22 @@ function setOrderingFormType(type){
 		<div class="form">
 			<input type="hidden" name="orderingFormType" id="orderingFormType"/>
 			<p>
-				<table class="form" align="center">
-					<tr>
-						<td colspan="4">
+				<h2>
 							Choose type of <b>Ordering Template</b> you want to create:	
-						</td>
-					</tr>
+				</h2>
+				
+				<table>
 					<tr>	
-						
-						<td colspan="2" style="text-align: left;">
-							
-									<input type="button" onclick="setOrderingFormType('c')" value="Generate form for Commissary" />
+						<td >&nbsp; 1 &nbsp; </td>
+						<td colspan="2" style="text-align: left;"> Click the button to generate template for Commissary: &nbsp;&nbsp;
+							<input type="button" onclick="setOrderingFormType('c')" value="Generate form for Commissary" />
 						</td>
 					</tr>
-					</table>
-					<table>
+					
 						<tr>
-							<td>
-								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="custpo.customer.customerNo"></sx:autocompleter>
+							<td>&nbsp; 2 &nbsp; </td>
+							<td> Choose one customer or NONE to generate template: 
+								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="custpo.customer.customerNo" headerValue="NONE" headerKey="-1"></sx:autocompleter>
 							</td>
 							<td>
 								<input type="button" onclick="setOrderingFormType('s')" value="Generate form for Stores" />

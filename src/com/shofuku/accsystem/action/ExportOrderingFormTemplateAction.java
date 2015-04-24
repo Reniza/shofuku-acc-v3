@@ -76,6 +76,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	public String listCustomer(){
 		Session session = getSession();
 		customerNoList = customerManager.listAllCustomerNo(session);
+		//customerNoList.add(0, "none");
 		
 		return "listCustomer";
 		

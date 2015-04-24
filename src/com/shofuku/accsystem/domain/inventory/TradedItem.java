@@ -1,7 +1,6 @@
 package com.shofuku.accsystem.domain.inventory;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 
 import com.shofuku.accsystem.domain.financials.Vat;
 
