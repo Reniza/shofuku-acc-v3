@@ -35,9 +35,9 @@ public class SASConstants {
 	public final static String ORDERING_FORM_FILENAME = "OrderingFormTemplate.xls";
 	
 	//POI CONSTANTS
-	public final static int ORDERING_FORM_FIRST_ROW = 9;
+	public final static int ORDERING_FORM_FIRST_ROW = 11;
 	public final static int ORDERING_FORM_FIRST_COLUMN = 0;
-	public final static int ORDERING_FORM_SECOND_COLUMN = 6;
+	public final static int ORDERING_FORM_SECOND_COLUMN = 7;
 	
 	public final static String EXISTS = "RECORD ALREADY EXIST";
 	public final static String NON_EXISTS = "RECORD NOT EXIST";

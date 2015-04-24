@@ -229,7 +229,7 @@ public class POIUtil {
 							Row.CREATE_NULL_AS_BLANK).getStringCellValue();
 					double quantity = 0.0;
 					try {
-					quantity = hssfRow.getCell(column + 4,
+					quantity = hssfRow.getCell(column + 5,
 							Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
 					}catch(IllegalStateException ise) {
 						quantity = 0.0;
