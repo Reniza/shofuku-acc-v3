@@ -216,10 +216,20 @@ public class POIUtil {
 			try {
 				while (!(null == hssfRow.getCell(column + 0,
 						Row.CREATE_NULL_AS_BLANK))
-						&& !("CODE".equalsIgnoreCase(hssfRow.getCell(column + 0,
-								Row.CREATE_NULL_AS_BLANK).getStringCellValue()))
-						&& !("".equalsIgnoreCase(hssfRow.getCell(column + 0,
-								Row.CREATE_NULL_AS_BLANK).getStringCellValue()))) {
+						&& !("CODE".equalsIgnoreCase(hssfRow.getCell(column + 0,Row.CREATE_NULL_AS_BLANK).getStringCellValue()))
+						
+						&& (
+							(!("".equalsIgnoreCase(hssfRow.getCell(column + 0,Row.CREATE_NULL_AS_BLANK).getStringCellValue())))
+							|| (
+								("".equalsIgnoreCase(hssfRow.getCell(column + 0,Row.CREATE_NULL_AS_BLANK).getStringCellValue())) 
+								&& SASConstants.UNLISTED_ITEMS.equalsIgnoreCase(group)
+							   )
+						   )
+						
+						
+						) 
+				
+					{
 					PurchaseOrderDetails purchaseOrderDetails = new PurchaseOrderDetails();
 					String itemCode = hssfRow.getCell(column + 0,
 							Row.CREATE_NULL_AS_BLANK).getStringCellValue();
@@ -243,22 +253,23 @@ public class POIUtil {
 						purchaseOrderDetails.setUnitOfMeasurement(uom == null ? ""
 								: uom);
 						purchaseOrderDetails.setQuantity(quantity);
+						if(group.equalsIgnoreCase(SASConstants.UNLISTED_ITEMS)){
+							purchaseOrderDetails
+							.setInFinishedGoods(true);
+							purchaseOrderDetails
+							.setAmount(0.0);
+						}else {
+							purchaseOrderDetails.setUnitCost(inventoryManager
+									.getItemPricingByItemCodeAndParameter(session,
+											itemCode, customerType, priceType));
+							purchaseOrderDetails
+							.setInFinishedGoods(purchaseOrderDetails
+									.getUnitCost() > 0 ? true : false);
+							purchaseOrderDetails
+							.setAmount(purchaseOrderDetails.getQuantity()
+									* purchaseOrderDetails.getUnitCost());
+						}
 	
-						purchaseOrderDetails.setUnitCost(inventoryManager
-								.getItemPricingByItemCodeAndParameter(session,
-										itemCode, customerType, priceType));
-						// purchaseOrderDetails.setInFinishedGoods(purchaseOrderDetails.getUnitCost()>0?true:false);
-						//
-						// if(!purchaseOrderDetails.isInFinishedGoods()){
-						// purchaseOrderDetails.setUnitCost(getAmountFromRawMaterials(session,itemCode));
-						// }
-	
-						purchaseOrderDetails
-								.setInFinishedGoods(purchaseOrderDetails
-										.getUnitCost() > 0 ? true : false);
-						purchaseOrderDetails
-								.setAmount(purchaseOrderDetails.getQuantity()
-										* purchaseOrderDetails.getUnitCost());
 						purchaseOrderDetails.setGroup(group);
 						orderDetailList.add(purchaseOrderDetails);
 					}

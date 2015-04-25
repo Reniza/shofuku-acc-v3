@@ -2,6 +2,7 @@ package com.shofuku.accsystem.action;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,10 +47,13 @@ public class ManageStockLevelAction extends ActionSupport{
 		customer = (Customer) manager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
 		stockLevelList = new ArrayList();
-		while(itr.hasNext()) {
-			String key = (String)itr.next();
-			CustomerStockLevel csl = (CustomerStockLevel)customer.getCustomerStockLevelMap().get(key);
-			stockLevelList.add(csl);
+		
+		List<String> tempList = new ArrayList();
+		tempList.addAll(customer.getCustomerStockLevelMap().keySet());
+		Collections.sort(tempList);
+
+		for(String keyset:tempList) {
+			stockLevelList.add((CustomerStockLevel)customer.getCustomerStockLevelMap().get(keyset));
 		}
 		
 	return "input";

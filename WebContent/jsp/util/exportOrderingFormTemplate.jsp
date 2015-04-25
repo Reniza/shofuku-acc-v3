@@ -52,7 +52,7 @@ function setOrderingFormType(type){
 						<tr>
 							<td>&nbsp; 2 &nbsp; </td>
 							<td> Choose one customer or NONE to generate template: 
-								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="custpo.customer.customerNo" headerValue="NONE" headerKey="-1"></sx:autocompleter>
+								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="customer.customerNo" headerValue="NONE" headerKey="-1"></sx:autocompleter>
 							</td>
 							<td>
 								<input type="button" onclick="setOrderingFormType('s')" value="Generate form for Stores" />

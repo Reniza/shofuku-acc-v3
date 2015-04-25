@@ -30,6 +30,7 @@ import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -88,7 +89,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		//START: 2015 - PHASE 3a - stock level per customer
 		
 		//temp value: CMJCC01
-		List result = manager.listByParameter(Customer.class, "customerNo","CMJCC01",session);
+		List result = manager.listByParameter(Customer.class, "customerNo",customer.getCustomerNo(),session);
 		customer =(Customer) result.get(0);
 		Map customerSpecificStockLevel = customer.getCustomerStockLevelMap();
 		//END: 2015 - PHASE 3a - stock level per customer
@@ -98,6 +99,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
 		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
+		List<UnlistedItem> ulList = manager.listAlphabeticalAscByParameter(UnlistedItem.class, "description", session); 
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
 		
@@ -230,6 +232,35 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 			}
 		}
 		
+		iterator = ulList.iterator();
+		while(iterator.hasNext()) {
+			UnlistedItem unlistedItem = (UnlistedItem) iterator.next();
+			if(unlistedItem.getClassification() == null) {
+				System.out.println(unlistedItem.getDescription()+" : not included");	
+			}else {
+				if (itemMap.get(unlistedItem.getClassification()) == null) {
+					tempList = new ArrayList<Item>();
+					subClassMap = new HashMap<String, ArrayList<Item>>();
+				} else {
+					subClassMap = itemMap.get(unlistedItem.getClassification());
+
+					if (subClassMap.get(SASConstants.UNLISTED_ITEMS) == null) {
+						tempList = new ArrayList<Item>();
+					} else {
+						tempList = (ArrayList<Item>) subClassMap
+								.get(SASConstants.UNLISTED_ITEMS);
+					}
+				}
+				//START: 2015 - PHASE 3a - stock level per customer
+			
+				double tempStockLevelValue=0;
+				
+				tempList.add(new Item(unlistedItem.getItemCode(), unlistedItem.getDescription(), unlistedItem.getUom(),unlistedItem.getClassification(), SASConstants.UNLISTED_ITEMS,"N",tempStockLevelValue));
+				subClassMap.put(SASConstants.UNLISTED_ITEMS, tempList);
+				itemMap.put(unlistedItem.getClassification(), subClassMap);
+				//END: 2015 - PHASE 3a - stock level per customer
+			}
+		}
 		
 	
 		
@@ -271,7 +302,10 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		int currentRow = 9;
 		int currentColumn = 1;
 		
-		int rowLimit = 70;
+		int rowLimit = 0;
+		
+		//for unlistedItemPointer
+		int lastRow=0;
 		
 		HSSFSheet sheet = wb.getSheetAt(sheetCtr);
 		
@@ -303,10 +337,15 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 			rowLimit = getRowLimit(subClassessMap);
 			String sheetName = sheet.getSheetName();
 			System.out.println("NOW PROCESSING SHEET: "+ sheetName);
+			ArrayList<Item> unlistedItemList= new ArrayList<Item>();
 			for(ArrayList<Item> itemArrayListPerSubClass : subClassessMap.values()) {
 				//create sub class header
 				//TODO:addNullCheck
 				String subClassDesc = ((Item)itemArrayListPerSubClass.get(0)).getSubClassification();
+				if(subClassDesc.equalsIgnoreCase(SASConstants.UNLISTED_ITEMS)) {
+					unlistedItemList.addAll(itemArrayListPerSubClass);
+					continue;
+				}
 				createSubClassHeader(sheet,subClassDesc,currentRow,currentColumn);
 				currentRow+=2;
 				Iterator iterator = itemArrayListPerSubClass.iterator();
@@ -314,11 +353,29 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 					Item tempItem = (Item)iterator.next();
 					insertItem(sheet,currentRow++,currentColumn,tempItem);
 				}
+				
+				lastRow=currentRow;
 				if(currentRow>rowLimit/2) {
 					currentColumn++;
+					
 					currentRow = 9;
 				}
 			}
+			
+			//write unlisted items
+			currentRow=lastRow++;
+			currentColumn = 2;
+			
+			createSubClassHeader(sheet,SASConstants.UNLISTED_ITEMS,currentRow,currentColumn);
+			currentRow+=2;
+			Iterator iterator = unlistedItemList.iterator();
+			while(iterator.hasNext()) {
+				Item tempItem = (Item)iterator.next();
+				//to force write on 2nd column
+				insertItem(sheet,currentRow++,currentColumn,tempItem);
+			}
+			
+			
 			currentRow = 9;
 			currentColumn = 1;
 			
