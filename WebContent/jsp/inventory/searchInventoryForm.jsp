@@ -192,7 +192,6 @@
 				</s:elseif>
 				<s:elseif test="%{#subModule == 'unlistedItems'}">
 					<tr>
-						<th>ITEM CODE</th>
 						<th width="300px">DESCRIPTION</th>
 						<th>UOM</th>
 						<th>CLASSIFICATION</th>
@@ -346,9 +345,8 @@
 									<s:param name="unl.description" value="%{description}">description</s:param>
 									<s:param name="subModule" value="%{'unlistedItems'}">subModule</s:param>
 								</s:url> <s:a href="%{displayId}">
-									<s:property value="itemCode" />
+									<s:property value="description" />
 								</s:a></td>
-							<td align="left"><s:property value="description" /></td>
 							<td><s:property
 									value="uom" /></td>
 							<td><s:property
