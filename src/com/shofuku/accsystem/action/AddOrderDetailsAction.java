@@ -718,21 +718,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 				while (itr.hasNext()) {
 					PurchaseOrderDetails poDetails = itr.next();
 
-					// PurchaseOrderDetails groupEntry = new
-					// PurchaseOrderDetails();
-					// groupEntry.setItemCode(poDetails.getGroup());
-					// groupEntry.setDescription(poDetails.getGroup());
-
-					// if(groups.containsKey(poDetails.getGroup())) {
-					// groupEntry.setAmount(groups.get(poDetails.getGroup()).getAmount()
-					// + poDetails.getAmount());
-					// groups.put(poDetails.getGroup(), groupEntry);
-					// poDetailsGrouped.addPurchaseOrderDetail(groupEntry);
-					// }else {
-					// groupEntry.setAmount(poDetails.getAmount());
-					// groups.put(poDetails.getGroup(), groupEntry);
-					// poDetailsGrouped.addPurchaseOrderDetail(groupEntry);
-					// }
 					
 					//START: 2013 - PHASE 3 : PROJECT 4: MARK
 					for(Item item: allItemList){
@@ -742,7 +727,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 						}
 					}
 					//END : 2013 - PHASE 3 : PROJECT 4: MARK
-
+// YOU LEFT HERE PROBLEM: PODETAILS CANT SHOW FOR SAME ITEM CODES WHICH IS BLANK FOR UNLISTED ITEMS
 					if (poDetails.isInFinishedGoods()) {
 						poDetailsHelper.modifyPurchaseOrderDetail(poDetails);
 						if (null == custpo) {

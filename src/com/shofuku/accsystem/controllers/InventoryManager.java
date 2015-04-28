@@ -277,6 +277,7 @@ public class InventoryManager extends HibernateUtil {
 				double qtyOut=0;
 				qtyIn=podetails.getQuantityIn();
 				qtyOut=podetails.getQuantityOut();
+				try {
 				if(item.getItemType().equalsIgnoreCase("rawMat")) {
 					object = (RawMaterial)dao.load(podetails.getItemCode(), RawMaterial.class);	
 					((RawMaterial)object).setQuantityIn(podetails.getQuantityIn());
@@ -300,6 +301,10 @@ public class InventoryManager extends HibernateUtil {
 					if(qtyOut>0) {
 						deductInventoryItem(object, session);
 					}
+				}
+				}catch(NullPointerException npe) {
+					//catch unlisted Items null pointer on inventory update
+					//do nothing
 				}
 			}
 		dao.commitChanges(session);

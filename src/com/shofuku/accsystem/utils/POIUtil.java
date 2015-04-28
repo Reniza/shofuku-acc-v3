@@ -207,11 +207,16 @@ public class POIUtil {
 		int maxRows = rch.getOrderingTemplateMaxRows();
 		
 		while (itemSectionIndex < maxRows) {
-			if (!(null == hssfRow.getCell(column + 0, Row.CREATE_NULL_AS_BLANK))
-					&& ("CODE".equalsIgnoreCase(hssfRow.getCell(column + 0,
-							Row.CREATE_NULL_AS_BLANK).getStringCellValue()))) {
-				group = (hssfRow.getCell(1 + column + 0,
-						Row.CREATE_NULL_AS_BLANK).getStringCellValue());
+			try {
+				if (!(null == hssfRow.getCell(column + 0, Row.CREATE_NULL_AS_BLANK))
+						&& ("CODE".equalsIgnoreCase(hssfRow.getCell(column + 0,
+								Row.CREATE_NULL_AS_BLANK).getStringCellValue()))) {
+					group = (hssfRow.getCell(1 + column + 0,
+							Row.CREATE_NULL_AS_BLANK).getStringCellValue());
+				}
+			}catch(NullPointerException npe) {
+				logger.debug("POIUtil populateOrderDetail() : " + npe.toString());
+				break;
 			}
 			try {
 				while (!(null == hssfRow.getCell(column + 0,

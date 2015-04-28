@@ -466,7 +466,10 @@ public class SASConstants {
 	public static final String JOURNAL_ENTRIES_FILENAME = "Journal Entry Report - ";
 	public static final int JOURNAL_ENTRIES_VARIABLES_COLUMN_START = 3;
 	public static final int JOURNAL_ENTRIES_VALUES_COLUMN = 2;
+
+	
 	public static final String UNLISTED_ITEMS = "Unlisted Items";
+	public static final String NOT_APPLICABLE = "N/A";
 	
 	
 }
