@@ -3274,14 +3274,25 @@ public class POIUtil {
 		HashMap<String, PurchaseOrderDetails> map = new HashMap<String, PurchaseOrderDetails>();
 		Set<PurchaseOrderDetails> sortedMap = new HashSet<PurchaseOrderDetails>();
 		List itemCodeList = new ArrayList();
+		List unlistedItemsList= new ArrayList();
+		HashMap<String,PurchaseOrderDetails> unlistedItemsMap = new HashMap<String,PurchaseOrderDetails>();
+		
+		
 		try {
 			Iterator<PurchaseOrderDetails> itr = purchaseOrderDetailsList
 					.iterator();
 			while (itr.hasNext()) {
 				PurchaseOrderDetails podetails = (PurchaseOrderDetails) itr
 						.next();
-				map.put(podetails.getItemCode(), podetails);
-				itemCodeList.add(podetails.getItemCode());
+				if(podetails.getItemCode().trim().equalsIgnoreCase("")) {
+					unlistedItemsMap.put(SASConstants.NOT_APPLICABLE,podetails);
+					// YOU LEFT HERE PROBLEM: PODETAILS CANT SHOW FOR SAME ITEM CODES WHICH IS BLANK FOR UNLISTED ITEMS
+					unlistedItemsList.add(podetails);
+					
+				}else {
+					map.put(podetails.getItemCode(),podetails);
+					itemCodeList.add(podetails.getItemCode());
+				}
 			}
 
 			Collections.sort(itemCodeList);
@@ -3292,6 +3303,17 @@ public class POIUtil {
 				sortedPurchaseOrderDetailsList.add(map.get(code));
 				sortedMap.add(map.get(code));
 			}
+			
+			//include unlisted items
+			Iterator unlistedItemsMapItr = unlistedItemsList.iterator();
+			while(unlistedItemsMapItr.hasNext()) {
+				PurchaseOrderDetails podetails = (PurchaseOrderDetails)unlistedItemsMapItr.next();
+				sortedMap.add(podetails);
+			}
+			sortedPurchaseOrderDetailsList.addAll(unlistedItemsList);
+			//end include unlisted items
+
+			
 			poDetailsHelper.setPurchaseOrderDetailsSet(sortedMap);
 			poDetailsHelper
 					.setPurchaseOrderDetailsList(sortedPurchaseOrderDetailsList);
