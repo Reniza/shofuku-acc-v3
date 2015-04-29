@@ -242,7 +242,9 @@
 								<td><s:textfield size="5" name="orderDetails.quantityIn" theme="simple"></s:textfield></td>
 								<td><s:textfield size="5" name="orderDetails.quantityOut" theme="simple"></s:textfield></td>
 								<td><s:textfield size="10" readOnly="readOnly" name="orderDetails.unitOfMeasurement" theme="simple"></s:textfield></td>
-								<td><s:textfield size="10" readOnly="readOnly" name="orderDetails.unitCost" theme="simple"></s:textfield></td>
+								<td><s:textfield size="10" readOnly="readOnly" name="orderDetails.unitCost" theme="simple"></s:textfield>
+								<s:hidden name="orderDetails.quantity"		    value="%{orderDetails.quantity}"></s:hidden>
+								</td>
 							</tr>
 						</table>
 						</div>

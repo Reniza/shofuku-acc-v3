@@ -2302,10 +2302,16 @@ public class POIUtil {
 		Iterator itr = set.iterator();
 		Map<String, PurchaseOrderDetails> tempMap = new HashMap();
 		try {
+			int nullCtr= 0;
 			while (itr.hasNext()) {
 				PurchaseOrderDetails podetails = (PurchaseOrderDetails) itr
 						.next();
-				tempMap.put(podetails.getItemCode(), podetails);
+				String nullFiller = "Unlisted Item -";
+				
+				if(null==podetails.getItemCode() || "".equalsIgnoreCase(podetails.getItemCode()) || " ".equalsIgnoreCase(podetails.getItemCode())) {
+					nullFiller=nullFiller+nullCtr++;
+				}
+				tempMap.put(nullFiller+podetails.getItemCode(), podetails);
 			}
 
 		} catch (Exception e) {
