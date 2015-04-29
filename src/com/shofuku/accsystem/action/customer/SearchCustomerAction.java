@@ -60,7 +60,7 @@ public class SearchCustomerAction extends ActionSupport {
 						customerList = manager.listByParameter(Customer.class,
 								moduleParameter, moduleParameterValue,session);
 					}
-					if (0 == customerList.size()) {
+					if (customerList == null || 0 == customerList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					
@@ -88,7 +88,7 @@ public class SearchCustomerAction extends ActionSupport {
 								CustomerPurchaseOrder.class, moduleParameter,
 								moduleParameterValue,session);
 					}
-					if (0 == customerList.size()) {
+					if (customerList == null || 0 == customerList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					
@@ -120,7 +120,7 @@ public class SearchCustomerAction extends ActionSupport {
 								DeliveryReceipt.class, moduleParameter,
 								moduleParameterValue,session);
 					}
-					if (0 == customerList.size()) {
+					if (customerList == null || 0 == customerList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					
@@ -153,7 +153,7 @@ public class SearchCustomerAction extends ActionSupport {
 								CustomerSalesInvoice.class, moduleParameter,
 								moduleParameterValue,session);
 					}
-					if (0 == customerList.size()) {
+					if (customerList == null || 0 == customerList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					

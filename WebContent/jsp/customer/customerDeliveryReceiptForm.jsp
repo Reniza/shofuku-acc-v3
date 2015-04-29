@@ -206,7 +206,6 @@
 			
 				<div>
 				<s:if test="%{dr.returnSlipList != null}">
-				
 					<table class="form">
 						<tr  valign="top">
 							<th >Return Slip Details</th>
@@ -216,28 +215,25 @@
 						<tr class="others">
 							<td class="header">Return Slip No</td>
 							<td class="header">Transaction Date</td>
-							
 						</tr>
-						<s:iterator value="dr.returnSlipList">
+					<s:iterator value="dr.returnSlipList">
 						<tr>
-								
-								<td align="left"><s:url id="displayId" action="editInventoryAction">
+							<td align="left"><s:url id="displayId" action="editInventoryAction">
 											<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 											<s:param name="rs.returnSlipNo" value="returnSlipNo">itemCode</s:param>
 											<s:param name="subModule" value="%{'returnSlip'}">subModule</s:param>
 										</s:url>
 										<s:a href="%{displayId}"><s:property value="returnSlipNo"/></s:a>
-								</td>
-								<td class="desc"><s:property value="returnDate" /></td>
-							</tr>
-							</s:iterator>
-						</table>
-				
+							</td>
+							<td class="desc"><s:property value="returnDate" /></td>
+						</tr>
+					</s:iterator>
+					</table>
 				</s:if>
-					<p style="text-align:left;">
 					
-						<table class="form">
-							<tr>
+				<p style="text-align:left;">
+					<table class="form">
+						<tr>
 								<s:hidden name="parentPage" value="DeliveryReceipt"/>
 								<s:hidden name="forWhat" value="%{forWhat}"/>
 								<s:hidden name="poDetailsHelperToCompare.hiddenDelimetedOrderDetailsItemCode"     	value="%{poDetailsHelperToCompare.hiddenDelimetedOrderDetailsItemCode}"></s:hidden>
@@ -264,27 +260,28 @@
 								<s:hidden name="poDetailsHelper.hiddenDelimetedOrderDetailsVattableAmount"		    value="%{poDetailsHelper.hiddenDelimetedOrderDetailsVattableAmount}"></s:hidden>
 						<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 									
-									<th colspan="6">Order Details</th>
-							</tr>
-							</table>
-							<table class="results">
-							<tr valign="top">
-								<td>
+						<th colspan="6">Order Details</th>
+						</tr>
+					</table>
+					<table class="results">
+						<tr valign="top">
+							<td>
 								<table class="compare">
 									<tr>
 										<td colspan="6" class="others">Delivery Receipt Details</td>
 									</tr>
-								<tr class="others">
-									<td class="desc">Item Code</td>
-									<td class="desc">QTY</td>
-									<td class="header" width="250px">Description</td>
-									<td>UOM</td>
-									<td>Unit Cost</td>
-									<td>Amount</td>
-									<td>Input Tax</td>
-									<td>Vattable Amount</td>
-								</tr>
+									<tr class="others">
+										<td class="desc">Item Code</td>
+										<td class="desc">QTY</td>
+										<td class="header" width="250px">Description</td>
+										<td>UOM</td>
+										<td>Unit Cost</td>
+										<td>Amount</td>
+										<td>Input Tax</td>
+										<td>Vattable Amount</td>
+									</tr>
 								<s:iterator value="poDetailsHelper.purchaseOrderDetailsList">
+									
 									<!--START: 2014 - ITEM COLORING-->
 										<s:set name="currentItrItemType" value="itemType"/>
 										<s:if test="%{#currentItrItemType=='rawMat'}">
@@ -311,30 +308,29 @@
 									</tr>
 								</s:iterator>
 								<tr>
-							<td colspan="7" class="total">Total: PHP</td>
-							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalAmount}" /></td>
+									<td colspan="7" class="total">Total: PHP</td>
+									<td class="totalAmount"><s:property value="%{poDetailsHelper.totalAmount}" /></td>
 					<!--START: 2013 - PHASE 3 : PROJECT 4: MARK-->
-					</tr>
-					<tr>
-							<td colspan="7" class="total">Total Non Vatable Amount: PHP</td>
-							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalNonVattableAmount}" /></td>
-					</tr>
-					
-								</table>
+								</tr>
+								<tr>
+									<td colspan="7" class="total">Total Non Vatable Amount: PHP</td>
+									<td class="totalAmount"><s:property value="%{poDetailsHelper.totalNonVattableAmount}" /></td>
+								</tr>
+							</table>
 							</td>
 							<td>
 								<table class="compare">
-								<tr>
-									<td colspan="6" class="others">Purchase Order Details</td>
-								</tr>
-								<tr class="others">
-											<td class="desc">Item Code</td>
-											<td class="desc">QTY</td>
-											<td class="header" width="250px">Description</td> 
-											<td>UOM</td> 
-											<td>Unit Cost</td>
-											<td>Amount</td>
-								</tr>
+									<tr>
+										<td colspan="6" class="others">Purchase Order Details</td>
+									</tr>
+									<tr class="others">
+												<td class="desc">Item Code</td>
+												<td class="desc">QTY</td>
+												<td class="header" width="250px">Description</td> 
+												<td>UOM</td> 
+												<td>Unit Cost</td>
+												<td>Amount</td>
+									</tr>
 								<s:iterator value="poDetailsHelperToCompare.purchaseOrderDetailsList">
 									<tr>
 										<td class="desc"><s:property value="itemCode" /></td>
@@ -345,54 +341,50 @@
 										<td><s:property value="amount" /></td>
 									</tr>
 								</s:iterator>
-								<tr>
+									<tr>
 									<td colspan="5" class="total">Total: PHP</td>
-							<td class="totalAmount"><s:property value="%{dr.customerPurchaseOrder.totalAmount}" /></td>
-								</tr>
+									<td class="totalAmount"><s:property value="%{dr.customerPurchaseOrder.totalAmount}" /></td>
+									</tr>
 								</table>
 							</td>
 						</tr>
-						</table>
+					</table>
 					</p>
-					
 				</div>
 			</div>
 		</div>
 
 		<div class="forButtons">
 			<p>
-				<table class="forButtons" align="center">
-				<tr><s:hidden name="subModule" value="deliveryReceipt"/>
-						
+			<table class="forButtons" align="center">
+				<tr>
+				<s:hidden name="subModule" value="deliveryReceipt"/>
 				<s:if test="%{forWhatDisplay == 'edit'}">
 						<td><input class="myButtons" name="edit" type="button" onclick="javascript:toggleAlert('drForm','delrId');" value="Edit" id="Edit"></input></td>
 						<td><s:submit cssClass="myButtons" type="button" id="bManageOrderDetails" disabled="%{forWhat}"
 											value="Manage Order Details" name="addOrderDetailAction"
 											action="addOrderDetailAction"></s:submit></td>
-					
 						<td><s:submit disabled="%{forWhat}" id="bUpdate" cssClass="myButtons" type="button" value="Update" action="updateCustomerAction"></s:submit></td>
 						<td><s:submit cssClass="myButtons" type="button" value="Delete" onclick="javascript:customerConfirmation('delrForm');"></s:submit></td>
 						<td><s:submit cssClass="myButtons" type="button" value="Print" action="printCustomerAction" onclick="javascript:removeDiv('wholeForm');"></s:submit></td>
 						<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','delrForm');" value="New Entry"></input></td>
-				
 				</s:if>
 				<s:else>
 						<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" value="New Entry" name="newReceivingReport" action="addCustomerAction"></s:submit></td>
 						<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','delrForm');" value="Cancel"></input></td>
-					
 				</s:else>
 				</tr>
-				</table>
+			</table>
 			</p>
 		</div>
 	</s:form>
 </div>
 </s:if>
+
 <s:else>
 <div class="print">
 	<jsp:include page="/jsp/util/companyHeader.jsp"/>
 		<h3 class="form">DELIVERY RECEIPT</h3>
-			
 				<p>
 					<table class="form">
 						<tr>
@@ -415,59 +407,59 @@
 						</tr>
 					</table>
 				</p>	
-				
-					<p>
-						<table class="form">
-							<tr>
-									<th>Order Details</th>
-							</tr>
-						</table>
-							<table class="lists" border="1px">
-								<tr class="others">
-									<td class="desc">Item Code</td>
-									<td class="desc">QTY</td>
-									<td class="header" width="250px">Description</td>
-									<td>UOM</td>
-									<td>Unit Cost</td>
-									<td>Amount</td>
-								</tr>
-								<s:iterator value="poDetailsHelper.purchaseOrderDetailsList">
-									<tr>
-										<td class="desc"><s:property value="itemCode" /></td>
-										<td class="desc"><s:property value="quantity" /></td>
-										<td class="desc"><s:property value="description" /></td>
-										<td><s:property value="unitOfMeasurement" /></td>
-										<td><s:property value="unitCost" /></td>
-										<td><s:property value="amount" /> </td>
-									</tr>
-								</s:iterator>
-									<tr>
+				<p>
+					<table class="form">
+						<tr>
+							<th>Order Details</th>
+						</tr>
+					</table>
+					<table class="lists" border="1px">
+						<tr class="others">
+							<td class="desc">Item Code</td>
+							<td class="desc">QTY</td>
+							<td class="header" width="250px">Description</td>
+							<td>UOM</td>
+							<td>Unit Cost</td>
+							<td>Amount</td>
+						</tr>
+						<s:iterator value="poDetailsHelper.purchaseOrderDetailsList">
+						<tr>
+							<td class="desc"><s:property value="itemCode" /></td>
+							<td class="desc"><s:property value="quantity" /></td>
+							<td class="desc"><s:property value="description" /></td>
+							<td><s:property value="unitOfMeasurement" /></td>
+							<td><s:property value="unitCost" /></td>
+							<td><s:property value="amount" /> </td>
+						</tr>
+						</s:iterator>
+						<tr>
 							<td colspan="5" class="total">Total: PHP</td>
 							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalAmount}" /></td>
 					<!--START: 2013 - PHASE 3 : PROJECT 4: MARK-->
-					</tr>
-					<tr>
+						</tr>
+						<tr>
 							<td colspan="5" class="total">Total Non Vatable Amount: PHP</td>
 							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalNonVattableAmount}" /></td>
-					</tr>
-					<tr>
+						</tr>
+						<tr>
 							<td colspan="5" class="total">Total Vat Amount: PHP</td>
 							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalVatAmount}" /></td>
-					</tr>
-					<tr>
+						</tr>
+						<tr>
 							<td colspan="5" class="total">Total Vatable Amount: PHP</td>
 							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalVattableAmount}" /></td>
-					</tr>
-						</table>
-					</p>
-						<table>
-							<tr>
+						</tr>
+					</table>
+				
+					<table>
+						<tr>
 							<td  class="others">PREPARED BY:</td>
 						</tr>
 						<tr>
 							<td style="padding-top:10px;">_____________________</td>
 						</tr>
-						</table>
+					</table>
+				</p>
 			</div>
 </s:else>
 </body>

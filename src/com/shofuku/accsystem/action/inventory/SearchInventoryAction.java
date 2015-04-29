@@ -98,7 +98,7 @@ public class SearchInventoryAction extends ActionSupport{
 									moduleParameter, moduleParameterValue,session);
 						}
 					}
-						if (inventoryList.size()==0) {
+						if (inventoryList == null || inventoryList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					
@@ -123,7 +123,7 @@ public class SearchInventoryAction extends ActionSupport{
 						inventoryList = manager.listInventoryByParameter(FinishedGood.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (inventoryList.size()==0) {
+						if (inventoryList == null || inventoryList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					return "returnSlip";
@@ -146,7 +146,7 @@ public class SearchInventoryAction extends ActionSupport{
 						inventoryList = manager.listInventoryByParameter(FPTS.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (inventoryList.size()==0) {
+						if (inventoryList == null || inventoryList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					return "fpts";
@@ -167,7 +167,7 @@ public class SearchInventoryAction extends ActionSupport{
 						inventoryList = manager.listInventoryByParameter(RequisitionForm.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (inventoryList.size()==0) {
+						if (inventoryList == null || inventoryList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					return "rf";
@@ -181,7 +181,7 @@ public class SearchInventoryAction extends ActionSupport{
 						inventoryList = manager.listInventoryByParameter(FinishedGood.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (inventoryList.size()==0) {
+						if (inventoryList == null || inventoryList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					return "finGood";
@@ -206,7 +206,7 @@ public class SearchInventoryAction extends ActionSupport{
 									}
 								}
 							}
-							if (resultList.size()==0) {
+							if (resultList == null || resultList.size()==0) {
 								addActionMessage(SASConstants.NO_LIST);
 							}
 				}

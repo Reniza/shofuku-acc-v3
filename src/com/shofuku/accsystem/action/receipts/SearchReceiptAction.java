@@ -55,7 +55,7 @@ public class SearchReceiptAction extends ActionSupport{
 						receiptList = manager.listReceiptsByParameter(ORSales.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (0 == receiptList.size()) {
+						if (receiptList == null || 0 == receiptList.size()) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 						
@@ -72,7 +72,7 @@ public class SearchReceiptAction extends ActionSupport{
 						receiptList = manager.listReceiptsByParameter(OROthers.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-					if (0 == receiptList.size()) {
+					if (receiptList == null || 0 == receiptList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					return "orOthers";
@@ -89,7 +89,7 @@ public class SearchReceiptAction extends ActionSupport{
 						receiptList = manager.listReceiptsByParameter(CashCheckReceipts.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-					if (0 == receiptList.size()) {
+					if (receiptList == null || 0 == receiptList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 						

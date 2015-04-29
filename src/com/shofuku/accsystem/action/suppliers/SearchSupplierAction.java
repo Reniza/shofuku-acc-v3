@@ -79,7 +79,7 @@ public class SearchSupplierAction extends ActionSupport {
 							moduleParameter, moduleParameterValue,session);
 						}
 					}
-							if (0 == supplierList.size()) {
+							if (supplierList == null || 0 == supplierList.size()) {
 								addActionMessage(SASConstants.NO_LIST);
 							}
 					
@@ -104,7 +104,7 @@ public class SearchSupplierAction extends ActionSupport {
 								supPO.getClass(), moduleParameter,
 								moduleParameterValue,session);
 					}
-						if (0 == supplierList.size()) {
+						if (supplierList == null || 0 == supplierList.size()) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 						
@@ -143,7 +143,7 @@ public class SearchSupplierAction extends ActionSupport {
 								supInv.getClass(), moduleParameter,
 								moduleParameterValue,session);
 					}
-					if (0 == supplierList.size()) {
+					if (supplierList == null || 0 == supplierList.size()) {
 						addActionMessage(SASConstants.NO_LIST);
 					}
 					

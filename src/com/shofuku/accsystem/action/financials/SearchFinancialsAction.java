@@ -51,7 +51,7 @@ public class SearchFinancialsAction extends ActionSupport{
 						financialsList = new ArrayList<>();
 						financialsList.add(aep);
 					}
-						if (financialsList.size()==0) {
+						if (financialsList == null || financialsList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 						
@@ -71,7 +71,7 @@ public class SearchFinancialsAction extends ActionSupport{
 						financialsList = new ArrayList<>();
 						financialsList.add(jep);
 					}
-						if (financialsList.size()==0) {
+						if (financialsList == null || financialsList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 						

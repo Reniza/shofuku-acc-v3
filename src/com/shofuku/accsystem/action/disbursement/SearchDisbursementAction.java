@@ -1,5 +1,6 @@
 package com.shofuku.accsystem.action.disbursement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -39,8 +40,10 @@ public class SearchDisbursementAction extends ActionSupport {
 	}
 	public String execute() throws Exception{
 		Session session = getSession();
+		disbursementList = new ArrayList();
 		try {
 			if (getClicked().equals("true")) {
+				
 
 				if (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("AA")) {
 					
@@ -56,7 +59,7 @@ public class SearchDisbursementAction extends ActionSupport {
 						disbursementList = manager.listDisbursementsByParameter(PettyCash.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (disbursementList.size()==0) {
+						if (disbursementList == null || disbursementList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 						
@@ -75,7 +78,7 @@ public class SearchDisbursementAction extends ActionSupport {
 							disbursementList = manager.listDisbursementsByParameter(CashPayment.class,
 											moduleParameter, moduleParameterValue,session);
 						}
-							if (disbursementList.size()==0) {
+							if (disbursementList == null || disbursementList.size()==0) {
 								addActionMessage(SASConstants.NO_LIST);
 							}
 						
@@ -94,7 +97,7 @@ public class SearchDisbursementAction extends ActionSupport {
 						disbursementList = manager.listDisbursementsByParameter(CheckPayments.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (disbursementList.size()==0) {
+						if ( disbursementList == null || disbursementList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					
@@ -121,7 +124,7 @@ public class SearchDisbursementAction extends ActionSupport {
 						disbursementList = manager.listDisbursementsByParameter(CheckPayments.class,
 										moduleParameter, moduleParameterValue,session);
 					}
-						if (disbursementList.size()==0) {
+						if (disbursementList == null || disbursementList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
 					
