@@ -16,7 +16,7 @@
 <body>
 
 	<div align="center">
-		<img src="images/header2.jpg" width="60%" height="50px" />
+		<img src="images/header.jpg" width="60%" height="50px" />
 		<div class="importPage">
 			<s:form action="addOrderDetailAction" validate="true" >
 			
