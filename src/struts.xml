@@ -675,6 +675,9 @@
 		<action name="showUtensilsForm">
 			<result type="tiles">showUtensilsForm.tiles</result>
 		</action>
+		<action name="showOfficeSuppliesForm">
+			<result type="tiles">showOfficeSuppliesForm.tiles</result>
+		</action>
 		<action name="showUnlistedItemsForm">
 			<result type="tiles">showUnlistedItemsForm.tiles</result>
 		</action>
@@ -850,6 +853,12 @@
 			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
 			method="loadLookListsInUtensils">
 			<result name="utensils" type="tiles">showUtensilsForm.tiles
+			</result>
+		</action>
+		<action name="loadLookUpItemsInOfficeSupplies"
+			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
+			method="loadLookListsInOfficeSupplies">
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles
 			</result>
 		</action>
 		<action name="loadLookUpItemsInUnlistedItems"

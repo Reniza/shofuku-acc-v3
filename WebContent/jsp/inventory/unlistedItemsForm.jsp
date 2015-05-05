@@ -26,7 +26,6 @@
 <s:if test="%{forWhat == 'print'}">
 <div class="print">
 			<jsp:include page="/jsp/util/companyHeader.jsp"/>
-
 	</div>
 </s:if>
 <div class="mainForm">
@@ -46,9 +45,10 @@
 						<th colspan="8">Details</th>
 					</tr>
 					<tr>
-						<td width="70"><s:textfield disabled="%{forWhat}" label="Item Code: " name="unl.itemCode" id="itemId"/>
+						<!--  <td width="70">
+						<s:hidden disabled="%{forWhat}" label="Item Code: " name="unl.itemCode" id="itemId"/>
 						
-						</td>
+						</td>-->
 						<s:hidden name="itemNo" value="%{unl.itemCode}"/>
 						
 						<s:if test="%{forWhat != 'print'}">

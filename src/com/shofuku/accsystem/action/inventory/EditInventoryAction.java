@@ -20,6 +20,7 @@ import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
@@ -45,6 +46,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	FinishedGood fg;
 	TradedItem ti;
 	Utensils u;
+	OfficeSupplies os;
 	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
@@ -120,6 +122,8 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				return "unlistedItems";
 			}
@@ -146,6 +150,8 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			return "tradedItems";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("utensils")){
 			return "utensils";
+		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("ofcSup")){
+			return "ofcSup";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("unlistedItems")){
 			return "unlistedItems";
 		}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("fpts")){
@@ -179,6 +185,10 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 						//di ako sure
 						this.setU(new Utensils());
 						this.getU().setItemCode(itemCode);
+					}else if(subModule.equalsIgnoreCase("ofcSup")){
+						//di ako sure
+						this.setOs(new OfficeSupplies());
+						this.getOs().setItemCode(itemCode);
 					}else if(subModule.equalsIgnoreCase("unlistedItems")){
 						//di ako sure
 						this.setUnl(new UnlistedItem());
@@ -218,7 +228,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 						ti.getClassification(), session);
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
-				Utensils ti = new Utensils();
+				Utensils u = new Utensils();
 				u = (Utensils) manager.listInventoryByParameter(Utensils.class, "itemCode",
 						this.getU().getItemCode(),session).get(0);
 				
@@ -226,6 +236,15 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						u.getClassification(), session);
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				OfficeSupplies os = new OfficeSupplies();
+				os = (OfficeSupplies) manager.listInventoryByParameter(OfficeSupplies.class, "itemCode",
+						this.getOs().getItemCode(),session).get(0);
+				
+				this.setOs(os);
+				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
+						os.getClassification(), session);
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				UnlistedItem unl = new UnlistedItem();
 				unl = (UnlistedItem) manager.listInventoryByParameterLike(UnlistedItem.class, "description",
@@ -418,6 +437,8 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
@@ -580,6 +601,12 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			}
 			public void setUnl(UnlistedItem unl) {
 				this.unl = unl;
+			}
+			public OfficeSupplies getOs() {
+				return os;
+			}
+			public void setOs(OfficeSupplies os) {
+				this.os = os;
 			}
 			
 

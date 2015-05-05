@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.shofuku.accsystem.domain.inventory.OfficeSupplies"
+		table="t301_office_supplies">
+
+		<id name="itemCode" 						type="string" 	column="ITEM_CODE"></id>
+		<property name="classification" 				type="string" 	column="CLASSIFICATION" />
+		<property name="subClassification" 				type="string" 	column="SUBCLASSIFICATION" />
+		<property name="template" 				type="string" 	column="TEMPLATE" />
+		<property name="description" 				type="string" 	column="DESCRIPTION" />
+		<property name="unitOfMeasurement" 			type="string" 	column="UNIT_OF_MEASUREMENT" />
+		<property name="isVattable" 				type="string" 	column="IS_VATTABLE" />
+		<property name="quantityIn" 				type="double" 	column="QUANTITY_IN" />
+		<property name="quantityOut" 				type="double" 	column="QUANTITY_OUT" />
+		<property name="quantityPerRecord" 			type="double" 	column="QUANTITY_PER_RECORD" />
+		<property name="quantityPerPhysicalCount" 	type="double"	column="QUANTITY_PER_PHYSICAL" />
+
+		<many-to-one name="itemPricing"
+			class="com.shofuku.accsystem.domain.inventory.ItemPricing" column="PRICING_ID"
+			not-null="false" unique="true" lazy="false" />
+
+	</class>
+</hibernate-mapping>

@@ -385,6 +385,7 @@ public class SASConstants {
 	public static final int SupplierPurchaseOrderTotalAmountRowMapping = 19;
 	public static final String TRADED_ITEM_ABBR ="TI";
 	public static final String UTENSILS_ABBR ="U";
+	public static final String OFFICE_SUPPLIES_ABBR = "OS";
 	public static final double VAT_PERCENT = 1.12;
 	public static final double VAT_AMOUNT_PERCENT = 0.12;
 	

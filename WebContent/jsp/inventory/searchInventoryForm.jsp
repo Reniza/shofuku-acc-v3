@@ -42,7 +42,7 @@
 					
 					<td><s:select label="Inventory Module:" headerKey="-1"
 							headerValue="--Choose Module--"
-							list="#{'items':'Item/s','rawMat':'Raw Materials', 'finGood':'Finished Goods', 'tradedItems':'Traded Items','utensils':'Utensils','unlistedItems':'Unlisted Items','fpts':'FP Transfer Slip','rf':'Order Requisition', 'returnSlip':'Return Slip'}"
+							list="#{'items':'Item/s','rawMat':'Raw Materials', 'finGood':'Finished Goods', 'tradedItems':'Traded Items','unlistedItems':'Unlisted Items','fpts':'FP Transfer Slip','rf':'Order Requisition', 'returnSlip':'Return Slip'}"
 							name="subModule"
 							onchange="javascript:onTypeChangeInventory('searchForm');" /></td>
 					
@@ -60,7 +60,7 @@
 								name="moduleParameter"
 								onchange="javascript:onTypeChangeInventory('searchForm');" /></td>
 					</s:if>
-					<s:if test="%{#subModule == 'utensils'}">
+				 	<s:if test="%{#subModule == 'utensils'}">
 						<td><s:select label="Search Utensils By:"
 								list="#{'ALL':'ALL','itemCode':'Item Code', 'description':'Description'}"
 								name="moduleParameter"

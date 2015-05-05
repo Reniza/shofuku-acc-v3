@@ -12,6 +12,7 @@ import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
@@ -39,6 +40,7 @@ public class SearchInventoryAction extends ActionSupport{
 	FinishedGood fg;
 	TradedItem ti;
 	Utensils u;
+	OfficeSupplies os;
 	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
@@ -60,6 +62,7 @@ public class SearchInventoryAction extends ActionSupport{
 				if ((null != getModuleParameter()&& getSubModule().equalsIgnoreCase("rawMat")) 
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("tradedItems"))
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("utensil"))
+						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("ofcSup"))
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("unlistedItems"))) {
 				
 					if (getModuleParameter().equalsIgnoreCase("description")) {
@@ -69,6 +72,8 @@ public class SearchInventoryAction extends ActionSupport{
 							inventoryList = manager.listInventoryByParameterLike(TradedItem.class, moduleParameter, moduleParameterValue,session);
 						}else if (getSubModule().equalsIgnoreCase("utensils")){
 							inventoryList = manager.listInventoryByParameterLike(Utensils.class, moduleParameter, moduleParameterValue,session);
+						}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+							inventoryList = manager.listInventoryByParameterLike(OfficeSupplies.class, moduleParameter, moduleParameterValue,session);
 						}else{
 							inventoryList = manager.listInventoryByParameterLike(UnlistedItem.class, moduleParameter, moduleParameterValue,session);
 						}
@@ -79,6 +84,8 @@ public class SearchInventoryAction extends ActionSupport{
 							inventoryList = manager.listAlphabeticalAscByParameter(TradedItem.class, "itemCode",session);
 						}else if (getSubModule().equalsIgnoreCase("utensils")){
 							inventoryList = manager.listAlphabeticalAscByParameter(Utensils.class, "itemCode",session);
+						}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+							inventoryList = manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "itemCode",session);
 						}else{
 							inventoryList = manager.listAlphabeticalAscByParameter(UnlistedItem.class, "itemCode",session);
 						}
@@ -89,6 +96,9 @@ public class SearchInventoryAction extends ActionSupport{
 										moduleParameter, moduleParameterValue,session);
 						}else if (getSubModule().equalsIgnoreCase("utensils")){
 							inventoryList = manager.listInventoryByParameter(Utensils.class,
+									moduleParameter, moduleParameterValue,session);
+						}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+							inventoryList = manager.listInventoryByParameter(OfficeSupplies.class,
 									moduleParameter, moduleParameterValue,session);
 						}else if (getSubModule().equalsIgnoreCase("unlisteditems")){
 						inventoryList = manager.listInventoryByParameter(UnlistedItem.class,
@@ -106,6 +116,8 @@ public class SearchInventoryAction extends ActionSupport{
 						return "rawMat";
 					}else if (getSubModule().equalsIgnoreCase("utensils")){
 						return "utensils";
+					}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+						return "ofcSup";
 					}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
 						return "unlistedItems";
 					}else {
@@ -220,6 +232,8 @@ public class SearchInventoryAction extends ActionSupport{
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
@@ -338,4 +352,11 @@ public class SearchInventoryAction extends ActionSupport{
 	public void setUnl(UnlistedItem unl) {
 		this.unl = unl;
 	}
+	public OfficeSupplies getOs() {
+		return os;
+	}
+	public void setOs(OfficeSupplies os) {
+		this.os = os;
+	}
+	
 }
