@@ -524,9 +524,13 @@ public class InventoryManager extends HibernateUtil {
 	public double getItemPricingByItemCodeAndParameter(Session session, String itemCode, String customerType, String priceType) {
 		ItemPricing itemPricing = dao.getItemPricingByItemCodeAndParameter(session, itemCode);
 		double price = 0.0;
-		if(itemCode.equalsIgnoreCase("FL09")) {
-			System.out.println(priceType.toLowerCase());
-		}
+
+		/*
+		 * F = Franchise
+		 * C = Commisary
+		 * CC = Company Owned
+		 */
+		
 		try {
 		if(customerType.equalsIgnoreCase("F")) {
 			switch(priceType.toLowerCase()) {

@@ -661,7 +661,7 @@ public class AddInventoryAction extends ActionSupport {
 	@Deprecated
 	private boolean isFromCustomer(String id) {
 		CustomerManager customerManager = new CustomerManager();
-		Customer customer = customerManager.loadSupplier(id);
+		Customer customer = customerManager.loadCustomer(id);
 		if(customer==null) {
 			return false;
 		}else {

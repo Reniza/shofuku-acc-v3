@@ -129,6 +129,14 @@ public class DateFormatHelper {
 
 	}
 	
+	public Timestamp dynamicParseWordedDateToTimestamp(java.util.Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat(SASConstants.TIMESTAMP_FORMAT);
+
+		Timestamp timestInp = null;
+		timestInp = new java.sql.Timestamp(date.getTime());
+		return timestInp;
+
+	}
 	
 	public Timestamp dynamicParseDateToTimestamp(java.util.Date date,String format) {
 

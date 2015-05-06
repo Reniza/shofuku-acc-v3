@@ -19,8 +19,8 @@ public class CustomerManager {
 
 	CustomerDaoImpl dao = new CustomerDaoImpl();
 
-	public Customer loadSupplier(String customerId) {
-		Customer customer =(Customer) dao.load(new Customer(customerId), Customer.class);
+	public Customer loadCustomer(String customerId) {
+		Customer customer =(Customer) dao.load(customerId, Customer.class);
 		if(customer==null){
 			return null;
 		}else {

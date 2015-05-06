@@ -310,6 +310,7 @@ public class SASConstants {
 	public static final String SUPPLIERPO_PREFIX = "SPO-";
 	public static final String RECEIVINGREPORT_PREFIX = "RR-";
 	
+	public static final String CUSTOMER = "CUSTOMER";
 	public static final String CUSTOMERPO = "CustomerPurchaseOrder";
 	public static final String DELIVERYREPORT = "DeliveryReceipt";
 	public static final String CUSTOMERINVOICE = "CustomerInvoice";
@@ -470,6 +471,33 @@ public class SASConstants {
 	
 	public static final String UNLISTED_ITEMS = "Unlisted Items";
 	public static final String NOT_APPLICABLE = "N/A";
+	
+	
+	/*
+	 * IMPORT OFFLINE ORDERS INDEX VALUES
+	 */
+	
+	public final static int IMPORT_COLUMN_CUSTOMER_NO =0;
+	public final static int IMPORT_COLUMN_PO_DATE =1;
+	public final static int IMPORT_COLUMN_PO_DELIVERY_DATE =2;
+	public final static int IMPORT_COLUMN_PO_PAYMENT_DATE =3;
+	public final static int IMPORT_COLUMN_PO_PAYMENT_TERMS =4;
+	public final static int IMPORT_COLUMN_PO_ITEM_CODE =5;
+	public final static int IMPORT_COLUMN_PO_UNLISTED_ITEM_DESCRIPTION =6;
+	public final static int IMPORT_COLUMN_PO_ITEM_QUANTITY =7;
+	
+	public final static int IMPORT_COLUMN_DR_RECEIPT_DATE =8;
+	public final static int IMPORT_COLUMN_DR_SHIPPING_METHOD =9;
+	public final static int IMPORT_COLUMN_DR_SHIPPING_DATE =10;
+	public final static int IMPORT_COLUMN_DR_DUE_DATE =11;
+	public final static int IMPORT_COLUMN_DR_REMARKS =12;
+	public final static int IMPORT_COLUMN_DR_ACCOUNTING_PROFILE =13;
+	public final static int IMPORT_COLUMN_DR_ACCOUNTING_PROFILE_AMOUNT =14;
+	public final static int IMPORT_COLUMN_DR_AP_DEBIT_CREDIT =15;
+	public final static int IMPORT_COLUMN_DR_ITEM_CODE =16;
+	public final static int IMPORT_COLUMN_DR_UNLISTED_ITEM_DESCRIPTION =17;
+	public final static int IMPORT_COLUMN_DR_ITEM_QUANTITY =18;
+
 	
 	
 }
