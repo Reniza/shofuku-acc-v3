@@ -32,5 +32,14 @@ public class ImportOfflineOrdersTest {
 		ImportOfflineOrdersUtil ioo = new ImportOfflineOrdersUtil();
 		ioo.setImportType("CUSTOMER");
 		ioo.readImportFile(fileName, session);
+		
+		Iterator itr = ioo.getErrorString().iterator();
+		
+		while(itr.hasNext()) {
+			String errorMsg = (String)itr.next();
+			System.out.println(errorMsg);
+		}
+		
+		
 	}
 }
