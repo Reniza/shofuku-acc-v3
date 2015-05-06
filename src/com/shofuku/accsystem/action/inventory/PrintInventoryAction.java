@@ -13,6 +13,7 @@ import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
@@ -31,6 +32,7 @@ public class PrintInventoryAction {
 	FinishedGood fg;
 	TradedItem ti;
 	Utensils u;
+	OfficeSupplies os;
 	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
@@ -87,6 +89,15 @@ public String execute() throws Exception{
 				this.setU(u);
 				forWhat="print";
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+				
+				OfficeSupplies u = new OfficeSupplies();
+				os = (OfficeSupplies) manager.listInventoryByParameter(
+						OfficeSupplies.class, "itemCode",
+						getItemNo(),session).get(0);
+				this.setOs(os);
+				forWhat="print";
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
 				
 				UnlistedItem unl = new UnlistedItem();
@@ -335,6 +346,12 @@ public UnlistedItem getUnl() {
 }
 public void setUnl(UnlistedItem unl) {
 	this.unl = unl;
+}
+public OfficeSupplies getOs() {
+	return os;
+}
+public void setOs(OfficeSupplies os) {
+	this.os = os;
 }
 
 

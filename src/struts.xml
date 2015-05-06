@@ -716,6 +716,7 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
 			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
@@ -730,6 +731,7 @@
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 		</action>
 		
@@ -744,6 +746,8 @@
 			<result name="tradedItems" type="tiles">showSearchInventoryForm.tiles
 			</result>
 			<result name="utensils" type="tiles">showSearchInventoryForm.tiles
+			</result>
+			<result name="ofcSup" type="tiles">showSearchInventoryForm.tiles
 			</result>
 			<result name="unlistedItems" type="tiles">showSearchInventoryForm.tiles
 			</result>
@@ -761,12 +765,10 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
-			<result name="utensils" type="tiles">showUtensilsForm.tiles
-			</result>
-			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
-			</result>
-			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles
-			</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
+			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 			<result name="rf" type="tiles">showOrderRequisitionForm.tiles</result>
 			<result name="returnSlip" type="tiles">showReturnSlipForm.tiles</result>
@@ -777,10 +779,9 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
-			<result name="utensils" type="tiles">showUtensilsForm.tiles
-			</result>
-			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
-			</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 			<result name="rf" type="tiles">showOrderRequisitionForm.tiles</result>
@@ -792,49 +793,41 @@
 			method="execute">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
 			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
-			<result name="utensils" type="tiles">showUtensilsForm.tiles
-			</result>
-			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
-			</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="input" type="tiles">showFinishedGoodsForm.tiles</result>
 			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 			<result name="rf" type="tiles">showOrderRequisitionForm.tiles</result>
 			<result name="returnSlip" type="tiles">showReturnSlipForm.tiles</result>
-			
 
 		</action>
 		<action name="printInventoryAction"
 			class="com.shofuku.accsystem.action.inventory.PrintInventoryAction"
 			method="execute">
 			<result name="tradedItems">/jsp/inventory/tradedItemsForm.jsp</result>
-			<result name="utensils">/jsp/inventory/utensilsForm.jsp
-			</result>
-			<result name="unlistedItems">/jsp/inventory/unlistedItemsForm.jsp
-			</result>
+			<result name="utensils">/jsp/inventory/utensilsForm.jsp</result>
+			<result name="ofcSup">/jsp/inventory/officeSuppliesForm.jsp</result>
+			<result name="unlistedItems">/jsp/inventory/unlistedItemsForm.jsp</result>
 			<result name="rawMat">/jsp/inventory/rawMaterialsForm.jsp</result>
 			<result name="finGood">/jsp/inventory/finishedGoodsForm.jsp</result>
 			<result name="fpts">/jsp/inventory/finishedProductTransferSlipForm.jsp</result>
 			<result name="rf">/jsp/inventory/orderRequisitionForm.jsp</result>
 			<result name="returnSlip">/jsp/inventory/ReturnSlipForm.jsp</result>
-			
 		</action>
 
 		<action name="loadLookUpItems"
 			class="com.shofuku.accsystem.action.inventory.AddInventoryAction"
 			method="loadLookLists">
 			<result name="rawMat" type="tiles">showRawMaterialsForm.tiles</result>
-			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles
-			</result>
-			<result name="utensils" type="tiles">showUtensilsForm.tiles
-			</result>
-			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles
-			</result>
+			<result name="tradedItems" type="tiles">showTradedItemsForm.tiles</result>
+			<result name="utensils" type="tiles">showUtensilsForm.tiles</result>
+			<result name="ofcSup" type="tiles">showOfficeSuppliesForm.tiles</result>
+			<result name="unlistedItems" type="tiles">showUnlistedItemsForm.tiles</result>
 			<result name="finGood" type="tiles">showFinishedGoodsForm.tiles</result>
-			<result name="returnSlip" type="tiles">showReturnSlipForm.tiles
-			</result>
-			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles
-			</result>
+			<result name="returnSlip" type="tiles">showReturnSlipForm.tiles</result>
+			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 		</action>
 
 		<action name="loadLookUpItemsInRawMat"

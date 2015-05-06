@@ -42,7 +42,7 @@
 					
 					<td><s:select label="Inventory Module:" headerKey="-1"
 							headerValue="--Choose Module--"
-							list="#{'items':'Item/s','rawMat':'Raw Materials', 'finGood':'Finished Goods', 'tradedItems':'Traded Items','unlistedItems':'Unlisted Items','fpts':'FP Transfer Slip','rf':'Order Requisition', 'returnSlip':'Return Slip'}"
+							list="#{'items':'Item/s','rawMat':'Raw Materials', 'finGood':'Finished Goods', 'tradedItems':'Traded Items','utensils':'Utensils', 'ofcSup':'Office Supplies','unlistedItems':'Unlisted Items','fpts':'FP Transfer Slip','rf':'Order Requisition', 'returnSlip':'Return Slip'}"
 							name="subModule"
 							onchange="javascript:onTypeChangeInventory('searchForm');" /></td>
 					
@@ -62,6 +62,12 @@
 					</s:if>
 				 	<s:if test="%{#subModule == 'utensils'}">
 						<td><s:select label="Search Utensils By:"
+								list="#{'ALL':'ALL','itemCode':'Item Code', 'description':'Description'}"
+								name="moduleParameter"
+								onchange="javascript:onTypeChangeInventory('searchForm');" /></td>
+					</s:if>
+					<s:if test="%{#subModule == 'ofcSup'}">
+						<td><s:select label="Search Office Supplies By:"
 								list="#{'ALL':'ALL','itemCode':'Item Code', 'description':'Description'}"
 								name="moduleParameter"
 								onchange="javascript:onTypeChangeInventory('searchForm');" /></td>
@@ -102,10 +108,7 @@
 					</s:if>
 				
 				</tr>
-
-
 				<tr>
-
 					<s:if test="%{#subModule == 'fpts' || #subModule == 'rf'}">
 
 						<s:if test="%{#moduleParameter  == 'transactionDate'}">
@@ -127,7 +130,6 @@
 					<td><s:submit cssClass="myButtons" label="Submit"
 							value="SEARCH"></s:submit></td>
 				</tr>
-				
 			</table>
 			</p>
 		</s:form>
@@ -177,6 +179,20 @@
 					</tr>
 				</s:elseif>
 				<s:elseif test="%{#subModule == 'utensils'}">
+					<tr>
+						<th>ITEM CODE</th>
+						<th width="300px">DESCRIPTION</th>
+						<th>CO STANDARD PRICE</th>
+						<th>CO ACTUAL PRICE</th>
+						<th>CO TRANSFER PRICE</th>
+
+						<th>FR STANDARD PRICE</th>
+						<th>FR ACTUAL PRICE</th>
+						<th>FR TRANSFER PRICE</th>
+
+					</tr>
+				</s:elseif>
+				<s:elseif test="%{#subModule == 'ofcSup'}">
 					<tr>
 						<th>ITEM CODE</th>
 						<th width="300px">DESCRIPTION</th>
@@ -334,8 +350,31 @@
 									value="itemPricing.franchiseActualPricePerUnit" /></td>
 							<td><s:property
 									value="itemPricing.franchiseTransferPricePerUnit" /></td>
+						</tr>
+					</s:elseif>
+					<s:elseif test="%{#subModule == 'ofcSup'}">
+						<tr>
+							<td align="left"><s:url id="displayId" action="editInventoryAction">
+									<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
+									<s:param name="os.itemCode" value="%{itemCode}">itemCode</s:param>
+									<s:param name="subModule" value="%{'ofcSup'}">subModule</s:param>
+								</s:url> <s:a href="%{displayId}">
+									<s:property value="itemCode" />
+								</s:a></td>
+							<td align="left"><s:property value="description" /></td>
+							<td><s:property
+									value="itemPricing.companyOwnedStandardPricePerUnit" /></td>
+							<td><s:property
+									value="itemPricing.companyOwnedActualPricePerUnit" /></td>
+							<td><s:property
+									value="itemPricing.companyOwnedTransferPricePerUnit" /></td>
 
-
+							<td><s:property
+									value="itemPricing.franchiseStandardPricePerUnit" /></td>
+							<td><s:property
+									value="itemPricing.franchiseActualPricePerUnit" /></td>
+							<td><s:property
+									value="itemPricing.franchiseTransferPricePerUnit" /></td>
 						</tr>
 					</s:elseif>
 					<s:elseif test="%{#subModule == 'unlistedItems'}">

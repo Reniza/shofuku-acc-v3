@@ -134,11 +134,7 @@
 							<tr>
 								<th colspan="6">Record Count</th>
 							</tr>
-							<!-- <tr>
-								<td><s:textfield disabled="%{forWhat}" label="Quantity IN:" name="os.quantityIn"/></td>
-								<td><s:textfield disabled="%{forWhat}" label="Quantity OUT:" name="os.quantityOut"/></td>
-							</tr>
-							 -->
+							
 							<tr>
 								<td><s:textfield readOnly="readOnly" label="Quantity Per Record:" name="os.quantityPerRecord"/></td>
 								<td><s:textfield disabled="%{forWhat}" label="Quantity Per Count:" name="os.quantityPerPhysicalCount"/></td>
@@ -167,7 +163,7 @@
 				
 				<s:else>
 				<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" id="bNew" value="New Entry" action="addInventoryAction"></s:submit></td>
-				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInTradedItems" type="button" id="bCancel" value="Cancel"></s:submit></td>
+				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInOfficeSupplies" type="button" id="bCancel" value="Cancel"></s:submit></td>
 				</s:else>
 			</tr>
 		</table>

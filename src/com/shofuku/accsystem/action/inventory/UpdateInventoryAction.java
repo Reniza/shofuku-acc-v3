@@ -634,20 +634,19 @@ public class UpdateInventoryAction extends ActionSupport{
 		itemPricing.setFranchiseStandardPricePerUnit(newItemPricing.getFranchiseStandardPricePerUnit());
 		itemPricing.setFranchiseTransferPricePerUnit(newItemPricing.getFranchiseTransferPricePerUnit());
 		
-		
 		manager.updatePersistingInventoryObject(itemPricing, session);
 
-	if(obj instanceof RawMaterial) {
-		rm.setItemPricing(itemPricing);
-	}else if( obj instanceof TradedItem) {
-		ti.setItemPricing(itemPricing);
-	}else if( obj instanceof Utensils) {
-		u.setItemPricing(itemPricing);
-	}else if( obj instanceof OfficeSupplies) {
-		os.setItemPricing(itemPricing);
-	}else if( obj instanceof FinishedGood) {
-		fg.setItemPricing(itemPricing);
-	}
+		if(obj instanceof RawMaterial) {
+			rm.setItemPricing(itemPricing);
+		}else if( obj instanceof TradedItem) {
+			ti.setItemPricing(itemPricing);
+		}else if( obj instanceof Utensils) {
+			u.setItemPricing(itemPricing);
+		}else if( obj instanceof OfficeSupplies) {
+			os.setItemPricing(itemPricing);
+		}else if( obj instanceof FinishedGood) {
+			fg.setItemPricing(itemPricing);
+		}
 	//else if (obj instanceof TradedItem)
 	}
 	private void setPrices() {

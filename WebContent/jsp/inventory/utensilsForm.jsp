@@ -163,7 +163,7 @@
 				<td><s:submit disabled="%{forWhat}" id="bUpdate" cssClass="myButtons" type="button" value="Update" action="updateInventoryAction"></s:submit></td>
 				<td><s:submit cssClass="myButtons" type="button" id="bDel" value="Delete" onclick="javascript:inventoryConfirmation('utensilsForm');"></s:submit></td>
 				<td><s:submit cssClass="myButtons" type="button" id="bPrint" value="Print" action="printInventoryAction"></s:submit></td>
-				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInUtensilsItems" type="button" id="bNew" value="New Entry"></s:submit></td>
+				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInUtensils" type="button" id="bNew" value="New Entry"></s:submit></td>
 			</s:if>
 				
 			<s:elseif test="%{forWhat == 'print'}">
@@ -171,7 +171,7 @@
 				
 			<s:else>
 				<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" id="bNew" value="New Entry" action="addInventoryAction"></s:submit></td>
-				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInUtensilsItems" type="button" id="bCancel" value="Cancel"></s:submit></td>
+				<td><s:submit cssClass="myButtons" action="loadLookUpItemsInUtensils" type="button" id="bCancel" value="Cancel"></s:submit></td>
 			</s:else>
 			</tr>
 		</table>

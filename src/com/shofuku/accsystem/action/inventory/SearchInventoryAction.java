@@ -61,7 +61,7 @@ public class SearchInventoryAction extends ActionSupport{
 
 				if ((null != getModuleParameter()&& getSubModule().equalsIgnoreCase("rawMat")) 
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("tradedItems"))
-						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("utensil"))
+						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("utensils"))
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("ofcSup"))
 						|| (null != getModuleParameter()&& getSubModule().equalsIgnoreCase("unlistedItems"))) {
 				

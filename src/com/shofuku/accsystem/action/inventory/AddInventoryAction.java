@@ -397,7 +397,7 @@ public class AddInventoryAction extends ActionSupport {
 		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
 		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<Utensils> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
 		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
@@ -430,7 +430,7 @@ public class AddInventoryAction extends ActionSupport {
 				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(utensils.getItemCode(), utensils.getDescription(), utensils.getUnitOfMeasurement(),utensils.getClassification(), utensils.getSubClassification(),utensils.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: AZ
-				item.setItemType("utensilsItems");
+				item.setItemType("utensils");
 				tempList.add(item);
 		}
 		iterator = ofcSupList.iterator();
@@ -439,7 +439,7 @@ public class AddInventoryAction extends ActionSupport {
 				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(ofcSup.getItemCode(), ofcSup.getDescription(), ofcSup.getUnitOfMeasurement(),ofcSup.getClassification(), ofcSup.getSubClassification(),ofcSup.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: AZ
-				item.setItemType("utensilsItems");
+				item.setItemType("ofcSup");
 				tempList.add(item);
 		}
 		iterator = finList.iterator();
@@ -714,6 +714,7 @@ public class AddInventoryAction extends ActionSupport {
 		ItemPricing itemPricing = new ItemPricing();
 		String itemCode = "";
 		String itemType = "";
+		/*
 		if (obj instanceof RawMaterial) {
 			itemPricing = invUtil.getItemPricing(session, rm.getItemCode());
 			itemCode = rm.getItemCode();
@@ -736,8 +737,8 @@ public class AddInventoryAction extends ActionSupport {
 			itemType = SASConstants.OFFICE_SUPPLIES_ABBR;
 		}
 		// else if (obj instanceof TradedItem)
-
-		if (itemPricing == null) {
+	
+		if (itemPricing == null) {*/
 			itemPricing = new ItemPricing();
 			if (obj instanceof RawMaterial) {
 				itemPricing = rm.getItemPricing();
@@ -747,17 +748,19 @@ public class AddInventoryAction extends ActionSupport {
 				itemPricing = ti.getItemPricing();
 			}else if (obj instanceof Utensils) {
 				itemPricing = u.getItemPricing();
-			}else if (obj instanceof Utensils) {
+			}else if (obj instanceof OfficeSupplies) {
 				itemPricing = os.getItemPricing();
 			}
 			
 			itemPricing.setItemCode(itemCode);
 			itemPricing.setItemType(itemType);
 			manager.addPersistingInventoryObject(itemPricing, session);
+			//itemPricing = invUtil.getItemPricing(session, itemCode);
+		// }
+		/*
+		else {
 			itemPricing = invUtil.getItemPricing(session, itemCode);
-		} else {
-			itemPricing = invUtil.getItemPricing(session, itemCode);
-		}
+		} */
 		if (obj instanceof RawMaterial) {
 			rm.setItemPricing(itemPricing);
 		}else if (obj instanceof FinishedGood) {
@@ -770,7 +773,6 @@ public class AddInventoryAction extends ActionSupport {
 			os.setItemPricing(itemPricing);
 		}
 		// else if (obj instanceof TradedItem)
-
 	}
 
 	private void setFGCompanyOwnedPrice() {
@@ -800,7 +802,6 @@ public class AddInventoryAction extends ActionSupport {
 								+ (fg.getActualTotalCost() / fg.getYields())));
 			}
 		}
-
 	}
 
 	private Set finalIngredients;
@@ -1569,7 +1570,7 @@ public class AddInventoryAction extends ActionSupport {
 			}
 		}
 		if (os.getUnitOfMeasurement().equalsIgnoreCase("OTHERS")) {
-			addFieldError("ofcSup.unitOfMeasurementText", "REQUIRED");
+			addFieldError("os.unitOfMeasurementText", "REQUIRED");
 		}
 		return errorFound;
 	}
