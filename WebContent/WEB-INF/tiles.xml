@@ -164,6 +164,9 @@
 	<definition name="showUtensilsForm.tiles" extends="baseLayout.tiles">
 		<put-attribute name="body" value="/jsp/inventory/utensilsForm.jsp"/>
 	</definition>
+	<definition name="showOfficeSuppliesForm.tiles" extends="baseLayout.tiles">
+		<put-attribute name="body" value="/jsp/inventory/officeSuppliesForm.jsp"/>
+	</definition>
 	<definition name="showUnlistedItemsForm.tiles" extends="baseLayout.tiles">
 		<put-attribute name="body" value="/jsp/inventory/unlistedItemsForm.jsp"/>
 	</definition>

@@ -439,6 +439,21 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 		return false;
 	}
 	
+	public boolean persistingDelete(Object item,Session session) {
+		Transaction tx = null;
+		try {
+			tx=getCurrentTransaction(session);
+			session.delete(item);
+			tx.commit();
+			return true;
+		} catch (RuntimeException re) {
+			if (null != tx)
+				tx.rollback();
+			re.printStackTrace();
+		}
+		return false;
+	}
+	
 	
 
 	public int getMaxRows(String tableName, Session session) {

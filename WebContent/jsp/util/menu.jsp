@@ -39,7 +39,8 @@
 	      <li id="inventoryMenu0"><a href="loadLookUpItems.action?requestingModule=rawMaterial">RAW MATERIALS</a></li>
 	      <li id="inventoryMenu2"><a href="loadLookUpItems.action?requestingModule=finishedGood">FINISHED GOODS</a></li>
 	      <li id="inventoryMenu1"><a href="loadLookUpItems.action?requestingModule=tradedItems">TRADED ITEMS</a></li>
-  <!--  <li id="inventoryMenu4"><a href="loadLookUpItems.action?requestingModule=utensils">UTENSILS</a></li>-->
+  		  <li id="inventoryMenu4"><a href="loadLookUpItems.action?requestingModule=utensils">UTENSILS</a></li>
+	      <li id="inventoryMenu11"><a href="loadLookUpItems.action?requestingModule=ofcSup">OFFICE SUPPLIES</a></li> 
 	      <li id="inventoryMenu5"><a href="loadLookUpItems.action?requestingModule=unlistedItems">UNLISTED ITEMS</a></li>
 	      <li id="inventoryMenu6"><a href="<s:url action="newInventoryEntryAction"><s:param name="subModule" value="%{'rf'}"/></s:url>">ORDER REQUISITION</a></li>
 	      <li id="inventoryMenu3"><a href="<s:url action="newInventoryEntryAction"><s:param name="subModule" value="%{'fpts'}"/></s:url>">FP TRANSFER SLIP</a></li>

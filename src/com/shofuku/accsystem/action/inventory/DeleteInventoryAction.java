@@ -10,6 +10,7 @@ import com.shofuku.accsystem.controllers.LookupManager;
 
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
@@ -31,6 +32,7 @@ public class DeleteInventoryAction extends ActionSupport{
 	FinishedGood fg;
 	TradedItem ti;
 	Utensils u;
+	OfficeSupplies os;
 	UnlistedItem unl;
 	FPTS fpts;
 	RequisitionForm rf;
@@ -83,14 +85,23 @@ public class DeleteInventoryAction extends ActionSupport{
 					addActionError(SASConstants.NON_DELETED);
 				}
 				return "utensils";
-			}else if (getSubModule().equalsIgnoreCase("unlistedItem")) {
-				deleteResult = manager.deleteInventoryByParameter(this.unl.getDescription(), UnlistedItem.class,session);
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				deleteResult = manager.deleteInventoryByParameter(getItemNo(), OfficeSupplies.class,session);
 				if (deleteResult == true) {
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
 				}
-				return "unlistedItem";
+				return "ofcSup";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				UnlistedItem unlistedItem = (UnlistedItem)manager.listByParameter(UnlistedItem.class, "description", unl.getDescription(), session).get(0);
+				deleteResult = manager.deletePersistingInventoryItem(unlistedItem,session);
+				if (deleteResult == true) {
+					addActionMessage(SASConstants.DELETED);
+				} else {
+					addActionError(SASConstants.NON_DELETED);
+				}
+				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				updateInventoryCountForDelete(getSubModule(),getFptsNo(),session);
 				session = getSession();
@@ -139,6 +150,8 @@ public class DeleteInventoryAction extends ActionSupport{
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
@@ -200,7 +213,6 @@ public class DeleteInventoryAction extends ActionSupport{
 	}
 
 	List itemCodeList;
-
 	List UOMList;
 
 	LookupManager lookupManager = new LookupManager();
@@ -213,8 +225,14 @@ public class DeleteInventoryAction extends ActionSupport{
 		}catch(Exception e){
 			if (getSubModule().equalsIgnoreCase("rawMat")) {
 				return "rawMat";
-			}if (getSubModule().equalsIgnoreCase("tradedItems")) {
+			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				return "tradedItems";
+			}else if (getSubModule().equalsIgnoreCase("utensils")) {
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
+			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				return "unlistedItems";
 			}else {
 				return "finGood";
 			}
@@ -242,9 +260,6 @@ public class DeleteInventoryAction extends ActionSupport{
 	public void setFg(FinishedGood fg) {
 		this.fg = fg;
 	}
-
-	
-	
 
 	public String getProductNo() {
 		return productNo;
@@ -319,6 +334,24 @@ public class DeleteInventoryAction extends ActionSupport{
 	}
 	public void setRs(ReturnSlip rs) {
 		this.rs = rs;
+	}
+	public Utensils getU() {
+		return u;
+	}
+	public void setU(Utensils u) {
+		this.u = u;
+	}
+	public OfficeSupplies getOs() {
+		return os;
+	}
+	public void setOs(OfficeSupplies os) {
+		this.os = os;
+	}
+	public UnlistedItem getUnl() {
+		return unl;
+	}
+	public void setUnl(UnlistedItem unl) {
+		this.unl = unl;
 	}
 	
 		

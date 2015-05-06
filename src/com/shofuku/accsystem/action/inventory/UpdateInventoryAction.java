@@ -20,6 +20,7 @@ import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
@@ -49,7 +50,6 @@ public class UpdateInventoryAction extends ActionSupport{
 	private String itemNo;
 	private String subModule;
 	
-
 	List<Ingredient> ingredients;
 	String pcItr;
 	String descItr;
@@ -62,6 +62,7 @@ public class UpdateInventoryAction extends ActionSupport{
 	FinishedGood fg;
 	TradedItem ti;
 	Utensils u;
+	OfficeSupplies os;
 	UnlistedItem unl;
 	ReturnSlip rs;
 	FPTS fpts;
@@ -71,8 +72,6 @@ public class UpdateInventoryAction extends ActionSupport{
 	RequisitionForm rf;
 	String rfNo;
 	String rfId;
-	
-
 	String rsIdNo;
 
 	List itemSubClassificationList;
@@ -143,7 +142,6 @@ public class UpdateInventoryAction extends ActionSupport{
 						if(lookupManager.addNewUOM(new UnitOfMeasurements(ti.getUnitOfMeasurement(),"GENERAL"), session)){
 							session = getSession();
 							loadLookLists();
-							
 						}
 					}
 					//Instantiate Item Pricing 
@@ -162,7 +160,6 @@ public class UpdateInventoryAction extends ActionSupport{
 				
 			return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
-				
 				unl.setItemCode(this.getItemNo());
 				if (isValidateUnlistedItems()) {
 				}else {
@@ -198,7 +195,6 @@ public class UpdateInventoryAction extends ActionSupport{
 						if(lookupManager.addNewUOM(new UnitOfMeasurements(u.getUnitOfMeasurement(),"GENERAL"), session)){
 							session = getSession();
 							loadLookLists();
-							
 						}
 					}
 					//Instantiate Item Pricing 
@@ -214,8 +210,9 @@ public class UpdateInventoryAction extends ActionSupport{
 					}
 					forWhat="true";
 				}
-				
-			return "utensils";
+				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")){
+				return updateOfficeSupplies();
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")){
 				return updateReturnSlip();
 			}else if (getSubModule().equalsIgnoreCase("fpts")){
@@ -292,6 +289,33 @@ public class UpdateInventoryAction extends ActionSupport{
 		
 	}
 
+	private String updateOfficeSupplies(){
+		Session session = getSession();
+		boolean updateResult=false;
+			os.setItemCode(this.getItemNo());
+			if (validateOfficeSupplies()) {
+			}else {
+				if(otherUOMSelected){
+					if(lookupManager.addNewUOM(new UnitOfMeasurements(os.getUnitOfMeasurement(),"GENERAL"), session)){
+						session = getSession();
+						loadLookLists();
+					}
+				}
+				//Instantiate Item Pricing 
+				processItemPricing(session,os);
+				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
+						os.getClassification(), session);
+				updateResult = manager.updateInventory(os,session);
+				
+				if (updateResult== true) {
+					addActionMessage(SASConstants.UPDATED);
+				}else {
+					addActionMessage(SASConstants.UPDATE_FAILED);
+				}
+				forWhat="true";
+			}
+		return "ofcSup";
+	}
 	private String updateReturnSlip() {
 		//to get if disabled
 		rs.setReturnSlipNo(rsIdNo);
@@ -581,10 +605,11 @@ public class UpdateInventoryAction extends ActionSupport{
 		itemPricing = invUtil.getItemPricing(session,rm.getItemCode());
 	}else if(obj instanceof Utensils) {
 		itemPricing = invUtil.getItemPricing(session,u.getItemCode());
-	}else if(obj instanceof Utensils) {
+	}else if(obj instanceof TradedItem) {
 		itemPricing = invUtil.getItemPricing(session,ti.getItemCode());
-	}
-	else if( obj instanceof FinishedGood) {
+	}else if(obj instanceof OfficeSupplies) {
+		itemPricing = invUtil.getItemPricing(session,os.getItemCode());
+	}else if( obj instanceof FinishedGood) {
 		itemPricing = invUtil.getItemPricing(session,fg.getProductCode());
 	}
 	//else if (obj instanceof TradedItem)
@@ -595,6 +620,8 @@ public class UpdateInventoryAction extends ActionSupport{
 			newItemPricing = ti.getItemPricing();
 		}else if( obj instanceof Utensils) {
 			newItemPricing = u.getItemPricing();
+		}else if( obj instanceof OfficeSupplies) {
+			newItemPricing = os.getItemPricing();
 		}else if( obj instanceof FinishedGood) {
 			newItemPricing = fg.getItemPricing();
 		}
@@ -607,20 +634,20 @@ public class UpdateInventoryAction extends ActionSupport{
 		itemPricing.setFranchiseStandardPricePerUnit(newItemPricing.getFranchiseStandardPricePerUnit());
 		itemPricing.setFranchiseTransferPricePerUnit(newItemPricing.getFranchiseTransferPricePerUnit());
 		
-		
 		manager.updatePersistingInventoryObject(itemPricing, session);
 
-	if(obj instanceof RawMaterial) {
-		rm.setItemPricing(itemPricing);
-	}else if( obj instanceof TradedItem) {
-		ti.setItemPricing(itemPricing);
-	}else if( obj instanceof Utensils) {
-		u.setItemPricing(itemPricing);
-	}else if( obj instanceof FinishedGood) {
-		fg.setItemPricing(itemPricing);
-	}
+		if(obj instanceof RawMaterial) {
+			rm.setItemPricing(itemPricing);
+		}else if( obj instanceof TradedItem) {
+			ti.setItemPricing(itemPricing);
+		}else if( obj instanceof Utensils) {
+			u.setItemPricing(itemPricing);
+		}else if( obj instanceof OfficeSupplies) {
+			os.setItemPricing(itemPricing);
+		}else if( obj instanceof FinishedGood) {
+			fg.setItemPricing(itemPricing);
+		}
 	//else if (obj instanceof TradedItem)
-	
 	}
 	private void setPrices() {
 		ItemPricing itemPricing = fg.getItemPricing();
@@ -632,7 +659,6 @@ public class UpdateInventoryAction extends ActionSupport{
 		}else{
 			itemPricing.setCompanyOwnedStandardPricePerUnit(Double.valueOf(fg.getStandardTotalCost() / fg.getYields()));
 			itemPricing.setCompanyOwnedActualPricePerUnit(fg.getActualTotalCost()/fg.getYields());
-			
 			//Transfer Price Computation
 			Double markup = fg.getMarkUp()/100;
 			double partialTransferPricePerunit = Double.valueOf((fg.getActualTotalCost() / fg.getYields())*(markup==0.0?1:markup));
@@ -665,7 +691,6 @@ private void setIngredient(boolean includeNewItem) {
 	
 	try{
 	while(pcItrTk.hasMoreElements()) {
-		
 			Ingredient in = new Ingredient();
 			in.setProductCode(((String) pcItrTk.nextElement()).trim());
 			in.setQuantity(Double.valueOf(dc
@@ -690,7 +715,6 @@ private void setIngredient(boolean includeNewItem) {
 }
 
 List itemCodeList;
-
 List UOMList;
 
 LookupManager lookupManager = new LookupManager();
@@ -705,22 +729,24 @@ LookupManager lookupManager = new LookupManager();
 			}
 			return uomStringsList;
 				}
+		
 		public String loadLookLists(){
 			Session session = getSession();
-			
 			try{
 			UOMList = generateUOMStrings(lookupManager.getLookupElements(UnitOfMeasurements.class, "GENERAL",session));
 			itemCodeList = manager.loadItemListFromRawAndFin(session);
 			}catch(Exception e){
 				if (getSubModule().equalsIgnoreCase("rawMat")) {
 					return "rawMat";
-				}if (getSubModule().equalsIgnoreCase("tradedItems")) {
+				}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 					return "tradedItems";
-				}if (getSubModule().equalsIgnoreCase("utensils")) {
+				}else if (getSubModule().equalsIgnoreCase("utensils")) {
 					return "utensils";
-				}if (getSubModule().equalsIgnoreCase("unlistedItems")) {
+				}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+					return "ofcSup";
+				}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 					return "unlistedItems";
-				}if (getSubModule().equalsIgnoreCase("rawMat")) {
+				}else if (getSubModule().equalsIgnoreCase("rawMat")) {
 					return "rawMat";
 				}else {
 					return "finGood";
@@ -745,6 +771,8 @@ LookupManager lookupManager = new LookupManager();
 				return "tradedItems";
 			}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("utensils")){
 				return "utensils";
+			}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("ofcSup")){
+				return "ofcSup";
 			}else if(requestingModule!=null && requestingModule.equalsIgnoreCase("unlistedItems")){
 				return "unlistedItems";
 			}else{
@@ -784,8 +812,6 @@ LookupManager lookupManager = new LookupManager();
 					}
 				}
 			}
-			
-		
 			return errorFound;	
 		}
 			
@@ -917,7 +943,50 @@ LookupManager lookupManager = new LookupManager();
 
 			return errorFound;
 		}
-		
+		private boolean validateOfficeSupplies() {
+			loadLookLists();
+			boolean errorFound = false;
+			if ("".equals(getOs().getItemCode())) {
+				addFieldError("ofcSup.itemCode", "REQUIRED");
+				errorFound = true;
+			} else {
+				if (getOs().getItemCode().length() > 45) {
+					addFieldError("ofcSup.itemCode", "item code too long");
+					errorFound = true;
+				}
+			}
+			if ("".equals(getOs().getDescription())) {
+				addFieldError("ofcSup.description", "REQUIRED");
+				errorFound = true;
+			} else {
+				if (getOs().getDescription().trim().length() > 200) {
+					addFieldError("ofcSup.description",
+							"MAXIMUM LENGTH: 200 characters");
+				}
+			}
+			if (os.getUnitOfMeasurement() == null) {
+			}
+
+			else {
+				if (os.getUnitOfMeasurement().indexOf(", ") > -1) {
+					if ("".equals(os.getUnitOfMeasurement().substring(
+							os.getUnitOfMeasurement().indexOf(", ")))) {
+						addFieldError("ofcSup.unitOfMeasurement", "REQUIRED");
+						errorFound = true;
+					} else {
+						otherUOMSelected = true;
+						os.setUnitOfMeasurement(os
+								.getUnitOfMeasurement()
+								.substring(
+										os.getUnitOfMeasurement().indexOf(", ") + 2));
+					}
+				}
+			}
+			if (os.getUnitOfMeasurement().equalsIgnoreCase("OTHERS")) {
+				addFieldError("ofcSup.unitOfMeasurementText", "REQUIRED");
+			}
+			return errorFound;
+		}
 		private boolean validateUtensils() {
 			loadLookLists();
 			boolean errorFound = false;
@@ -1364,5 +1433,11 @@ private boolean validateReturnSlip() {
 			public void setUnl(UnlistedItem unl) {
 				this.unl = unl;
 			}
-
+			public OfficeSupplies getOs() {
+				return os;
+			}
+			public void setOs(OfficeSupplies os) {
+				this.os = os;
+			}
+			
 }

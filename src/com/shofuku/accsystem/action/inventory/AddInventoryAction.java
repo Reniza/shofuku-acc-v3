@@ -25,6 +25,7 @@ import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
@@ -61,6 +62,7 @@ public class AddInventoryAction extends ActionSupport {
 	ReturnSlip rs;
 	Utensils u;
 	UnlistedItem unl;
+	OfficeSupplies os;
 
 	String returnSlipToValue;
 	
@@ -116,10 +118,7 @@ public class AddInventoryAction extends ActionSupport {
 		
 		Session session = getSession();
 		try {
-			
-			
 		if (getSubModule().equalsIgnoreCase("fpts")) {
-			
 			rfNoList = manager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
 		/*	fpts = new FPTS();
 			fpts.setFptsNo(rch.getPrefix(
@@ -140,7 +139,6 @@ public class AddInventoryAction extends ActionSupport {
 		}else {
 			return INPUT;
 		}
-		
 		
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -290,6 +288,9 @@ public class AddInventoryAction extends ActionSupport {
 					}
 				}
 				return "unlistedItems";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return addOfficeSupplies();
+						
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 				return addReturnSlip();
 						
@@ -354,6 +355,8 @@ public class AddInventoryAction extends ActionSupport {
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
@@ -372,7 +375,6 @@ public class AddInventoryAction extends ActionSupport {
 				session.getSessionFactory().close();
 			}
 		}
-
 	}
 	
 	private boolean isExistingInAllItems(String itemCode) {
@@ -395,6 +397,7 @@ public class AddInventoryAction extends ActionSupport {
 		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
 		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
 		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
@@ -424,13 +427,21 @@ public class AddInventoryAction extends ActionSupport {
 		iterator = utensilsList.iterator();
 		while(iterator.hasNext()) {
 			Utensils utensils = (Utensils) iterator.next();
-				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(utensils.getItemCode(), utensils.getDescription(), utensils.getUnitOfMeasurement(),utensils.getClassification(), utensils.getSubClassification(),utensils.getIsVattable());
-				//END: 2013 - PHASE 3 : PROJECT 4: MARK
-				item.setItemType("tradedItems");
+				//END: 2013 - PHASE 3 : PROJECT 4: AZ
+				item.setItemType("utensils");
 				tempList.add(item);
 		}
-		
+		iterator = ofcSupList.iterator();
+		while(iterator.hasNext()) {
+			OfficeSupplies ofcSup = (OfficeSupplies) iterator.next();
+				//START: 2013 - PHASE 3 : PROJECT 4: AZ
+				Item item = new Item(ofcSup.getItemCode(), ofcSup.getDescription(), ofcSup.getUnitOfMeasurement(),ofcSup.getClassification(), ofcSup.getSubClassification(),ofcSup.getIsVattable());
+				//END: 2013 - PHASE 3 : PROJECT 4: AZ
+				item.setItemType("ofcSup");
+				tempList.add(item);
+		}
 		iterator = finList.iterator();
 		while(iterator.hasNext()){
 			FinishedGood finGood = (FinishedGood) iterator.next();
@@ -438,9 +449,40 @@ public class AddInventoryAction extends ActionSupport {
 				item.setItemType("finGood");
 				tempList.add(item);
 		}
-		
 		return tempList;
 	}
+
+	private String addOfficeSupplies(){
+		Session session = getSession();
+		boolean addResult = false;
+		if (validateOfficeSupplies()) {
+		} else {
+			if (isExistingInAllItems(getOs()
+					.getItemCode())) {
+				addActionMessage(SASConstants.EXISTS);
+			} else {
+				if (otherUOMSelected)
+					if (lookupManager.addNewUOM(new UnitOfMeasurements(
+							os.getUnitOfMeasurement(), "GENERAL"),
+							session)) {
+						session = getSession();
+						loadLookLists();
+					}
+				processItemPricing(session, os);
+				addResult = manager.addInventoryObject(os, session);
+
+				if (addResult == true) {
+					addActionMessage(SASConstants.ADD_SUCCESS);
+					forWhat = "true";
+					forWhatDisplay = "edit";
+				} else {
+					addActionError(SASConstants.FAILED);
+				}
+			}
+		}
+		return "ofcSup";
+	}
+	
 
 	private String addRequisitionForm() {
 		Session session = getSession();
@@ -469,7 +511,6 @@ public class AddInventoryAction extends ActionSupport {
 
 	private boolean validateRF() 
 		 {
-			
 			boolean errorFound = false;
 			
 			/*if ("".equals(rf.getRequisitionNo())) {
@@ -484,7 +525,6 @@ public class AddInventoryAction extends ActionSupport {
 			if (null == (rf.getRequisitionDate())) {
 				 addActionMessage("REQUIRED: Transaction Date");
 				errorFound = true;
-			
 			}
 			if ("".equals(rf.getRequisitionType())) {
 				addFieldError("rf.requisitionType", "REQUIRED");
@@ -674,6 +714,7 @@ public class AddInventoryAction extends ActionSupport {
 		ItemPricing itemPricing = new ItemPricing();
 		String itemCode = "";
 		String itemType = "";
+		/*
 		if (obj instanceof RawMaterial) {
 			itemPricing = invUtil.getItemPricing(session, rm.getItemCode());
 			itemCode = rm.getItemCode();
@@ -690,10 +731,14 @@ public class AddInventoryAction extends ActionSupport {
 			itemPricing = invUtil.getItemPricing(session, u.getItemCode());
 			itemCode = u.getItemCode();
 			itemType = SASConstants.UTENSILS_ABBR;
+		}else if (obj instanceof OfficeSupplies) {
+			itemPricing = invUtil.getItemPricing(session, os.getItemCode());
+			itemCode = os.getItemCode();
+			itemType = SASConstants.OFFICE_SUPPLIES_ABBR;
 		}
 		// else if (obj instanceof TradedItem)
-
-		if (itemPricing == null) {
+	
+		if (itemPricing == null) {*/
 			itemPricing = new ItemPricing();
 			if (obj instanceof RawMaterial) {
 				itemPricing = rm.getItemPricing();
@@ -703,26 +748,31 @@ public class AddInventoryAction extends ActionSupport {
 				itemPricing = ti.getItemPricing();
 			}else if (obj instanceof Utensils) {
 				itemPricing = u.getItemPricing();
+			}else if (obj instanceof OfficeSupplies) {
+				itemPricing = os.getItemPricing();
 			}
 			
 			itemPricing.setItemCode(itemCode);
 			itemPricing.setItemType(itemType);
 			manager.addPersistingInventoryObject(itemPricing, session);
+			//itemPricing = invUtil.getItemPricing(session, itemCode);
+		// }
+		/*
+		else {
 			itemPricing = invUtil.getItemPricing(session, itemCode);
-		} else {
-			itemPricing = invUtil.getItemPricing(session, itemCode);
-		}
+		} */
 		if (obj instanceof RawMaterial) {
 			rm.setItemPricing(itemPricing);
-		} else if (obj instanceof FinishedGood) {
+		}else if (obj instanceof FinishedGood) {
 			fg.setItemPricing(itemPricing);
-		} else if (obj instanceof TradedItem) {
+		}else if (obj instanceof TradedItem) {
 			ti.setItemPricing(itemPricing);
 		}else if (obj instanceof Utensils) {
 			u.setItemPricing(itemPricing);
+		}else if (obj instanceof OfficeSupplies) {
+			os.setItemPricing(itemPricing);
 		}
 		// else if (obj instanceof TradedItem)
-
 	}
 
 	private void setFGCompanyOwnedPrice() {
@@ -752,7 +802,6 @@ public class AddInventoryAction extends ActionSupport {
 								+ (fg.getActualTotalCost() / fg.getYields())));
 			}
 		}
-
 	}
 
 	private Set finalIngredients;
@@ -930,6 +979,14 @@ public class AddInventoryAction extends ActionSupport {
 		forWhatDisplay = "new";
 		return "utensils";
 	}
+	public String loadLookListsInOfficeSupplies() {
+		Session session = getSession();
+			UOMList = generateUOMStrings(lookupManager.getLookupElements(
+					UnitOfMeasurements.class, "GENERAL", session));
+			os = new OfficeSupplies();
+			forWhatDisplay = "new";
+		return "ofcSup";
+	}
 	public String loadLookListsInUnlistedItems() {
 		Session session = getSession();
 		
@@ -961,6 +1018,8 @@ public class AddInventoryAction extends ActionSupport {
 					return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils") || getRequestingModule().equalsIgnoreCase("utensils")) {
 				return "utensils";
+			}else if (getSubModule().equalsIgnoreCase("ofcSup") || getRequestingModule().equalsIgnoreCase("ofcSup")) {
+				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems") || getRequestingModule().equalsIgnoreCase("unlistedItems")) {
 					return "unlistedItems";
 			}else if (getSubModule().equalsIgnoreCase("returnSlip") || getRequestingModule().equalsIgnoreCase("returnSlip")) {
@@ -995,6 +1054,9 @@ public class AddInventoryAction extends ActionSupport {
 		}else if (requestingModule != null
 				&& requestingModule.equalsIgnoreCase("utensils")) {
 			return "utensils";
+		}else if (requestingModule != null
+				&& requestingModule.equalsIgnoreCase("ofcSup")) {
+			return "ofcSup";
 		} else if (requestingModule != null
 				&& requestingModule.equalsIgnoreCase("unlistedItems")) {
 			return "unlistedItems";
@@ -1035,6 +1097,15 @@ public class AddInventoryAction extends ActionSupport {
 				u.setItemCode(u.getItemCode());
 			}
 			return "utensils";
+		}else if (getSubModule().equals("ofcSup")) {
+			setItemNo(itemNo);
+			
+			if (!itemNo.equals("")){
+				os.setItemCode(itemNo);
+			}else{
+				os.setItemCode(os.getItemCode());
+			}
+			return "ofcSup";
 		}else if (getSubModule().equals("unlistedItems")) {
 			setItemNo(itemNo);
 			
@@ -1102,6 +1173,8 @@ public class AddInventoryAction extends ActionSupport {
 			return "tradedItems";
 		}else if (getSubModule().equalsIgnoreCase("utensils")) {
 			return "utensils";
+		}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
+			return "ofcSup";
 		}else {
 			return "finGood";
 		}
@@ -1457,6 +1530,50 @@ public class AddInventoryAction extends ActionSupport {
 		return errorFound;
 	}
 	
+	private boolean validateOfficeSupplies() {
+		loadLookLists();
+		boolean errorFound = false;
+		if ("".equals(getOs().getItemCode())) {
+			addFieldError("ofcSup.itemCode", "REQUIRED");
+			errorFound = true;
+		} else {
+			if (getOs().getItemCode().length() > 45) {
+				addFieldError("ofcSup.itemCode", "item code too long");
+				errorFound = true;
+			}
+		}
+		if ("".equals(getOs().getDescription())) {
+			addFieldError("ofcSup.description", "REQUIRED");
+			errorFound = true;
+		} else {
+			if (getOs().getDescription().trim().length() > 200) {
+				addFieldError("ofcSup.description",
+						"MAXIMUM LENGTH: 200 characters");
+			}
+		}
+		if (os.getUnitOfMeasurement() == null) {
+		}
+
+		else {
+			if (os.getUnitOfMeasurement().indexOf(", ") > -1) {
+				if ("".equals(os.getUnitOfMeasurement().substring(
+						os.getUnitOfMeasurement().indexOf(", ")))) {
+					addFieldError("ofcSup.unitOfMeasurement", "REQUIRED");
+					errorFound = true;
+				} else {
+					otherUOMSelected = true;
+					os.setUnitOfMeasurement(os
+							.getUnitOfMeasurement()
+							.substring(
+									os.getUnitOfMeasurement().indexOf(", ") + 2));
+				}
+			}
+		}
+		if (os.getUnitOfMeasurement().equalsIgnoreCase("OTHERS")) {
+			addFieldError("os.unitOfMeasurementText", "REQUIRED");
+		}
+		return errorFound;
+	}
 	private boolean isValidateUnlistedItems() {
 		loadLookLists();
 		boolean errorFound = false;
@@ -1934,5 +2051,14 @@ public class AddInventoryAction extends ActionSupport {
 		public void setUnl(UnlistedItem unl) {
 			this.unl = unl;
 		}
+
+		public OfficeSupplies getOs() {
+			return os;
+		}
+
+		public void setOs(OfficeSupplies os) {
+			this.os = os;
+		}
+		
 		
 }

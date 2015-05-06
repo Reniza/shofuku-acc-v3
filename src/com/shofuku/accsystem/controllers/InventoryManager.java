@@ -22,11 +22,13 @@ import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
 import com.shofuku.accsystem.domain.inventory.Memo;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.utils.DoubleConverter;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
@@ -55,6 +57,12 @@ public class InventoryManager extends HibernateUtil {
 	public boolean deleteInventoryByParameter(Object object, Class clazz,Session session) {
 		return dao.deleteByParameter(object, clazz,session);
 	}
+	
+	
+	public boolean deletePersistingInventoryItem(Object object, Session session) {
+		return dao.persistingDelete(object,session);
+	}
+	
 	
 	public boolean mergeInventoryByParameter(Object object, Class clazz,Session session) {
 		return dao.mergeByParameter(object, clazz,session);
@@ -160,6 +168,24 @@ public class InventoryManager extends HibernateUtil {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
 				return dao.updateInventoryPerRecordCount(originalItem, session);
 			}
+		}else if (object instanceof Utensils) {
+			Utensils incomingItem = (Utensils) object;
+			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
+				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				return dao.updateInventoryPerRecordCount(originalItem, session);
+			}
+		}else if (object instanceof OfficeSupplies) {
+			OfficeSupplies incomingItem = (OfficeSupplies) object;
+			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
+				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				return dao.updateInventoryPerRecordCount(originalItem, session);
+			}
 		}
 
 		//passed an unknown item type
@@ -196,6 +222,22 @@ public class InventoryManager extends HibernateUtil {
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
 			TradedItem originalItem = (TradedItem)dao.load(incomingItem.getItemCode(),TradedItem.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
+				 dao.updateInventoryPerRecordCount(originalItem, session);
+			}
+		}else if (object instanceof Utensils) {
+			Utensils incomingItem = (Utensils) object;
+			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
+				 dao.updateInventoryPerRecordCount(originalItem, session);
+			}
+		}else if (object instanceof OfficeSupplies) {
+			OfficeSupplies incomingItem = (OfficeSupplies) object;
+			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
@@ -243,16 +285,28 @@ public class InventoryManager extends HibernateUtil {
 				dao.updateInventoryPerRecordCount(originalItem, session);
 				
 			}
+		}else if (object instanceof Utensils) {
+			Utensils incomingItem = (Utensils) object;
+			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				dao.updateInventoryPerRecordCount(originalItem, session);
+				
+			}
+		}else if (object instanceof OfficeSupplies) {
+			OfficeSupplies incomingItem = (OfficeSupplies) object;
+			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
+			
+			if(originalItem != null) {
+				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				dao.updateInventoryPerRecordCount(originalItem, session);
+				
+			}
 		}
-		
-
 		//passed an unknown item type
 		return false;
-
 	}
-	
-	
-	
 	
 	//method called from add
 	public void updateInventoryFromOrders(
@@ -281,12 +335,19 @@ public class InventoryManager extends HibernateUtil {
 				if(item.getItemType().equalsIgnoreCase("rawMat")) {
 					object = (RawMaterial)dao.load(podetails.getItemCode(), RawMaterial.class);	
 					((RawMaterial)object).setQuantityIn(podetails.getQuantityIn());
-					
 					((RawMaterial)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("tradedItems")) {
 					object = (TradedItem)dao.load(podetails.getItemCode(),TradedItem.class);
 					((TradedItem)object).setQuantityIn(podetails.getQuantityIn());
 					((TradedItem)object).setQuantityOut(podetails.getQuantityOut());
+				}else if(item.getItemType().equalsIgnoreCase("utensils")) {
+					object = (Utensils)dao.load(podetails.getItemCode(),Utensils.class);
+					((Utensils)object).setQuantityIn(podetails.getQuantityIn());
+					((Utensils)object).setQuantityOut(podetails.getQuantityOut());
+				}else if(item.getItemType().equalsIgnoreCase("ofcSup")) {
+					object = (OfficeSupplies)dao.load(podetails.getItemCode(),OfficeSupplies.class);
+					((OfficeSupplies)object).setQuantityIn(podetails.getQuantityIn());
+					((OfficeSupplies)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("finGood")) {
 					object = (FinishedGood)dao.load(podetails.getItemCode(),FinishedGood.class);
 					((FinishedGood)object).setQuantityIn(podetails.getQuantityIn());
@@ -344,7 +405,21 @@ public class InventoryManager extends HibernateUtil {
 					((FinishedGood)object).setQuantityOut(poDetails.getQuantity());
 					return object;
 				}else {
-					return null;
+					object = (Utensils)dao.load(poDetails.getItemCode(),Utensils.class);
+					if(object!=null) {
+						((Utensils)object).setQuantityIn(poDetails.getQuantity());
+						((Utensils)object).setQuantityOut(poDetails.getQuantity());
+						return object;
+					}else{
+						object = (OfficeSupplies)dao.load(poDetails.getItemCode(),OfficeSupplies.class);
+						if(object!=null) {
+							((OfficeSupplies)object).setQuantityIn(poDetails.getQuantity());
+							((OfficeSupplies)object).setQuantityOut(poDetails.getQuantity());
+							return object;
+						}else{
+							return null;
+						}
+					}
 				}
 			}
 		}
@@ -466,6 +541,7 @@ public class InventoryManager extends HibernateUtil {
 					item.getItemPricing().getCompanyOwnedTransferPricePerUnit()
 							* originalIngredient.getQuantity());
 			}catch(IndexOutOfBoundsException ioeb2) {
+				try{
 				List list = dao.listByParameter(TradedItem.class, "itemCode",
 						originalIngredient.getProductCode(), session);
 				TradedItem item = (TradedItem) list.get(0);
@@ -479,8 +555,44 @@ public class InventoryManager extends HibernateUtil {
 						item.getItemPricing().getCompanyOwnedActualPricePerUnit() * originalIngredient.getQuantity(),
 						item.getItemPricing().getCompanyOwnedTransferPricePerUnit()
 								* originalIngredient.getQuantity());
+				}
+				//added utensils
+				catch(IndexOutOfBoundsException ioeb3){
+					try{
+					List list = dao.listByParameter(Utensils.class, "itemCode",
+							originalIngredient.getProductCode(), session);
+					Utensils item = (Utensils) list.get(0);
+					ingredient = new Ingredient(
+							item.getItemCode(),
+							item.getDescription(),
+							originalIngredient.getQuantity(),
+							item.getUnitOfMeasurement(),
+							item.getItemPricing().getCompanyOwnedStandardPricePerUnit()
+									* originalIngredient.getQuantity(),
+							item.getItemPricing().getCompanyOwnedActualPricePerUnit() * originalIngredient.getQuantity(),
+							item.getItemPricing().getCompanyOwnedTransferPricePerUnit()
+									* originalIngredient.getQuantity());
+					}
+					//added Office supplies
+					catch(IndexOutOfBoundsException ioeb4){
+						List list = dao.listByParameter(OfficeSupplies.class, "itemCode",
+								originalIngredient.getProductCode(), session);
+						OfficeSupplies item = (OfficeSupplies) list.get(0);
+						ingredient = new Ingredient(
+								item.getItemCode(),
+								item.getDescription(),
+								originalIngredient.getQuantity(),
+								item.getUnitOfMeasurement(),
+								item.getItemPricing().getCompanyOwnedStandardPricePerUnit()
+										* originalIngredient.getQuantity(),
+								item.getItemPricing().getCompanyOwnedActualPricePerUnit() * originalIngredient.getQuantity(),
+								item.getItemPricing().getCompanyOwnedTransferPricePerUnit()
+										* originalIngredient.getQuantity());
+						}
+					
+					}
+				}
 			}
-		}
 		return ingredient;
 	}
 	
@@ -489,9 +601,13 @@ public class InventoryManager extends HibernateUtil {
 		List rawAndFinList = dao.listAlphabeticalAscByParameter(RawMaterial.class, "itemCode",session);
 		List finList = dao.listAlphabeticalAscByParameter(FinishedGood.class, "productCode", session);
 		List tradedItemList = dao.listAlphabeticalAscByParameter(TradedItem.class, "itemCode", session);
+		List utensilsList = dao.listAlphabeticalAscByParameter(Utensils.class, "itemCode", session);
+		List ofcSupList = dao.listAlphabeticalAscByParameter(OfficeSupplies.class, "itemCode", session);
 		
 		Iterator finListItr = finList.iterator();
 		Iterator tradedListItr = tradedItemList.iterator();
+		Iterator utensilsListItr = utensilsList.iterator();
+		Iterator ofcSupListItr = ofcSupList.iterator();
 		while(finListItr.hasNext()){
 			FinishedGood finGood = (FinishedGood) finListItr.next();
 			
@@ -502,7 +618,16 @@ public class InventoryManager extends HibernateUtil {
 			TradedItem ti = (TradedItem) tradedListItr.next();
 			rawAndFinList.add(new RawMaterial(ti.getItemCode(), ti.getDescription(), ti.getUnitOfMeasurement(), ti.getItemPricing()));
 		}
-		
+		//utensils
+		while(utensilsListItr.hasNext()){
+			Utensils u = (Utensils) utensilsListItr.next();
+			rawAndFinList.add(new RawMaterial(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(), u.getItemPricing()));
+		}
+		//office supplies
+		while(tradedListItr.hasNext()){
+			OfficeSupplies os = (OfficeSupplies) ofcSupListItr.next();
+			rawAndFinList.add(new RawMaterial(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(), os.getItemPricing()));
+		}
 		return rawAndFinList;  
 	}
 	
@@ -577,6 +702,8 @@ public class InventoryManager extends HibernateUtil {
 		
 		List<RawMaterial> rawMatList =listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<TradedItem> utensilsList =listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<TradedItem> ofcSupList =listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
 		List<FinishedGood> finList = listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		ArrayList<Item> tempList = new ArrayList<Item>();
@@ -602,6 +729,25 @@ public class InventoryManager extends HibernateUtil {
 				tempList.add(item);
 		}
 		
+		iterator = utensilsList.iterator();
+		while(iterator.hasNext()) {
+			Utensils u = (Utensils) iterator.next();
+				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				Item item = new Item(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(),u.getClassification(), u.getSubClassification(),u.getIsVattable());
+				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				item.setItemType("utensils");
+				tempList.add(item);
+		}
+		
+		iterator = ofcSupList.iterator();
+		while(iterator.hasNext()) {
+			OfficeSupplies os = (OfficeSupplies) iterator.next();
+				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				Item item = new Item(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(),os.getClassification(), os.getSubClassification(),os.getIsVattable());
+				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				item.setItemType("ofcSup");
+				tempList.add(item);
+		}
 		
 		iterator = finList.iterator();
 		while(iterator.hasNext()){
