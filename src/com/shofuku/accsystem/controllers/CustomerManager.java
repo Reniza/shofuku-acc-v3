@@ -88,5 +88,9 @@ public class CustomerManager {
 	public boolean persistingUpdate(Object persistentObject,Session session) {
 		return dao.persistingUpdate(persistentObject,session);
 	}
+	
+	public Object persistingInsert(Object object,Session session) {
+		return dao.persistingAdd(object, session);
+	}
 
 }

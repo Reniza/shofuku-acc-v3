@@ -41,11 +41,13 @@ import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
@@ -580,6 +582,10 @@ private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(Set s
 			list = dao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("TradedItems")) {
 			list = dao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("Utensils")) {
+			list = dao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("OfficeSupplies")) {
+			list = dao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("FinishedGoods")) {
 			list = dao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
 		}else if(subModule.equalsIgnoreCase("AccountEntryProfile")) {

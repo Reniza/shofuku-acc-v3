@@ -470,4 +470,19 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 		} 
 		
 	}
+	@Override
+	public Object persistingAdd(Object object,Session session) {
+		Transaction tx = null;
+		tx = getCurrentTransaction(session);
+			try {
+				session.save(object);
+				return object;
+			} catch (RuntimeException re) {
+				if (null != tx) {
+					tx.rollback();
+				}
+				re.printStackTrace();
+				return null;
+			} 
+	}
 }

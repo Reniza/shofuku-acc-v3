@@ -35,6 +35,9 @@ public interface BaseHibernateDao {
 	public List getBetweenDates(Date startDate, Date endDate, String className,
 			String field,Session session);
 	
+	public Object persistingAdd(Object object,Session session);
+	
+	
 	public int getRecordCount(String subModule,Session session);
 	public String getLastSupplierByInitialLetter(char lastLetter,Session session);
 	public String getLastCustomerByInitialLetter(char lastLetter,Session session);

@@ -373,7 +373,6 @@ public class PurchaseOrderDetailHelper {
 		Set<PurchaseOrderDetails> poset = generatePODetailsSet();
 		Iterator<PurchaseOrderDetails> itr = poset.iterator();
 		Set<PurchaseOrderDetails> persistedSet = new HashSet<PurchaseOrderDetails>();
-		BaseHibernateDaoImpl dao = new BaseHibernateDaoImpl();
 		Transaction tx = null;
 		tx = getCurrentTransaction(ss);
 		while(itr.hasNext()) {
@@ -567,7 +566,7 @@ public class PurchaseOrderDetailHelper {
 			Iterator<PurchaseOrderDetails> itr =purchaseOrderDetailsList.iterator();
 			while(itr.hasNext()) {
 				PurchaseOrderDetails podetails = (PurchaseOrderDetails)itr.next();
-				if(podetails.getItemCode().trim().equalsIgnoreCase("")) {
+				if(null==podetails.getItemCode() || podetails.getItemCode().trim().equalsIgnoreCase("")) {
 					unlistedItemsMap.put(SASConstants.NOT_APPLICABLE,podetails);
 					// YOU LEFT HERE PROBLEM: PODETAILS CANT SHOW FOR SAME ITEM CODES WHICH IS BLANK FOR UNLISTED ITEMS
 					unlistedItemsList.add(podetails);
