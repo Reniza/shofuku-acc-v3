@@ -41,9 +41,11 @@ import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
 import com.shofuku.accsystem.domain.inventory.Memo;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -585,6 +587,12 @@ public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 				orderBy = "itemCode";
 			} else if (subModule.equalsIgnoreCase("TradedItems")) {
 				clazz = TradedItem.class;
+				orderBy = "itemCode";
+			}else if (subModule.equalsIgnoreCase("Utensils")) {
+				clazz = Utensils.class;
+				orderBy = "itemCode";
+			}else if (subModule.equalsIgnoreCase("OfficeSupplies")) {
+				clazz = OfficeSupplies.class;
 				orderBy = "itemCode";
 			} else if (subModule.equalsIgnoreCase("FinishedGoods")) {
 				clazz = FinishedGood.class;

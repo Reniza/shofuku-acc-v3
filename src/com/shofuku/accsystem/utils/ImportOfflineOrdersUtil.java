@@ -109,6 +109,9 @@ public class ImportOfflineOrdersUtil {
 						cpo.setPaymentTerm(hssfRow.getCell(SASConstants.IMPORT_COLUMN_PO_PAYMENT_TERMS, Row.CREATE_NULL_AS_BLANK).getStringCellValue());
 						} catch (Exception e) {errorString.add("PO Payment term on sheet "+x+" is invalid");						}	
 						
+						//for testing print
+						errorString.add("testing lang sa logs");
+						
 						// set cpo purchase order details
 						// RULES FOR PODETAILS APPLIED HERE
 						PurchaseOrderDetailHelper poDtlHelper = new PurchaseOrderDetailHelper();
@@ -122,6 +125,7 @@ public class ImportOfflineOrdersUtil {
 						poDtlHelper.setOrderDate(cpo.getPurchaseOrderDate());
 						
 						cpo.setPurchaseOrderDetails(poDtlHelper.persistNewSetElements(session));
+						
 						boolean addResult =customerManager.addCustomerObject(cpo, session);
 						if (addResult) {
 							rch.updateCount(SASConstants.CUSTOMERPO, "add");

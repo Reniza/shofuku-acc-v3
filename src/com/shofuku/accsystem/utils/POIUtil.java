@@ -69,12 +69,14 @@ import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.Item;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
@@ -644,6 +646,18 @@ public class POIUtil {
 		} else if (subModule.equals("TradedItems")) {
 			setSummaryHeaders(wb,
 					SASConstants.SUMMARY_TEMPLATE_HEADER_TRADED_ITEMS,
+					SASConstants.SUMMARY_TEMPLATE_FIRST_COL);
+			populateSummaryForInventory(wb, list, subModule);
+
+		}else if (subModule.equals("Utensils")) {
+			setSummaryHeaders(wb,
+					SASConstants.SUMMARY_TEMPLATE_HEADER_UTENSILS,
+					SASConstants.SUMMARY_TEMPLATE_FIRST_COL);
+			populateSummaryForInventory(wb, list, subModule);
+
+		}else if (subModule.equals("OfficeSupplies")) {
+			setSummaryHeaders(wb,
+					SASConstants.SUMMARY_TEMPLATE_HEADER_OFFICE_SUPPLIES,
 					SASConstants.SUMMARY_TEMPLATE_FIRST_COL);
 			populateSummaryForInventory(wb, list, subModule);
 
@@ -1317,6 +1331,14 @@ public class POIUtil {
 					TradedItem tradedItems = (TradedItem) list.get(counter);
 					putTradedItemValues(sheet, row, tradedItems);
 					maxRow += 1;
+				} else if (subModule.equals("Utensils")) {
+					Utensils utensils = (Utensils) list.get(counter);
+					putUtensilsValues(sheet, row, utensils);
+					maxRow += 1;
+				} else if (subModule.equals("OfficeSupplies")) {
+					OfficeSupplies officeSupplies= (OfficeSupplies) list.get(counter);
+					putOfficeSuppliesValues(sheet, row, officeSupplies);
+					maxRow += 1;
 				} else if (subModule.equals("FinishedGoods")) {
 					FinishedGood finishedGood = (FinishedGood) list
 							.get(counter);
@@ -1702,6 +1724,102 @@ public class POIUtil {
 		cell.setCellValue(parseNullDouble(tradedItems.getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(tradedItems
+				.getQuantityPerPhysicalCount()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+
+	}
+	
+	private void putUtensilsValues(HSSFSheet sheet, HSSFRow row,
+			Utensils utensils) {
+		int col = SASConstants.SUMMARY_TEMPLATE_FIRST_COL;
+		HSSFCell cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+
+		cell.setCellValue(parseNullString(utensils.getItemCode()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullString(utensils.getDescription()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullString(utensils.getUnitOfMeasurement()));
+
+		// TODO: remove this after prices have been inserted
+		if (utensils.getItemPricing() == null) {
+			col += 6;
+		} else {
+			// Additional price type
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getCompanyOwnedStandardPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getCompanyOwnedActualPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getCompanyOwnedTransferPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getFranchiseStandardPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getFranchiseActualPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(utensils.getItemPricing()
+					.getFranchiseTransferPricePerUnit()));
+		}
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(utensils.getQuantityIn()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(utensils.getQuantityOut()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(utensils.getQuantityPerRecord()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(utensils
+				.getQuantityPerPhysicalCount()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+	}
+	
+	private void putOfficeSuppliesValues(HSSFSheet sheet, HSSFRow row,
+			OfficeSupplies officeSupplies) {
+		int col = SASConstants.SUMMARY_TEMPLATE_FIRST_COL;
+
+		HSSFCell cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullString(officeSupplies.getItemCode()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullString(officeSupplies.getDescription()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullString(officeSupplies.getUnitOfMeasurement()));
+
+		// TODO: remove this after prices have been inserted
+		if (officeSupplies.getItemPricing() == null) {
+			col += 6;
+		} else {
+			// Additional price type
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getCompanyOwnedStandardPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getCompanyOwnedActualPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getCompanyOwnedTransferPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getFranchiseStandardPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getFranchiseActualPricePerUnit()));
+			cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+			cell.setCellValue(parseNullDouble(officeSupplies.getItemPricing()
+					.getFranchiseTransferPricePerUnit()));
+		}
+		
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(officeSupplies.getQuantityIn()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(officeSupplies.getQuantityOut()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(officeSupplies.getQuantityPerRecord()));
+		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
+		cell.setCellValue(parseNullDouble(officeSupplies
 				.getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 

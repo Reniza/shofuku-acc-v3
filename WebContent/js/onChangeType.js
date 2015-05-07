@@ -77,7 +77,9 @@ function showSearchByDate(){
 		searchByDate.style.display = 'block';
 		searchByStatus.style.display = 'none';
 		
-	}else if (document.getElementById("inventoryModule").value == 'FinishedGoods' || document.getElementById("inventoryModule").value == 'RawMaterials' ||document.getElementById("inventoryModule").value == 'TradedItems' ){
+	}else if (document.getElementById("inventoryModule").value == 'FinishedGoods' || document.getElementById("inventoryModule").value == 'RawMaterials' 
+		|| document.getElementById("inventoryModule").value == 'TradedItems' || document.getElementById("inventoryModule").value == 'Utensils'
+			|| document.getElementById("inventoryModule").value == 'OfficeSupplies'){
 			searchByStatus.style.display = 'block';
 			searchByDate.style.display = 'none';
 	}

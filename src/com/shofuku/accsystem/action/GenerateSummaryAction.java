@@ -181,8 +181,6 @@ public class GenerateSummaryAction extends ActionSupport {
 			}
 		}
 	}
-	
-	
 
 	public String execute() throws Exception {
 		Session session = getSession();

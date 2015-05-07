@@ -37,7 +37,9 @@ public class ManageStockLevelAction extends ActionSupport{
 	CustomerManager manager = new CustomerManager();
 	POIUtil poiUtil = new POIUtil();
 	private String forWhat = "false";
-	private String forWhatDisplay ="edit";  Session getSession() {
+	private String forWhatDisplay ="edit"; 
+	
+	Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 

@@ -23,6 +23,10 @@
 <body >
 <div class="mainForm">
 	<h4 class="title">INVENTORY SUMMARY</h4>
+	<div class="errors">
+				<s:actionerror/>
+				<s:actionmessage/>
+			</div>
 	<div class ="form">
 		<s:form action="generateSummaryAction" validate="true" id="searchForm">
 			<div>
@@ -34,12 +38,11 @@
 								<td>
 									<s:select label="Inventory Module:" 
 								headerKey="-1" headerValue="--Choose Module--" id="inventoryModule"
-								list="#{'RawMaterials':'Raw Materials','TradedItems':'Traded Items', 'FinishedGoods':'Finished Goods','FinishedProductTransferSlip':'FP Transfer Slip','OrderRequisition':'Order Requisition','ReturnSlip':'Return Slip'}" 
+								list="#{'RawMaterials':'Raw Materials','TradedItems':'Traded Items', 'Utensils':'Utensils', 'OfficeSupplies':'Office Supplies', 'FinishedGoods':'Finished Goods','FinishedProductTransferSlip':'FP Transfer Slip','OrderRequisition':'Order Requisition','ReturnSlip':'Return Slip'}" 
 								name="inventoryModule" onchange="javascript:showSearchByDate();" />
 								</td>
 							<td><s:submit label="Generate Report" value="Generate and Export Report"></s:submit></td>
 							</tr>
-							
 						</table>
 						<p></p>
 						<table class="form" id="searchByDateTbl">
@@ -66,10 +69,7 @@
 						
 					</p>
 				</div>
-				<div class="errors">
-				<s:actionerror/>
-				<s:actionmessage/>
-			</div>
+				
 		</s:form>		
 	</div>
 </div>
