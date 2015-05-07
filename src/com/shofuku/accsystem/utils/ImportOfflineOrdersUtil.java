@@ -86,16 +86,6 @@ public class ImportOfflineOrdersUtil {
 						PurchaseOrderDetailHelper poDtlHelper = new PurchaseOrderDetailHelper();
 						
 						
-<<<<<<< HEAD
-						//for testing print
-						errorString.add("testing lang sa logs");
-						
-						// set cpo purchase order details
-						// RULES FOR PODETAILS APPLIED HERE
-						PurchaseOrderDetailHelper poDtlHelper = new PurchaseOrderDetailHelper();
-						if(customer.getCustomerType().equalsIgnoreCase("CC")) {
-							populateOrderDetail(getItemMap(itemList),customer.getCustomerType() , "standard", SASConstants.IMPORT_COLUMN_PO_ITEM_CODE, hssfSheet, session);
-=======
 						/*
 						 * check transaction if (PO IS ALREADY EXISTING)
 						 *  
@@ -142,7 +132,6 @@ public class ImportOfflineOrdersUtil {
 							cpo.setTotalAmount(poDtlHelper.getTotalAmount());
 							
 							
->>>>>>> 2289109d14148e3bd6bef545d23abc24c16f7d0a
 						}else {
 							try {
 								cpo = (CustomerPurchaseOrder) customerManager.listByParameter(
@@ -157,14 +146,6 @@ public class ImportOfflineOrdersUtil {
 							
 						}
 						
-<<<<<<< HEAD
-						cpo.setPurchaseOrderDetails(poDtlHelper.persistNewSetElements(session));
-						
-						boolean addResult =customerManager.addCustomerObject(cpo, session);
-						if (addResult) {
-							rch.updateCount(SASConstants.CUSTOMERPO, "add");
-						}
-=======
 						//check if dr is existing on template, if yes add PO as transient object if not proceed to insert
 						if(null==hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DATE).getDateCellValue()) {
 							boolean addResult =customerManager.addCustomerObject(cpo, session);	
@@ -172,7 +153,6 @@ public class ImportOfflineOrdersUtil {
 								rch.updateCount(SASConstants.CUSTOMERPO, "add");
 							}
 						}else {
->>>>>>> 2289109d14148e3bd6bef545d23abc24c16f7d0a
 
 							/*
 							 * BEGIN - ADD Delivery Receipt

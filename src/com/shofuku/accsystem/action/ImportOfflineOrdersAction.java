@@ -23,8 +23,8 @@ public class ImportOfflineOrdersAction extends ActionSupport {
 		Session session = getSession();
 		errorStringList = new ArrayList();
 		
-		util.readImportFile(fileUpload, session);
-		errorStringList = util.getErrorString();
+		//util.readImportFile(fileUpload, session);
+		errorStringList = util.getErrorStrings();
 		return "imported";
 	}
 
