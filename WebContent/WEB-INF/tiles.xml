@@ -195,6 +195,10 @@
 		<put-attribute name="body" value="/jsp/util/exportOrderingFormTemplate.jsp"/>
 	</definition>
 	
+	<definition name="showImportOfflineOrdersForm.tiles" extends="baseLayout.tiles">
+		<put-attribute name="body" value="/jsp/util/importOfflineOrdersForm.jsp"/>
+	</definition>
+	
 	<!--  Security -->
 	<definition name="showUserAccountForm.tiles" extends="baseLayout.tiles">
 		<put-attribute name="body" value="/jsp/security/userAccountForm.jsp"/>

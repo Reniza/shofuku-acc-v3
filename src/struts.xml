@@ -918,8 +918,20 @@
 		<action name="manageStockLevelPageAction" method="readStockLevelExcel"
 			class="com.shofuku.accsystem.action.ManageStockLevelAction">
 			<result name="updated" type="tiles">showManageStockLevelPage.tiles</result>
-			
 		</action>
+		
+		<!-- import offline orders -->
+		
+		<action name="importOfflineOrdersAction" method="execute"
+			class="com.shofuku.accsystem.action.ImportOfflineOrdersAction">
+			<result name="imported" type="tiles">showImportOfflineOrdersForm.tiles</result>
+		</action>
+		
+		<action name="showImportOfflineOrdersForm" >
+			<result type="tiles">showImportOfflineOrdersForm.tiles</result>
+					
+		</action>
+		
 		<action name="showCustomerProfileAction" method="showCustomerProfile"
 			class="com.shofuku.accsystem.action.ManageStockLevelAction">
 			<result name="showCustomer" type="tiles">showCustomerProfileForm.tiles</result>

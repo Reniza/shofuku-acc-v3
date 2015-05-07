@@ -80,6 +80,7 @@
 	  <li>TOOLS
 	    <ol id="toolsMenu">
 	      <li id="toolsMenu0"><a href="<s:url action="listCustomer.action"><s:param name="subModule" value="%{'template'}"/></s:url>">Template Generator</a></li>
+	      <li id="toolsMenu4"><a href="showImportOfflineOrdersForm.action">Import Offline Orders</a></li>
 	      <li id="toolsMenu1"><a href="<s:url action="loadRoleListAction"><s:param name="securityModule" value="%{'userAccount'}"/></s:url>">User Account</a></li>
 	      <li id="toolsMenu2"><a href="showUserRoleForm.action">User Role</a></li>
 	      <li id="toolsMenu3"><a href="showSearchSecurityForm.action">-=Search=-</a></li>
