@@ -477,6 +477,7 @@ public class SASConstants {
 	/*
 	 * IMPORT OFFLINE ORDERS INDEX VALUES
 	 */
+	public static final int IMPORT_OFFLINE_ORDER_STARTING_ROW = 3;
 	
 	public final static int IMPORT_COLUMN_CUSTOMER_NO =0;
 	public final static int IMPORT_COLUMN_PO_DATE =1;
@@ -487,18 +488,19 @@ public class SASConstants {
 	public final static int IMPORT_COLUMN_PO_UNLISTED_ITEM_DESCRIPTION =6;
 	public final static int IMPORT_COLUMN_PO_UNLISTED_ITEM_UOM =7;
 	public final static int IMPORT_COLUMN_PO_ITEM_QUANTITY =8;
+
+	public final static int IMPORT_COLUMN_PO_NUMBER=9;
 	
-	public final static int IMPORT_COLUMN_DR_RECEIPT_DATE =9;
-	public final static int IMPORT_COLUMN_DR_SHIPPING_METHOD =10;
-	public final static int IMPORT_COLUMN_DR_SHIPPING_DATE =11;
-	public final static int IMPORT_COLUMN_DR_DUE_DATE =12;
-	public final static int IMPORT_COLUMN_DR_REMARKS =13;
-	public final static int IMPORT_COLUMN_DR_ACCOUNTING_PROFILE =14;
-	public final static int IMPORT_COLUMN_DR_ACCOUNTING_PROFILE_AMOUNT =15;
-	public final static int IMPORT_COLUMN_DR_AP_DEBIT_CREDIT =16;
-	public final static int IMPORT_COLUMN_DR_ITEM_CODE =17;
-	public final static int IMPORT_COLUMN_DR_UNLISTED_ITEM_DESCRIPTION =18;
-	public final static int IMPORT_COLUMN_DR_ITEM_QUANTITY =19;
+	public final static int IMPORT_COLUMN_DR_DATE =10;
+	public final static int IMPORT_COLUMN_DR_SHIPPING_METHOD =11;
+	public final static int IMPORT_COLUMN_DR_SHIPPING_DATE =12;
+	public final static int IMPORT_COLUMN_DR_DUE_DATE =13;
+	public final static int IMPORT_COLUMN_DR_REMARKS =14;
+	public final static int IMPORT_COLUMN_DR_ITEM_CODE =15;
+	public final static int IMPORT_COLUMN_DR_UNLISTED_ITEM_DESCRIPTION =16;
+	public final static int IMPORT_COLUMN_DR_ITEM_QUANTITY =17;
+	
+
 
 	
 	
