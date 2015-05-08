@@ -70,11 +70,11 @@ public class DisbursementManager {
 		vatAmount = amount - vattedAmount;
 		return dc.formatDoubleToCurrency(vattedAmount);
 	}
-	public double computeVatAmount(double amount){
-		double vattedAmount = 0;
+	public double computeVatAmount(double vattedAmount){
+		//double vattedAmount = 0;
 		double vatAmount = 0;
 		
-		vattedAmount = amount / SASConstants.VAT_PERCENT;
+		//vattedAmount = amount / SASConstants.VAT_PERCENT;
 		vatAmount = vattedAmount * SASConstants.VAT_AMOUNT_PERCENT;
 		return dc.formatDoubleToCurrency(vatAmount);
 	}

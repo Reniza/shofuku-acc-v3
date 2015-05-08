@@ -27,21 +27,6 @@ function setOrderingFormType(type){
 	document.getElementById("exportForm").submit();
 }
 
-function roundUpAmount(n){
-
-var n =20.14984; 	
-alert (roundPrice(n));
-
-}
-
-
-function roundPrice(num) {
-    var p = num.toFixed(4).split(".");
-    return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
-        return  num + (i && !(i % 4) ? "," : "") + acc;
-    }, "") + "." + p[1];
-}
-
 
 </script>
 

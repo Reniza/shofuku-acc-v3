@@ -108,11 +108,15 @@ function computeVat(){
 		vatableAmount = amount / 1.12;
 		vatAmount = amount - vatableAmount;
 		
-		parseFloat(vatableAmount.toLocaleString()).toFixed(2);
-		parseFloat(vatAmount.toLocaleString()).toFixed(2);
-		alert(vatableAmount);
-		alert(vatAmount);
-		document.getElementById("vattableAmount").value = vatableAmount;
-		document.getElementById("vatAmount").value = vatAmount;
+		document.getElementById("vattableAmount").value = roundPrice(vatableAmount);
+		document.getElementById("vatAmount").value = roundPrice(vatAmount);
 	}
 }
+
+
+	function roundPrice(num) {
+	    var p = num.toFixed(4).split(".");
+	    return p[0].split("").reverse().reduce(function(acc, num, i, orig) {
+	        return  num + (i && !(i % 4) ? "," : "") + acc;
+	    }, "") + "." + p[1];
+	}
