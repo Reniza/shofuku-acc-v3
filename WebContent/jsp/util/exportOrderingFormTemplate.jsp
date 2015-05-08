@@ -22,9 +22,26 @@
 <script>
 
 function setOrderingFormType(type){
+	
 	document.getElementById("orderingFormType").value = type;
 	document.getElementById("exportForm").submit();
 }
+
+function roundUpAmount(n){
+
+var n =20.14984; 	
+alert (roundPrice(n));
+
+}
+
+
+function roundPrice(num) {
+    var p = num.toFixed(4).split(".");
+    return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
+        return  num + (i && !(i % 4) ? "," : "") + acc;
+    }, "") + "." + p[1];
+}
+
 
 </script>
 
@@ -46,13 +63,14 @@ function setOrderingFormType(type){
 						<td >&nbsp; 1 &nbsp; </td>
 						<td colspan="2" style="text-align: left;"> Click the button to generate template for Commissary: &nbsp;&nbsp;
 							<input type="button" onclick="setOrderingFormType('c')" value="Generate form for Commissary" />
+							<input type="button" onclick="roundUpAmount()" value="" />
 						</td>
 					</tr>
 					
 						<tr>
 							<td>&nbsp; 2 &nbsp; </td>
 							<td> Choose one customer or NONE to generate template: 
-								<sx:autocompleter listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="customer.customerNo" headerValue="NONE" headerKey="-1"></sx:autocompleter>
+								<sx:autocompleter onchange="" listValue="customerNo" list="customerNoList" maxlength="50" resultsLimit="-1" name="customer.customerNo" headerValue="NONE" headerKey="-1"></sx:autocompleter>
 							</td>
 							<td>
 								<input type="button" onclick="setOrderingFormType('s')" value="Generate form for Stores" />
