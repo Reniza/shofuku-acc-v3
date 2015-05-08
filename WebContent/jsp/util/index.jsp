@@ -1,1 +1,1 @@
- <META HTTP-EQUIV="Refresh" CONTENT="0;URL=showBaselayout.action">
+ <META HTTP-EQUIV="Refresh" CONTENT="0;URL=showLoginForm.action">

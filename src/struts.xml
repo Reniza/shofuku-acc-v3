@@ -24,12 +24,12 @@
 		<!-- LOGIN -->
 
 		<action name="showLoginForm">
-			<result>/jsp/loginForm.jsp</result>
+			<result>/jsp/util/loginForm.jsp</result>
 		</action>
 		<action name="login" class="com.shofuku.accsystem.action.LoginAction">
-			<result name="input">/jsp/loginForm.jsp</result>
-			<result name="error">/jsp/loginForm.jsp</result>
-			<result name="cancel" type="redirect">/jsp/loginForm.jsp</result>
+			<result name="input">/jsp/util/loginForm.jsp</result>
+			<result name="error">/jsp/util/loginForm.jsp</result>
+			<result name="cancel" type="redirect">/jsp/util/loginForm.jsp</result>
 			<result name="success" type="tiles">baseLayout.tiles</result>
 		</action>
 
