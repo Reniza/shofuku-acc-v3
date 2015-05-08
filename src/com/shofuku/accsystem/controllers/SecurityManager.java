@@ -5,12 +5,13 @@ import java.util.List;
 import org.hibernate.Session;
 
 import com.shofuku.accsystem.dao.impl.DisbursementDaoImpl;
+import com.shofuku.accsystem.dao.impl.SecurityDaoImpl;
 import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.utils.DoubleConverter;
 
 public class SecurityManager {
 	
-	DisbursementDaoImpl dao = new DisbursementDaoImpl();
+	SecurityDaoImpl dao = new SecurityDaoImpl();
 	DoubleConverter dc = new DoubleConverter();
 	
 	public List listSecurityByParameter(Class clazz,
