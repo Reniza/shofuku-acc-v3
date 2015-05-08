@@ -608,6 +608,7 @@ public class InventoryManager extends HibernateUtil {
 		Iterator tradedListItr = tradedItemList.iterator();
 		Iterator utensilsListItr = utensilsList.iterator();
 		Iterator ofcSupListItr = ofcSupList.iterator();
+		
 		while(finListItr.hasNext()){
 			FinishedGood finGood = (FinishedGood) finListItr.next();
 			
@@ -624,10 +625,10 @@ public class InventoryManager extends HibernateUtil {
 			rawAndFinList.add(new RawMaterial(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(), u.getItemPricing()));
 		}
 		//office supplies
-		while(tradedListItr.hasNext()){
+		while(ofcSupListItr.hasNext()){
 			OfficeSupplies os = (OfficeSupplies) ofcSupListItr.next();
 			rawAndFinList.add(new RawMaterial(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(), os.getItemPricing()));
-		}
+		} 
 		return rawAndFinList;  
 	}
 	
@@ -702,8 +703,8 @@ public class InventoryManager extends HibernateUtil {
 		
 		List<RawMaterial> rawMatList =listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
-		List<TradedItem> utensilsList =listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<TradedItem> ofcSupList =listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<Utensils> utensilsList =listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
 		List<FinishedGood> finList = listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		ArrayList<Item> tempList = new ArrayList<Item>();
@@ -722,9 +723,9 @@ public class InventoryManager extends HibernateUtil {
 		iterator = tradedItemList.iterator();
 		while(iterator.hasNext()) {
 			TradedItem tradedItem = (TradedItem) iterator.next();
-				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(tradedItem.getItemCode(), tradedItem.getDescription(), tradedItem.getUnitOfMeasurement(),tradedItem.getClassification(), tradedItem.getSubClassification(),tradedItem.getIsVattable());
-				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("tradedItems");
 				tempList.add(item);
 		}
@@ -732,9 +733,9 @@ public class InventoryManager extends HibernateUtil {
 		iterator = utensilsList.iterator();
 		while(iterator.hasNext()) {
 			Utensils u = (Utensils) iterator.next();
-				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(),u.getClassification(), u.getSubClassification(),u.getIsVattable());
-				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("utensils");
 				tempList.add(item);
 		}
@@ -742,9 +743,9 @@ public class InventoryManager extends HibernateUtil {
 		iterator = ofcSupList.iterator();
 		while(iterator.hasNext()) {
 			OfficeSupplies os = (OfficeSupplies) iterator.next();
-				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				//START: 2013 - PHASE 3 : PROJECT 4: AZ
 				Item item = new Item(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(),os.getClassification(), os.getSubClassification(),os.getIsVattable());
-				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("ofcSup");
 				tempList.add(item);
 		}

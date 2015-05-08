@@ -13,6 +13,7 @@
      <link rel="stylesheet" href="menu.css" type="text/css"/>
 	<script type="text/javascript" src="js/expandingMenu.js"></script> 	
 	<script type="text/javascript" src="js/Transactions.js"></script>
+	<script type="text/javascript" src="js/onChangeType.js"></script>
   <sx:head/>
  	
 	 <script type='text/javascript'>
@@ -29,10 +30,8 @@
 
 	<div class="form" id="wholeForm">
 		<div class="errors">
-
 		<s:actionerror/>
 		<s:actionmessage/>
-		
 	</div>
 <div id="voucherForm">
 <h3 class="form">PETTY CASH</h3>
@@ -52,9 +51,17 @@
 		</table>
 		<table class="form">
 			<tr>
-				<td><s:textfield disabled="%{forWhat}" label ="Payee:" size="90" name="pc.payee"></s:textfield></td>
+				<s:if test="%{forWhatDisplay == 'edit'}">	
+						<td>
+							<s:textfield disabled="%{forWhat}" label ="Payor:" size="90" name="pc.payee"></s:textfield>
+						</td> 
+					</s:if> 
+					<s:else>  
+					    <td>
+					    	<sx:autocompleter  label="Payor " listValue="supplierName" list="supplierList" maxlength="50" resultsLimit="-1" name="pc.payee"></sx:autocompleter>
+						</td>
+					</s:else>
 			</tr>
-			
 			<tr>
 				<td><s:textfield disabled="%{forWhat}" label="Particulars:" size="90" name="pc.particulars"></s:textfield></td>
 			</tr>
@@ -65,7 +72,7 @@
 				<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" size="90" resultsLimit="-1"
 				listValue="value" list="classifList" maxlength="50"  name="pc.description"></sx:autocompleter>
 				</td>
-				<td width="90"><s:textfield disabled="%{forWhat}" label="Amount: PHP" name="pc.amount"></s:textfield></td>
+				<td width="90"><s:textfield disabled="%{forWhat}" label="Amount: PHP" name="pc.amount" id="amount"></s:textfield></td>
 			</tr>
 		</table>
 		<table class="form">
@@ -74,9 +81,11 @@
 						</tr>
 					<tr>
 						<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
-						<td><s:textfield readonly="true" label="Vatable Amount: PHP" name="pc.vatDetails.vattableAmount"  id="credit1Amount"></s:textfield></td>
-						<td><s:textfield readonly="true" label="VAT Amount: PHP" name="pc.vatDetails.vatAmount"></s:textfield></td>
+						<td><s:textfield readonly="true" label="Vatable Amount: PHP" name="pc.vatDetails.vattableAmount"  id="vattableAmount"></s:textfield></td>
+						<td><s:textfield readonly="true" label="VAT Amount: PHP" name="pc.vatDetails.vatAmount" id="vatAmount"></s:textfield></td>
+						<td>No VAT? <s:checkbox id="checkVat" name="checkVat" onclick="javascript:computeVat()"></s:checkbox></td>
 						<!--END: 2013 - PHASE 3 : PROJECT 4: AZHEE-->
+						
 					</tr>
 					<tr>
 						<td><s:textfield disabled="%{forWhat}" label="TIN:" name="pc.vatDetails.tinNumber"></s:textfield></td>

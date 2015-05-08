@@ -83,15 +83,36 @@ function showSearchByDate(){
 			searchByStatus.style.display = 'block';
 			searchByDate.style.display = 'none';
 	}
-	
 }
 
 function loadItemSubClassification(thisForm){
-	
 	var classification = document.getElementById("classif").value;
 	document.getElementById("tempClassif").value = classification;
 	
 	document.forms[thisForm].action = 'loadItemSubClassificationAction.action';
 	  document.forms[thisForm].submit();
+}
+
+function computeVat(){
+	var checkVat = document.getElementById("checkVat").checked;
+	var amount = document.getElementById("amount").value;
+	var vatableAmount = 0;
+	var vatAmount = 0;
 	
+		alert(checkVat);
+		
+	if (checkVat==true){
+		document.getElementById("vattableAmount").value = 0;
+		document.getElementById("vatAmount").value = 0;
+	}else{
+		vatableAmount = amount / 1.12;
+		vatAmount = amount - vatableAmount;
+		
+		parseFloat(vatableAmount.toLocaleString()).toFixed(2);
+		parseFloat(vatAmount.toLocaleString()).toFixed(2);
+		alert(vatableAmount);
+		alert(vatAmount);
+		document.getElementById("vattableAmount").value = vatableAmount;
+		document.getElementById("vatAmount").value = vatAmount;
+	}
 }

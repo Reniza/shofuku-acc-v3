@@ -12,7 +12,8 @@
    <script type="text/javascript" src="js/deleteConfirmation.js"></script> 
   <sx:head/>
   <script type="text/javascript" src="js/expandingMenu.js"></script>
-  <script type="text/javascript" src="js/Transactions.js"></script> 	
+  <script type="text/javascript" src="js/Transactions.js"></script> 
+  <script type="text/javascript" src="js/onChangeType.js"></script>	
 	 <script type='text/javascript'>
 	var startWith=3;
 	var subMenu=1;
@@ -28,7 +29,6 @@
 			<div class="errors">
 				<s:actionerror/>
 				<s:actionmessage/>
-			
 			</div>
 		<div id="voucherForm">
 		<h3 class="form">CASH PAYMENT</h3>
@@ -46,8 +46,18 @@
 				</table>
 				<table class="form">
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label ="Payee:" size="90" name="cp.payee"></s:textfield></td>
-					</tr>
+					<s:if test="%{forWhatDisplay == 'edit'}">	
+						<td>
+							<s:textfield disabled="%{forWhat}" label ="Payor:" size="90" name="cp.payee"></s:textfield>
+						</td> 
+					</s:if> 
+					<s:else>  
+					    <td>
+					    	<sx:autocompleter label="Payor " listValue="supplierName" list="supplierList" maxlength="50" resultsLimit="-1" name="cp.payee"></sx:autocompleter>
+						</td>
+					</s:else>
+					
+					</tr> 
 					<tr>
 						<td><s:textfield disabled="%{forWhat}" label="Particulars:" size="90" name="cp.particulars"></s:textfield></td>
 					</tr>
@@ -58,7 +68,7 @@
 					<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" size="90" resultsLimit="-1"
 					listValue="value" list="classifList" name="cp.description"></sx:autocompleter>
 					</td>
-						<td width="90"><s:textfield disabled="%{forWhat}" label="Amount: PHP" name="cp.amount"></s:textfield></td>
+						<td width="90"><s:textfield disabled="%{forWhat}" label="Amount: PHP" name="cp.amount" id="amount"></s:textfield></td>
 					
 					</tr>
 				</table>
@@ -68,8 +78,9 @@
 						</tr>
 					<tr>
 						<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
-						<td><s:textfield readonly="true" label="Vatable Amount: PHP" name="cp.vatDetails.vattableAmount"  id="credit1Amount"></s:textfield></td>
-						<td><s:textfield readonly="true" label="VAT Amount: PHP" name="cp.vatDetails.vatAmount"></s:textfield></td>
+						<td><s:textfield readonly="true" label="Vatable Amount: PHP" name="cp.vatDetails.vattableAmount"  id="vattableAmount"></s:textfield></td>
+						<td><s:textfield readonly="true" label="VAT Amount: PHP" name="cp.vatDetails.vatAmount" id="vatAmount"></s:textfield></td>
+						<td>No VAT? <s:checkbox id="checkVat" name="checkVat" onclick="javascript:computeVat()"></s:checkbox></td>
 						<!--END: 2013 - PHASE 3 : PROJECT 4: AZHEE-->
 					</tr>
 					<tr>
