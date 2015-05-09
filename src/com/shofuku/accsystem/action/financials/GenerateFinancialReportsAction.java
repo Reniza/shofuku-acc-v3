@@ -71,6 +71,8 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 		08-	Journal Entries  --> General Journal
 		09-	VAT Report
 		10-	Check Encashment
+		11- Aging of Account Payable
+		12 Aging of Account Receivable
 		
 	 * */
 	public String execute() throws Exception{

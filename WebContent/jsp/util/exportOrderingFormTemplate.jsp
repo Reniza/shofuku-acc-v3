@@ -48,7 +48,6 @@ function setOrderingFormType(type){
 						<td >&nbsp; 1 &nbsp; </td>
 						<td colspan="2" style="text-align: left;"> Click the button to generate template for Commissary: &nbsp;&nbsp;
 							<input type="button" onclick="setOrderingFormType('c')" value="Generate form for Commissary" />
-							<input type="button" onclick="roundUpAmount()" value="" />
 						</td>
 					</tr>
 					

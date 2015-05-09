@@ -28,9 +28,11 @@ import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -87,17 +89,20 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		Iterator iterator = null;
 		customerNoList = customerManager.listAllCustomerNo(session);
 		//START: 2015 - PHASE 3a - stock level per customer
-		
+		Map customerSpecificStockLevel = new HashMap<>();
 		//temp value: CMJCC01
-		List result = manager.listByParameter(Customer.class, "customerNo",customer.getCustomerNo(),session);
-		customer =(Customer) result.get(0);
-		Map customerSpecificStockLevel = customer.getCustomerStockLevelMap();
-		//END: 2015 - PHASE 3a - stock level per customer
-		
+		if (orderingFormType.equalsIgnoreCase("S")){
+			List result = manager.listByParameter(Customer.class, "customerNo",customer.getCustomerNo(),session);
+			customer =(Customer) result.get(0);
+			customerSpecificStockLevel = customer.getCustomerStockLevelMap();
+			//END: 2015 - PHASE 3a - stock level per customer
+		}
 		
 		
 		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
 		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
 		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		List<UnlistedItem> ulList = manager.listAlphabeticalAscByParameter(UnlistedItem.class, "description", session); 
 		
@@ -190,6 +195,95 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 			}
 		}
 		
+		iterator = utensilsList.iterator();
+		while(iterator.hasNext()) {
+			Utensils utensils = (Utensils) iterator.next();
+			if(utensils.getItemCode().equalsIgnoreCase("FD01")) {
+				System.out.println("FOUND");
+			}	
+			if  (utensils.getClassification() == null ||
+					(!utensils.getTemplate().equalsIgnoreCase(orderingFormType)
+					&& (!utensils.getTemplate().equalsIgnoreCase("B")  
+						|| utensils.getTemplate().equalsIgnoreCase("N"))))  {
+				System.out.println(utensils.getDescription()+" : not included");
+			} else {
+
+				if (itemMap.get(utensils.getClassification()) == null) {
+					tempList = new ArrayList<Item>();
+					subClassMap = new HashMap<String, ArrayList<Item>>();
+				} else {
+					subClassMap = itemMap.get(utensils.getClassification());
+
+					if (subClassMap.get(utensils.getSubClassification()) == null) {
+						tempList = new ArrayList<Item>();
+					} else {
+						tempList = (ArrayList<Item>) subClassMap
+								.get(utensils.getSubClassification());
+					}
+				}
+				
+				//START: 2015 - PHASE 3a - stock level per customer
+				CustomerStockLevel csl = (CustomerStockLevel)customerSpecificStockLevel.get(utensils.getItemCode()); 
+				double tempStockLevelValue=0;
+				if(csl==null) {
+				}else {
+				tempStockLevelValue=csl.getStockLevel();
+				}
+				//END: 2015 - PHASE 3a - stock level per customer
+				
+				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				tempList.add(new Item(utensils.getItemCode(), utensils.getDescription(), utensils.getUnitOfMeasurement(),
+						utensils.getClassification(), utensils.getSubClassification(),utensils.getIsVattable(),tempStockLevelValue));
+				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				subClassMap.put(utensils.getSubClassification(), tempList);
+				itemMap.put(utensils.getClassification(), subClassMap);
+			}
+		}
+		
+		iterator = ofcSupList.iterator();
+		while(iterator.hasNext()) {
+			OfficeSupplies ofcSup = (OfficeSupplies) iterator.next();
+			if(ofcSup.getItemCode().equalsIgnoreCase("FD01")) {
+				System.out.println("FOUND");
+			}	
+			if  (ofcSup.getClassification() == null ||
+					(!ofcSup.getTemplate().equalsIgnoreCase(orderingFormType)
+					&& (!ofcSup.getTemplate().equalsIgnoreCase("B")  
+						|| ofcSup.getTemplate().equalsIgnoreCase("N"))))  {
+				System.out.println(ofcSup.getDescription()+" : not included");
+			} else {
+
+				if (itemMap.get(ofcSup.getClassification()) == null) {
+					tempList = new ArrayList<Item>();
+					subClassMap = new HashMap<String, ArrayList<Item>>();
+				} else {
+					subClassMap = itemMap.get(ofcSup.getClassification());
+
+					if (subClassMap.get(ofcSup.getSubClassification()) == null) {
+						tempList = new ArrayList<Item>();
+					} else {
+						tempList = (ArrayList<Item>) subClassMap
+								.get(ofcSup.getSubClassification());
+					}
+				}
+				
+				//START: 2015 - PHASE 3a - stock level per customer
+				CustomerStockLevel csl = (CustomerStockLevel)customerSpecificStockLevel.get(ofcSup.getItemCode()); 
+				double tempStockLevelValue=0;
+				if(csl==null) {
+				}else {
+				tempStockLevelValue=csl.getStockLevel();
+				}
+				//END: 2015 - PHASE 3a - stock level per customer
+				
+				//START: 2013 - PHASE 3 : PROJECT 4: MARK
+				tempList.add(new Item(ofcSup.getItemCode(), ofcSup.getDescription(), ofcSup.getUnitOfMeasurement(),
+						ofcSup.getClassification(), ofcSup.getSubClassification(),ofcSup.getIsVattable(),tempStockLevelValue));
+				//END: 2013 - PHASE 3 : PROJECT 4: MARK
+				subClassMap.put(ofcSup.getSubClassification(), tempList);
+				itemMap.put(ofcSup.getClassification(), subClassMap);
+			}
+		}
 		
 		tempList = new ArrayList<Item>();
 		iterator = finList.iterator();
@@ -261,8 +355,6 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 				//END: 2015 - PHASE 3a - stock level per customer
 			}
 		}
-		
-	
 		
 		return itemMap;
 	}
