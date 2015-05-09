@@ -4,12 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -19,6 +21,7 @@ import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -111,11 +114,20 @@ public class AddSupplierAction extends ActionSupport {
 		}
 	}
 
+	
 	public String execute() throws Exception {
 		Session session = getSession();
+		//TODO: try login here
+		/*
+		Map actionSession = ActionContext.getContext().getSession();
+		Object data = (Object) actionSession.get("user");
+		*/
+		
 		try {
 			boolean addResult = false;
-			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);			
+			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);		
+			
+			
 			if (getSubModule().equalsIgnoreCase("supplierProfile")) {
 				if (validateSupplierProfile()) {
 				} else {

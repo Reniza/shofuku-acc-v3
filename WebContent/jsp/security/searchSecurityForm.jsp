@@ -52,7 +52,7 @@
 				<s:if test="%{#securityModule == 'userRole'}">
 					<td>
 						<s:select label="Search User Role By:" 
-						list="#{'ALL':'ALL','userRoleName':'Role Name'}" 
+						list="#{'ALL':'ALL','roleName':'Role Name'}" 
 						name="moduleParameter" onchange="javascript:onTypeChangeSecurity('searchForm');"/>
 					</td>
 				</s:if>
@@ -113,10 +113,10 @@
 						<tr>
 							<td align="left"><s:url id="displayId" action="editSecurityAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
-										<s:param name="role.userRoleName" value="%{userRoleName}">userRoleName</s:param>
+										<s:param name="role.roleName" value="%{roleName}">roleName</s:param>
 										<s:param name="securityModule" value="%{securityModule}">securityModule</s:param>
 									</s:url>
-									<s:a href="%{displayId}"><s:property value="userRoleName"/></s:a>
+									<s:a href="%{displayId}"><s:property value="roleName"/></s:a>
 							</td>
 						</tr>
 					</s:elseif>

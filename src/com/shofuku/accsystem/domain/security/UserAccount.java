@@ -13,7 +13,7 @@ public class UserAccount  implements Serializable{
 	private String userName;
 	private String password;
 	private String fullName;
-	private UserRole role;
+	private Role role;
 	
 	public int getUserId() {
 		return userId;
@@ -39,10 +39,10 @@ public class UserAccount  implements Serializable{
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public UserRole getRole() {
+	public Role getRole() {
 		return role;
 	}
-	public void setRole(UserRole role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 	

@@ -1,14 +1,24 @@
 package com.shofuku.accsystem.action.security;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+
+
+import java.util.Map;
 
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.SecurityManager;
+import com.shofuku.accsystem.domain.inventory.Ingredient;
+import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.security.Module;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.security.UserRole;
+import com.shofuku.accsystem.domain.security.Role;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
@@ -25,8 +35,14 @@ public class SearchSecurityAction extends ActionSupport{
 	
 	private String clicked;
 	List securityList;
+	private List modulesNotGrantedList= new ArrayList<>();
+	private List modulesGrantedList= new ArrayList<>();
+	
+	private Map modulesGrantedMap;
+	
 
 	SecurityManager manager = new SecurityManager();
+	UserRoleHelper roleHelper = new UserRoleHelper();
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -53,18 +69,18 @@ public class SearchSecurityAction extends ActionSupport{
 					return "userAccount";
 				} else if (null != getModuleParameter()&& getSecurityModule().equalsIgnoreCase("userRole")) {
 					
-					if (getModuleParameter().equalsIgnoreCase("userRoleName")) {
+					if (getModuleParameter().equalsIgnoreCase("roleName")) {
 						securityList = manager.listToolsByParameterLike(
-										UserRole.class, moduleParameter,
+										Role.class, moduleParameter,
 										moduleParameterValue,session);
 					}else  {
-						securityList = manager.listAlphabeticalAscByParameter(UserRole.class, "userRoleName", session);
+						securityList = manager.listAlphabeticalAscByParameter(Role.class, "roleName", session);
 						moduleParameterValue="all";
 					} 
 						if (securityList.size()==0) {
 							addActionMessage(SASConstants.NO_LIST);
 						}
-						
+					
 					return "userRole";
 				} 
 			}
@@ -85,6 +101,29 @@ public class SearchSecurityAction extends ActionSupport{
 		}
 
 	}
+
+	//this method is strictly for this action class only
+	public String loadModules() {
+		
+		Session session = getSession();
+		
+		try{
+			modulesNotGrantedList = roleHelper.loadModules();
+			
+		} catch (IndexOutOfBoundsException iobe3) {
+			addActionError("ERROR LOADING MODULES");
+			return ERROR;
+		}finally {
+			if (session.isOpen()) {
+				session.close();
+				session.getSessionFactory().close();
+			}
+		}
+		return SUCCESS;
+		
+	}
+	
+	
 	public String getSecurityModule() {
 		return securityModule;
 	}
@@ -114,6 +153,24 @@ public class SearchSecurityAction extends ActionSupport{
 	}
 	public void setSecurityList(List securityList) {
 		this.securityList = securityList;
+	}
+	public List getModulesNotGrantedList() {
+		return modulesNotGrantedList;
+	}
+	public void setModulesNotGrantedList(List modulesNotGrantedList) {
+		this.modulesNotGrantedList = modulesNotGrantedList;
+	}
+	public List getModulesGrantedList() {
+		return modulesGrantedList;
+	}
+	public void setModulesGrantedList(List modulesGrantedList) {
+		this.modulesGrantedList = modulesGrantedList;
+	}
+	public Map getModulesGrantedMap() {
+		return modulesGrantedMap;
+	}
+	public void setModulesGrantedMap(Map modulesGrantedMap) {
+		this.modulesGrantedMap = modulesGrantedMap;
 	}
 	
 }

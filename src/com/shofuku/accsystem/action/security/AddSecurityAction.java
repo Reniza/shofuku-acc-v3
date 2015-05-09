@@ -1,6 +1,10 @@
 package com.shofuku.accsystem.action.security;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -11,8 +15,10 @@ import com.shofuku.accsystem.domain.financials.AccountingRules;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
+import com.shofuku.accsystem.domain.security.Module;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.security.UserRole;
+import com.shofuku.accsystem.domain.security.Role;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
 
 public class AddSecurityAction extends ActionSupport{
 	
@@ -28,6 +34,7 @@ public class AddSecurityAction extends ActionSupport{
 
 	SecurityManager securityManager = new SecurityManager();
 	RecordCountHelper rch = new RecordCountHelper();
+	UserRoleHelper roleHelper = new UserRoleHelper();
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -36,15 +43,23 @@ public class AddSecurityAction extends ActionSupport{
 	// beans
 		String subModule;
 		UserAccount user;
-		UserRole role;
+		Role role;
 		private String forWhat;
 		private String forWhatDisplay;
 		List roleList = null;
 		String tempPassword;
-	
+		
+		//roles
+		private List modulesNotGrantedList= new ArrayList<>();
+		private List modulesGrantedList= new ArrayList<>();
+		
+		private Map modulesGrantedMap;
+		
 	public String execute() throws Exception {
 		Session session = getSession();
 		try {
+			
+			
 			
 			if (getSubModule().equalsIgnoreCase("userAccount")) {
 				return addUserAccount(session);
@@ -69,6 +84,8 @@ public class AddSecurityAction extends ActionSupport{
 		
 	}
 
+	
+	
 	private String addUserRole(Session session) {
 		// TODO Auto-generated method stub
 		boolean addResult = false;
@@ -77,13 +94,20 @@ public class AddSecurityAction extends ActionSupport{
 		//	loadRoleList();
 		}else {
 			List existingRole = null;
-			existingRole =  securityManager.listSecurityByParameter(UserRole.class, "userRoleName", role.getUserRoleName(), session);
+			existingRole =  securityManager.listSecurityByParameter(Role.class, "roleName", role.getRoleName(), session);
 			if (!existingRole.isEmpty()) {
 				addActionMessage(SASConstants.EXISTS + "-> ROLE NAME ");
 			}else {
-			addResult = securityManager.insertToolsDetails(role, session); 
+				role.setRoleAccessString(roleHelper.parseModulesGrantedListToString(modulesGrantedList));
+				addResult = securityManager.insertToolsDetails(role, session); 
+				
 				if (addResult == true) {
 					addActionMessage(SASConstants.ADD_SUCCESS);
+					
+					modulesNotGrantedList=roleHelper.loadModules();
+					modulesGrantedMap = roleHelper.parseModulesListToMap(modulesNotGrantedList);
+					modulesGrantedList = roleHelper.addRolesAccessStringToGrantedList(role,modulesGrantedMap);
+					modulesNotGrantedList = roleHelper.removeGrantedModulesToAvailableModulesList(modulesGrantedList,modulesNotGrantedList);
 					
 					forWhat="true";
 					forWhatDisplay ="edit";
@@ -99,8 +123,8 @@ public class AddSecurityAction extends ActionSupport{
 		// TODO Auto-generated method stub
 		boolean errorFound = false;
 		
-		if ("".equals(role.getUserRoleName())) {
-			 addFieldError("role.userRoleName", "REQUIRED");
+		if ("".equals(role.getRoleName())) {
+			 addFieldError("role.roleName", "REQUIRED");
 			 errorFound = true;
 		}
 		return errorFound;
@@ -130,12 +154,11 @@ public class AddSecurityAction extends ActionSupport{
 	public String loadRoleList() {
 		// TODO Auto-generated method stub
 		Session session = getSession();
-		roleList= securityManager.listAlphabeticalAscByParameter(UserRole.class, "userRoleId",  session);
+		roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleId",  session);
 		return "userAccount";
 	}
 
 	private String addUserAccount(Session session) {
-		// TODO Auto-generated method stub
 		boolean addResult = false;
 		if (validateUserAccount()) {
 			loadRoleList();
@@ -146,9 +169,9 @@ public class AddSecurityAction extends ActionSupport{
 				addActionMessage(SASConstants.EXISTS + "-> USER NAME ");
 			}else {
 				List userRoleList = null;
-				userRoleList = securityManager.listSecurityByParameter(UserRole.class, "userRoleName", user.getRole().getUserRoleName(), session);
-				UserRole existingRole = new UserRole();
-				existingRole = (UserRole) userRoleList.get(0);
+				userRoleList = securityManager.listSecurityByParameter(Role.class, "roleName", user.getRole().getRoleName(), session);
+				Role existingRole = new Role();
+				existingRole = (Role) userRoleList.get(0);
 				user.setRole(existingRole);
 				addResult = securityManager.insertToolsDetails(user, session);
 				if (addResult == true) {
@@ -181,11 +204,11 @@ public class AddSecurityAction extends ActionSupport{
 		this.user = user;
 	}
 
-	public UserRole getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(UserRole role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
@@ -220,7 +243,23 @@ public class AddSecurityAction extends ActionSupport{
 	public void setTempPassword(String tempPassword) {
 		this.tempPassword = tempPassword;
 	}
-	
+
+	public List getModulesNotGrantedList() {
+		return modulesNotGrantedList;
+	}
+
+	public void setModulesNotGrantedList(List modulesNotGrantedList) {
+		this.modulesNotGrantedList = modulesNotGrantedList;
+	}
+
+	public List getModulesGrantedList() {
+		return modulesGrantedList;
+	}
+
+	public void setModulesGrantedList(List modulesGrantedList) {
+		this.modulesGrantedList = modulesGrantedList;
+	}
+
 	
 
 }
