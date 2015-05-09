@@ -93,7 +93,8 @@
 			
 				<!-- TOOLS -->
 			<mapping resource="com/shofuku/accsystem/domain/security/UserAccount.hbm.xml" />
-			<mapping resource="com/shofuku/accsystem/domain/security/UserRole.hbm.xml" />
+			<mapping resource="com/shofuku/accsystem/domain/security/Role.hbm.xml" />
+			<mapping resource="com/shofuku/accsystem/domain/security/Module.hbm.xml" />
 			
 			
 	</session-factory>

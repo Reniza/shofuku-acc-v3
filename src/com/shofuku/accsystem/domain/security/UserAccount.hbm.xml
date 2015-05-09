@@ -13,8 +13,8 @@
 		
 		<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 		<many-to-one name="role"
-			class="com.shofuku.accsystem.domain.security.UserRole"
-			column="USER_ROLE_ID" not-null="true" lazy="false" />
+			class="com.shofuku.accsystem.domain.security.Role"
+			column="ROLE_ID" not-null="true" lazy="false" />
 		<!--END: 2013 - PHASE 3 : PROJECT 4: AZ-->
 	</class>
 </hibernate-mapping>

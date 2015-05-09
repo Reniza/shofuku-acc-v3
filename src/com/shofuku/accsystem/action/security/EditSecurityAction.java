@@ -1,8 +1,10 @@
 package com.shofuku.accsystem.action.security;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
@@ -14,8 +16,10 @@ import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.Module;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.security.UserRole;
+import com.shofuku.accsystem.domain.security.Role;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
@@ -27,34 +31,48 @@ public class EditSecurityAction extends ActionSupport{
 
 	private String moduleParameter;
 	UserAccount user;
-	UserRole role;
+	Role role;
 	
 	List roleList;
-	SecurityManager manager = new SecurityManager();
+	SecurityManager securityManager = new SecurityManager();
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 
+	private List modulesNotGrantedList = new ArrayList<>();
+	private List modulesGrantedList= new ArrayList<>();
+	
+	private Map<Integer,String> modulesGrantedMap;
+	
+	UserRoleHelper roleHelper = new UserRoleHelper();
+	
 
 	public String execute() throws Exception {
 		Session session = getSession();
 		try {
 			forWhatDisplay="edit";
-			roleList = manager.listAlphabeticalAscByParameter(UserRole.class, "userRoleName", session);
+			roleList = securityManager.listAlphabeticalAscByParameter(Role.class, "roleName", session);
 			if (getSecurityModule().equalsIgnoreCase("userAccount")) {
 				UserAccount users = new UserAccount();
-				users = (UserAccount) manager.listSecurityByParameter(
+				users = (UserAccount) securityManager.listSecurityByParameter(
 						UserAccount.class, "userName",
 						this.getUser().getUserName(),session).get(0);
 				this.setUser(users);
 				return "userAccount";
 			} else {
-				UserRole userRole = new UserRole();
-				userRole = (UserRole) manager.listSecurityByParameter(
-						UserRole.class, "userRoleName",	this.getRole().getUserRoleName(),session).get(0);
+				Role userRole = new Role();
+				userRole = (Role) securityManager.listSecurityByParameter(
+						Role.class, "roleName",	this.getRole().getRoleName(),session).get(0);
 				
 				this.setRole(userRole);
+
+				modulesNotGrantedList=roleHelper.loadModules();
+				modulesGrantedMap = roleHelper.parseModulesListToMap(modulesNotGrantedList);
+				modulesGrantedList = roleHelper.addRolesAccessStringToGrantedList(role,modulesGrantedMap);
+				modulesNotGrantedList = roleHelper.removeGrantedModulesToAvailableModulesList(modulesGrantedList,modulesNotGrantedList);
+				
+				
 				return "userRole";
 			}		
 
@@ -73,7 +91,7 @@ public class EditSecurityAction extends ActionSupport{
 
 	}
 
-
+	
 	public String getSecurityModule() {
 		return securityModule;
 	}
@@ -124,12 +142,12 @@ public class EditSecurityAction extends ActionSupport{
 	}
 
 
-	public UserRole getRole() {
+	public Role getRole() {
 		return role;
 	}
 
 
-	public void setRole(UserRole role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
@@ -141,6 +159,26 @@ public class EditSecurityAction extends ActionSupport{
 
 	public void setRoleList(List roleList) {
 		this.roleList = roleList;
+	}
+	
+	
+	public List getModulesNotGrantedList() {
+		return modulesNotGrantedList;
+	}
+	public void setModulesNotGrantedList(List modulesNotGrantedList) {
+		this.modulesNotGrantedList = modulesNotGrantedList;
+	}
+	public List getModulesGrantedList() {
+		return modulesGrantedList;
+	}
+	public void setModulesGrantedList(List modulesGrantedList) {
+		this.modulesGrantedList = modulesGrantedList;
+	}
+	public Map getModulesGrantedMap() {
+		return modulesGrantedMap;
+	}
+	public void setModulesGrantedMap(Map modulesGrantedMap) {
+		this.modulesGrantedMap = modulesGrantedMap;
 	}
 	
 }

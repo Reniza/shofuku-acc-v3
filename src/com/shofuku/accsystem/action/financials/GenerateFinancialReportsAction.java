@@ -88,6 +88,11 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 				
 				// TODO: APPLY THIS LOGIC FOR LOGIN 
 				// get the data from session
+				
+				//Map sess = ActionContext.getContext().getSession();
+				//sess.put("user",user.getUserName());
+				//sess.put("role",user.getRole());
+
 				Map actionSession = ActionContext.getContext().getSession();
 				Object data = (Object) actionSession.get("logined");
 				Object data2 = (Object) actionSession.get("context");
