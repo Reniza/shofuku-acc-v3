@@ -12,7 +12,11 @@
 <body background="images/background.jpg">
   <div align="center">
   	<s:form action="login" validate="true">
-  	<h1 id="login">Welcome to SHO FUKU Trading Portal </h1>
+  	<h1 id="login">Welcome to SHO FUKU Trading Corp Portal </h1>
+  	<div class="errors">
+				<s:actionerror/>
+				<s:actionmessage/>
+			</div>
  	 <table id="login">
  		<tr>
 		 	<td id="error" colspan="2"><s:actionerror/></td>  

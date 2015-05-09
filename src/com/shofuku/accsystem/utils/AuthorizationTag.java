@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
+
 import javax.servlet.jsp.tagext.Tag;
 
 import com.opensymphony.xwork2.ActionContext;

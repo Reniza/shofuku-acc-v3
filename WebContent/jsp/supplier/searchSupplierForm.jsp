@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -44,6 +45,7 @@
 						list="#{'profile':'Profile', 'purchaseOrder':'Purchase Order', 'receivingReport':'Receiving Report', 'invoice':'Supplier Invoice'}" 
 						name="supplierModule" onchange="javascript:onTypeChangeSupplier();"/>
 						</td>
+				 
 					<s:if test="%{#supplierModule == 'profile'}">
 						<td>
 							<s:select label="Search Profile By:" 
@@ -51,6 +53,7 @@
 							name="moduleParameter" onchange="javascript:onTypeChangeModuleParameter();"/>
 						</td>
 					</s:if>
+				
 					<s:if test="%{#supplierModule == 'purchaseOrder'}">
 						<td>
 							<s:select label="Search PO By:" 
@@ -154,7 +157,10 @@
 										<s:param name="supplier.supplierId" value="%{supplierId}">supplierId</s:param>
 										<s:param name="supplierModule" value="%{'profile'}">supplierModule</s:param>
 									</s:url>
-									<s:a href="%{displayId}"><s:property value="supplierId"/></s:a>
+								<auth:isAuth role="0">
+									<s:a href="%{displayId}"><s:property value="supplierId"/>
+									</s:a> 
+								</auth:isAuth>
 								</td>
 								<td align="left"><s:property value="supplierName" /></td>
 								<td><s:property value="contactName"/></td>
@@ -169,7 +175,7 @@
 										<s:param name="po.supplierPurchaseOrderId" value="%{supplierPurchaseOrderId}">supplierPOId</s:param>
 										<s:param name="supplierModule" value="%{'purchaseOrder'}">supplierModule</s:param>
 									</s:url>
-									<s:a href="%{displayId}"><s:property value="supplierPurchaseOrderId"/></s:a>
+									<auth:isAuth role="5"><s:a href="%{displayId}"><s:property value="supplierPurchaseOrderId"/></s:a></auth:isAuth>
 								</td>
 								<td align="left"><s:property value="purchaseOrderDate"/></td>
 								<td align="left"><s:property value="supplier.supplierName"/></td>
