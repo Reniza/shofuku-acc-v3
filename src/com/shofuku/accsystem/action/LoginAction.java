@@ -34,7 +34,9 @@ public class LoginAction extends ActionSupport {
 		}
 		
 		if(getUsername().equals(user.getUserName()) && getPassword().equals(user.getPassword())){
-			  return SUCCESS;
+			  
+			
+			return SUCCESS;
 		  }else{
 			  return NONE;
 		  }
