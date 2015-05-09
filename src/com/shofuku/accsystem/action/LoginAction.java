@@ -2,6 +2,7 @@ package com.shofuku.accsystem.action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.controllers.SecurityManager;
 
@@ -23,6 +24,8 @@ public class LoginAction extends ActionSupport {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 	
+	UserRoleHelper roleHelper = new UserRoleHelper();
+	
 	public String execute() throws Exception {
 		Session session = getSession();
 		UserAccount user = (UserAccount) manager.listSecurityByParameter(UserAccount.class, "userName", this.getUsername(), session).get(0);
@@ -38,6 +41,9 @@ public class LoginAction extends ActionSupport {
 		if(getUsername().equals(user.getUserName()) && getPassword().equals(user.getPassword())){
 			Map sess = ActionContext.getContext().getSession();
 			sess.put("user",user);
+			
+			sess.put("rolesList", roleHelper.loadModules());
+			
 			  return SUCCESS;
 		  }else{
 			  return NONE;

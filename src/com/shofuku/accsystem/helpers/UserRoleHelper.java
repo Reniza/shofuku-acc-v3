@@ -33,6 +33,8 @@ public class UserRoleHelper {
 		return roleAccessString;
 	}
 	
+	
+	
 	public List addRolesAccessStringToGrantedList(Role role,Map modulesGrantedMap) {
 		
 		String[] roleSplit;

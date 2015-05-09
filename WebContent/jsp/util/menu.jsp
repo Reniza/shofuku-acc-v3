@@ -1,5 +1,6 @@
 <!doctype html>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 <html>
   <head>
     <meta charset="utf-8">
@@ -15,7 +16,7 @@
 	<ul id="menu">
 	  <li>SUPPLIERS
 	    <ol id="supplierMenu">
-	      <li id="supplierMenu0"><a href="showSupplierProfileForm.action" >SUPPLIER PROFILE</a></li> 
+	      <auth:isAuth role="0"> <li id="supplierMenu0"><a href="showSupplierProfileForm.action" >SUPPLIER PROFILE</a></li> </auth:isAuth>
 	      <li id="supplierMenu1"><a href="<s:url action="newSupplierEntryAction"><s:param name="subModule" value="%{'purchaseOrder'}"/></s:url>">PURCHASE ORDER</a></li>
 	      <li id="supplierMenu2"><a href="<s:url action="newSupplierEntryAction"><s:param name="subModule" value="%{'receivingReport'}"/></s:url>">RECEIVING REPORT</a></li>
 		  <li id="supplierMenu3"><a href="<s:url action="newSupplierEntryAction"><s:param name="subModule" value="%{'supplierInvoice'}"/></s:url>">SUPPLIER INVOICE</a></li>
@@ -24,9 +25,8 @@
 	    </ol>
 	  </li>
 	  <li>CUSTOMERS
-	 
 	    <ol id="customerMenu">
-	      <li id="customerMenu0"><a href="showCustomerProfileForm.action">CUSTOMER PROFILE</a></li>
+	       <auth:isAuth role="5"><li id="customerMenu0"><a href="showCustomerProfileForm.action">CUSTOMER PROFILE</a></li></auth:isAuth>
 	      <li id="customerMenu1"><a href="<s:url action="newCustomerEntryAction"><s:param name="subModule" value="%{'purchaseOrder'}"/></s:url>">PURCHASE ORDER</a></li>
 	      <li id="customerMenu2"><a href="<s:url action="newCustomerEntryAction"><s:param name="subModule" value="%{'deliveryReceipt'}"/></s:url>">DELIVERY RECEIPT</a></li>
 	      <li id="customerMenu3"><a href="<s:url action="newCustomerEntryAction"><s:param name="subModule" value="%{'invoice'}"/></s:url>">SALES INVOICE</a></li>
