@@ -154,7 +154,7 @@ public class AddSecurityAction extends ActionSupport{
 	public String loadRoleList() {
 		// TODO Auto-generated method stub
 		Session session = getSession();
-		roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "userRoleId",  session);
+		roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleId",  session);
 		return "userAccount";
 	}
 

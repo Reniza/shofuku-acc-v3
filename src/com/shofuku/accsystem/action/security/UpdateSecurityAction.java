@@ -78,7 +78,7 @@ private String updateUserRole(Session session) {
 if (validateUserRoleAccount()) {
 	//	loadRoleList();
 	}else {
-		role.setRoleAccessString(roleHelper.parseModulesGrantedListToString(modulesGrantedList));
+			role.setRoleAccessString(roleHelper.parseModulesGrantedListToString(modulesGrantedList));
 			updateResult = securityManager.updateSecurity(role, session); 
 			if (updateResult == true) {
 				addActionMessage(SASConstants.UPDATED);

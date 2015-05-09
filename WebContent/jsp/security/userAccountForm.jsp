@@ -63,7 +63,7 @@
 						<tr>
 							<td>Role Name:</td>
 							<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" resultsLimit="-1"
-							listValue="userRoleName" list="roleList" maxlength="50"  name="user.role.userRoleName"></sx:autocompleter> 
+							listValue="roleName" list="roleList" maxlength="50"  name="user.role.roleName"></sx:autocompleter> 
 							</td>
 						</tr>
 					</table>

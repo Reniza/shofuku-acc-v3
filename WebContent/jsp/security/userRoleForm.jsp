@@ -44,7 +44,7 @@
 						<tr>
 							<td>
 								<s:textfield label="Role Name:" name="role.roleName"></s:textfield></td>
-								<s:hidden name="roleId" value="%{role.roleId}"/>
+								<s:textfield label="Role Name:" name="role.roleId"></s:textfield></td>
 						</tr>
 					</table>
 				</p>
