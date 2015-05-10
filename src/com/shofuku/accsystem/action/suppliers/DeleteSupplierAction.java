@@ -52,6 +52,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				deleteResult = manager.deleteSupplierByParameter(getSupId(),
 						Supplier.class,session);
 				if (deleteResult == true) {
+					supplier = new Supplier();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -61,6 +62,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				deleteResult = manager.deleteSupplierByParameter(getPoId(),
 						SupplierPurchaseOrder.class,session);
 				if (deleteResult == true) {
+					po = new SupplierPurchaseOrder();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -97,6 +99,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				
 				deleteResult = manager.deleteSupplierByParameter(getRrId(),ReceivingReport.class,session);
 				if (deleteResult == true) {
+					rr= new ReceivingReport();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -106,6 +109,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				deleteResult = manager.deleteSupplierByParameter(getInvId(),
 						SupplierInvoice.class,session);
 				if (deleteResult == true) {
+					invoice = new SupplierInvoice();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);

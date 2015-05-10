@@ -64,6 +64,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			if (getSubModule().equalsIgnoreCase("rawMat")) {
 				deleteResult = manager.deleteInventoryByParameter(getItemNo(), RawMaterial.class,session);
 				if (deleteResult == true) {
+					rm = new RawMaterial();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -72,6 +73,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				deleteResult = manager.deleteInventoryByParameter(getItemNo(), TradedItem.class,session);
 				if (deleteResult == true) {
+					ti = new TradedItem();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -80,6 +82,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				deleteResult = manager.deleteInventoryByParameter(getItemNo(), Utensils.class,session);
 				if (deleteResult == true) {
+					u = new Utensils();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -88,6 +91,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
 				deleteResult = manager.deleteInventoryByParameter(getItemNo(), OfficeSupplies.class,session);
 				if (deleteResult == true) {
+					os = new OfficeSupplies();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -97,6 +101,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				UnlistedItem unlistedItem = (UnlistedItem)manager.listByParameter(UnlistedItem.class, "description", unl.getDescription(), session).get(0);
 				deleteResult = manager.deletePersistingInventoryItem(unlistedItem,session);
 				if (deleteResult == true) {
+					unl = new UnlistedItem();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -107,6 +112,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				session = getSession();
 				deleteResult = manager.deleteInventoryByParameter(getFptsNo(), FPTS.class,session);
 				if (deleteResult == true) {
+					fpts= new FPTS();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -117,6 +123,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				session = getSession();
 				deleteResult = manager.deleteInventoryByParameter(getRfNo(), RequisitionForm.class,session);
 				if (deleteResult == true) {
+					rf= new RequisitionForm();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -127,6 +134,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				session = getSession();
 				deleteResult = manager.deleteInventoryByParameter(getRsIdNo(), ReturnSlip.class,session);
 				if (deleteResult == true) {
+					rs= new ReturnSlip();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -136,6 +144,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				
 				deleteResult = manager.deleteInventoryByParameter(getProductNo(), FinishedGood.class,session);
 				if (deleteResult == true) {
+					fg = new FinishedGood();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
