@@ -6,7 +6,9 @@ import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.controllers.SecurityManager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
@@ -19,6 +21,10 @@ public class LoginAction extends ActionSupport {
 	SecurityManager manager = new SecurityManager();
 	private String username;
 	private String password;
+	private String forWhat;
+	private String forWhatDisplay;
+	
+	List userList = new ArrayList();
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -32,16 +38,22 @@ public class LoginAction extends ActionSupport {
 		if (getUsername().equals("") || getPassword().equals("") ){
 			validateLogin(); 
 		}else{
-			UserAccount user = (UserAccount) manager.listSecurityByParameter(UserAccount.class, "userName", this.getUsername(), session).get(0);
-			if(!getUsername().equals(user.getUserName().trim()) || !getPassword().equals(user.getPassword().trim())){
-				addActionError("Invalid user name or password! Please try again!");
-				return "error";
-			}else if (getUsername().equals(user.getUserName()) && getPassword().equals(user.getPassword())){
-					Map sess = ActionContext.getContext().getSession();
-					sess.put("user",user);
-					sess.put("rolesList", roleHelper.loadModules());
-			}
+			userList =  manager.listSecurityByParameter(UserAccount.class, "userName", this.getUsername(), session);
+			if (userList.size() == 0){
+				addActionError("Invalid user name! Please try another user...");
+			}else{
+				UserAccount user = (UserAccount) manager.listSecurityByParameter(UserAccount.class, "userName", this.getUsername(), session).get(0);
+				if(!getUsername().equals(user.getUserName().trim()) || !getPassword().equals(user.getPassword().trim())){
+					addActionError("Invalid password! Please try again!");
+					return "error";
+				}else if (getUsername().equals(user.getUserName()) && getPassword().equals(user.getPassword())){
+						Map sess = ActionContext.getContext().getSession();
+						sess.put("user",user);
+						sess.put("loggedUser",user.getUserName());
+						sess.put("rolesList", roleHelper.loadModules());
+				}
 				return "success";
+			}
 		}
 		return "input";
 	}
@@ -83,6 +95,23 @@ public class LoginAction extends ActionSupport {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getForWhat() {
+		return forWhat;
+	}
+
+	public void setForWhat(String forWhat) {
+		this.forWhat = forWhat;
+	}
+
+	public String getForWhatDisplay() {
+		return forWhatDisplay;
+	}
+
+	public void setForWhatDisplay(String forWhatDisplay) {
+		this.forWhatDisplay = forWhatDisplay;
+	}
+	
 	  
 }
 

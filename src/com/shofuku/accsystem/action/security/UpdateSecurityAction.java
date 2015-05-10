@@ -132,7 +132,7 @@ private boolean validateUserAccount() {
 public String loadRoleList() {
 	// TODO Auto-generated method stub
 	Session session = getSession();
-	roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleId",  session);
+	roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleName",  session);
 	return "userAccount";
 }
 

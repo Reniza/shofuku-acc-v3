@@ -16,7 +16,7 @@
 		<td height="50px" colspan="2" BGCOLOR="aad6f5" align="right">
 			<tiles:insertAttribute name="header" />
 			<label style="font-family:verdana, sans-serif; font-size: 14px;color: #426c85;font-weight: 700;">
-			Welcome [ ${user.fullName} ] 
+			Welcome [ ${loggedUser} ] 
 			<s:a style="text-decoration: none;color: #426c85;" href="logout.action">[ LOGOUT ]</s:a></label>
 		</td>
 	</tr>

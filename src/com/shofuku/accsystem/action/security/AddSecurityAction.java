@@ -58,10 +58,8 @@ public class AddSecurityAction extends ActionSupport{
 	public String execute() throws Exception {
 		Session session = getSession();
 		try {
-			
-			
-			
 			if (getSubModule().equalsIgnoreCase("userAccount")) {
+				loadRoleList();
 				return addUserAccount(session);
 			}else {
 				return addUserRole(session);
@@ -70,6 +68,7 @@ public class AddSecurityAction extends ActionSupport{
 		}catch (RuntimeException re) {
 			re.printStackTrace();
 			if (getSubModule().equalsIgnoreCase("userAccount")) {
+				loadRoleList();
 				return "userAccountAdded";
 			}else {
 				return "userRoleAdded";
@@ -83,8 +82,6 @@ public class AddSecurityAction extends ActionSupport{
 		}
 		
 	}
-
-	
 	
 	private String addUserRole(Session session) {
 		// TODO Auto-generated method stub
@@ -154,7 +151,7 @@ public class AddSecurityAction extends ActionSupport{
 	public String loadRoleList() {
 		// TODO Auto-generated method stub
 		Session session = getSession();
-		roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleId",  session);
+		roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleName",  session);
 		return "userAccount";
 	}
 

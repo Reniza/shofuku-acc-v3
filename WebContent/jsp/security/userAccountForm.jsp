@@ -62,8 +62,7 @@
 					<table class="form">
 						<tr>
 							<td>Role Name:</td>
-							<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" resultsLimit="-1"
-							listValue="roleName" list="roleList" maxlength="50"  name="user.role.roleName"></sx:autocompleter> 
+							<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" listValue="roleName" list="roleList" maxlength="50"  name="user.role.roleName"></sx:autocompleter> 
 							</td>
 						</tr>
 					</table>
@@ -80,14 +79,12 @@
 						
 							<td><input class="myButtons" name="edit" type="button" onclick="javascript:toggleAlert('profileForm','supplierId');" value="Edit"></input></td>
 							<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" value="Update" id="bUpdate" action="updateSecurityAction"></s:submit></td>
-						<!-- 	<td><s:submit cssClass="myButtons" type="button" value="Delete" onclick="javascript:supplierConfirmation('userAccountForm');"></s:submit></td>
-							<td><s:submit cssClass="myButtons" type="button" value="Print" action="printSupplierAction"></s:submit></td> -->
-							<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','userAccountForm');" value="New Entry"></input></td>
+							<td><s:submit cssClass="myButtons" type="button" value="New Entry" name="newEntry" action="loadRoleListAction"></s:submit></td>
 						
 						</s:if>
 						<s:else>
 							<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" value="Add User" name="newUserProfile" action="addSecurityAction"></s:submit></td>
-							<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','userAccountForm');" value="Cancel"></input></td>
+							<td><s:submit cssClass="myButtons" type="button" value="Cancel" name="cancel" action="loadRoleListAction"></s:submit></input></td>
 						   
 						</s:else>
 					</tr>
