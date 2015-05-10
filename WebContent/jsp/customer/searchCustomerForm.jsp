@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -144,12 +145,15 @@
 						<s:iterator value="customerList" status="customerList">
 							<s:if test="%{#customerModule == 'profile'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editCustomerAction">
+								<td align="left">
+									<auth:isAuth role="5">
+									<s:url id="displayId" action="editCustomerAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param>
 										<s:param name="customer.customerNo" value="%{customerNo}">customerNo</s:param>
 										<s:param name="customerModule" value="%{'profile'}">customerModule</s:param>
 									</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="customerNo"/></s:a>
 								</td>
 								<td align="left"><s:property value="customerName" /></td>
@@ -160,11 +164,14 @@
 							</s:if>
 							<s:elseif test="%{#customerModule == 'purchaseOrder'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editCustomerAction">
+								<td align="left">
+									<auth:isAuth role="6">
+									<s:url id="displayId" action="editCustomerAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="custpo.customerPurchaseOrderId" value="%{customerPurchaseOrderId}">supplierPOId</s:param>
 										<s:param name="customerModule" value="%{'purchaseOrder'}">customerModule</s:param>
 									</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="customerPurchaseOrderId"/></s:a>
 								</td>
 								<td align="left"><s:property value="purchaseOrderDate"/></td>
@@ -176,11 +183,14 @@
 							</s:elseif>
 							<s:elseif test="%{#customerModule == 'deliveryReceipt'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editCustomerAction">
+								<td align="left">
+									<auth:isAuth role="7">
+									<s:url id="displayId" action="editCustomerAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="dr.deliveryReceiptNo" value="%{deliveryReceiptNo}">RRNo</s:param>
 										<s:param name="customerModule" value="%{'deliveryReceipt'}">customerModule</s:param>
 									</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="deliveryReceiptNo"/></s:a>
 								</td>
 								<td align="left"><s:property value="deliveryReceiptDate"/></td>
@@ -192,11 +202,14 @@
 							</s:elseif>
 							<s:elseif test="%{#customerModule == 'invoice'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editCustomerAction">
+								<td align="left">
+									<auth:isAuth role="8">
+									<s:url id="displayId" action="editCustomerAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="invoice.customerInvoiceNo" value="%{customerInvoiceNo}">invoiceNo</s:param>
 										<s:param name="customerModule" value="%{'invoice'}">customerModule</s:param>
 									</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="customerInvoiceNo"/></s:a>
 								</td>
 								<td align="left"><s:property value="customerInvoiceDate"/></td>
@@ -209,7 +222,6 @@
 							</s:elseif>
 						</s:iterator>
 					</table>
-				
 			</p>
 		</div>	
 	</div>

@@ -102,7 +102,7 @@ private boolean validateUserRoleAccount() {
 	boolean errorFound = false;
 	
 	if ("".equals(role.getRoleName())) {
-		 addFieldError("role.userRoleName", "REQUIRED");
+		 addFieldError("role.roleName", "REQUIRED");
 		 errorFound = true;
 	}
 	return errorFound;
@@ -132,7 +132,7 @@ private boolean validateUserAccount() {
 public String loadRoleList() {
 	// TODO Auto-generated method stub
 	Session session = getSession();
-	roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "userRoleId",  session);
+	roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleId",  session);
 	return "userAccount";
 }
 
@@ -143,7 +143,7 @@ private String updateUserAccount(Session session) {
 	if (validateUserAccount()) {
 		loadRoleList();
 	}else {
-		Role userRole = (Role) securityManager.listSecurityByParameter(Role.class, "userRoleName", user.getRole().getRoleName(), session).get(0);
+		Role userRole = (Role) securityManager.listSecurityByParameter(Role.class, "roleName", user.getRole().getRoleName(), session).get(0);
 		this.user.setRole(userRole);
 			updateResult = securityManager.updateSecurity(user, session);
 			if (updateResult == true) {
