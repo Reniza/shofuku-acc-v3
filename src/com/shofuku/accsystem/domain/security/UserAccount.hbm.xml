@@ -10,6 +10,7 @@
 		<property name="userName" type="string" column="USERNAME" />
 		<property name="password" type="string" column="PASSWORD" />
 		<property name="fullName" type="string" column="FULL_NAME" />
+		<property name="location" type="string" column="LOCATION" />
 		
 		<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 		<many-to-one name="role"

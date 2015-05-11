@@ -13,6 +13,7 @@ public class UserAccount  implements Serializable{
 	private String userName;
 	private String password;
 	private String fullName;
+	private String location;
 	private Role role;
 	
 	public int getUserId() {
@@ -44,6 +45,12 @@ public class UserAccount  implements Serializable{
 	}
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 	

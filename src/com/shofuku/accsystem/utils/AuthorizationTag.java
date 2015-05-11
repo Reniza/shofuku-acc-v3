@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -26,12 +27,26 @@ public class AuthorizationTag extends BodyTagSupport  {
 	
 	private String role;
 	
+	private String alternateMessage;
+	
 	public int  doStartTag() throws JspException {
 		    
 		    Map actionSession = ActionContext.getContext().getSession();
 			UserAccount user = (UserAccount) actionSession.get("user");
 			
 			List modulesList = (List) actionSession.get("rolesList");
+			
+			String bodyText = bodyContent.getString();
+			
+			 try {
+			       	pageContext.getOut().print(bodyText);
+			       }
+			       catch (Exception e) {
+			       	throw new JspTagException(e.getMessage());
+			       }
+			 
+			 StringBuffer tableOut = new StringBuffer(); 
+			 tableOut.append(alternateMessage); 
 			
 			if(user==null) {
 			}else {
@@ -53,5 +68,13 @@ public class AuthorizationTag extends BodyTagSupport  {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getAlternateMessage() {
+		return alternateMessage;
+	}
+
+	public void setAlternateMessage(String alternateMessage) {
+		this.alternateMessage = alternateMessage;
 	}
 }

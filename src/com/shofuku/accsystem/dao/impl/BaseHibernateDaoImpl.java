@@ -238,6 +238,32 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 
 	}
 	
+	public List listAndOrderByParameter(Class clazz, String orderByParam,String searchKey,
+			String value,Session session) {
+
+		Transaction tx = null;
+		try {
+			tx=getCurrentTransaction(session);
+			Criteria criteria = session.createCriteria(clazz).add(
+					Restrictions.or(
+							Restrictions.like(searchKey, "%" + value + "%")
+									.ignoreCase(), Restrictions.or(Restrictions
+									.like(searchKey, "%" + value)
+									.ignoreCase(),
+									Restrictions
+											.like(searchKey, value + "%")
+											.ignoreCase())));
+					criteria.addOrder(Order.asc(orderByParam));
+			return criteria.list();
+		} catch (RuntimeException re) {
+			tx.rollback();
+			re.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	
 	public List listDistinctReferenceNo(Class clazz, String propertyName,Session session) {
 
 		Transaction tx = null;

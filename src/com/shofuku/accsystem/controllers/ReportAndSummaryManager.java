@@ -51,6 +51,7 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -70,6 +71,9 @@ public class ReportAndSummaryManager {
 	DateFormatHelper dfh = new DateFormatHelper();
 
 	private BaseHibernateDaoImpl dao = new BaseHibernateDaoImpl();
+	
+	private UserAccount user;
+	
 
 	public InputStream generateSoaSummary(ServletContext servletContext,
 			String dateFrom, String dateTo, String subModule,
@@ -575,7 +579,7 @@ private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(Set s
 		List list = new ArrayList();
 		
 		if (subModule.equalsIgnoreCase("Supplier")) {
-			list = dao.listAlphabeticalAscByParameter(Supplier.class,"supplierName",session);
+			list = dao.listAndOrderByParameter(Supplier.class,"supplierName","supplierName",user.getLocation()+"-",session);
 		}else if(subModule.equalsIgnoreCase("Customer")) {
 			list = dao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
 		}else if(subModule.equalsIgnoreCase("RawMaterials")) {
@@ -713,5 +717,11 @@ private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(Set s
 		}
 
 		return null;
+	}
+	public UserAccount getUser() {
+		return user;
+	}
+	public void setUser(UserAccount user) {
+		this.user = user;
 	}
 }
