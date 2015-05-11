@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 
 <html>
 <head>
@@ -131,11 +132,14 @@
 				<s:iterator value="disbursementList" status="disbursementList">
 					<s:if test="%{#subModule == 'AA'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editDisbursementAction">
+							<td align="left">
+								<auth:isAuth role="19">
+									<s:url id="displayId" action="editDisbursementAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="pc.pcVoucherNumber" value="%{pcVoucherNumber}">voucherNo</s:param>
 										<s:param name="subModule" value="%{'AA'}">subModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="pcVoucherNumber"/></s:a>
 							</td>
 							<td align="left"><s:property value="payee"/></td>
@@ -147,11 +151,14 @@
 					</s:if>
 					<s:elseif test="%{#subModule == 'BB'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editDisbursementAction">
+							<td align="left">
+								<auth:isAuth role="20">
+									<s:url id="displayId" action="editDisbursementAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="cp.cashVoucherNumber" value="%{cashVoucherNumber}">cashVoucherNumber</s:param>
 										<s:param name="subModule" value="%{'BB'}">subModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="cashVoucherNumber"/></s:a>
 							</td>
 						
@@ -162,11 +169,14 @@
 					
 					<s:elseif test="%{#subModule == 'CC'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editDisbursementAction">
+							<td align="left">
+								<auth:isAuth role="21">
+									<s:url id="displayId" action="editDisbursementAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="chp.checkVoucherNumber" value="%{checkVoucherNumber}">checkVoucherNumber</s:param>
 										<s:param name="subModule" value="%{'CC'}">subModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="checkVoucherNumber"/></s:a>
 							</td>
 							
@@ -179,11 +189,14 @@
 					</s:elseif>
 					<s:elseif test="%{#subModule == 'checkVoucher'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editDisbursementAction">
+							<td align="left">
+								<auth:isAuth role="22">
+									<s:url id="displayId" action="editDisbursementAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="chp.checkVoucherNumber" value="%{checkVoucherNumber}">checkVoucherNumber</s:param>
 										<s:param name="subModule" value="%{'checkVoucher'}">subModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="checkVoucherNumber"/></s:a>
 							</td>
 							
@@ -193,15 +206,12 @@
 					<!--  	invoice.receivingReport.supplierPurchaseOrder.paymentDate"/></td>-->	
 							<td><s:property value="invoice.supplierInvoiceNo"/></td>
 							<td><s:property value="checkNo" /></td>
-						
-							
 						</tr>
 					</s:elseif>
 				</s:iterator>
-				</table>		
+			</table>		
 		</p>
 	</div>
 </div>
-
 </body>
 </html>

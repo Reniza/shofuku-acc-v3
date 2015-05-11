@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -44,6 +45,7 @@
 						list="#{'profile':'Profile', 'purchaseOrder':'Purchase Order', 'receivingReport':'Receiving Report', 'invoice':'Supplier Invoice'}" 
 						name="supplierModule" onchange="javascript:onTypeChangeSupplier();"/>
 						</td>
+				 
 					<s:if test="%{#supplierModule == 'profile'}">
 						<td>
 							<s:select label="Search Profile By:" 
@@ -51,6 +53,7 @@
 							name="moduleParameter" onchange="javascript:onTypeChangeModuleParameter();"/>
 						</td>
 					</s:if>
+				
 					<s:if test="%{#supplierModule == 'purchaseOrder'}">
 						<td>
 							<s:select label="Search PO By:" 
@@ -148,13 +151,17 @@
 						<s:iterator value="supplierList" status="supplierList">
 							<s:if test="%{#supplierModule == 'profile'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editSupplierAction">
-										<s:param name="forWhat" value="%{'true'}">forDisable</s:param>
-										<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
-										<s:param name="supplier.supplierId" value="%{supplierId}">supplierId</s:param>
-										<s:param name="supplierModule" value="%{'profile'}">supplierModule</s:param>
-									</s:url>
-									<s:a href="%{displayId}"><s:property value="supplierId"/></s:a>
+								<td align="left">
+									<auth:isAuth role="0">
+										<s:url id="displayId" action="editSupplierAction">
+											<s:param name="forWhat" value="%{'true'}">forDisable</s:param>
+											<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
+											<s:param name="supplier.supplierId" value="%{supplierId}">supplierId</s:param>
+											<s:param name="supplierModule" value="%{'profile'}">supplierModule</s:param>
+										</s:url>
+									</auth:isAuth>
+									<s:a href="%{displayId}"><s:property value="supplierId"/>
+									</s:a> 
 								</td>
 								<td align="left"><s:property value="supplierName" /></td>
 								<td><s:property value="contactName"/></td>
@@ -163,12 +170,15 @@
 							</s:if>
 							<s:elseif test="%{#supplierModule == 'purchaseOrder'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editSupplierAction">
-										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
-										<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
-										<s:param name="po.supplierPurchaseOrderId" value="%{supplierPurchaseOrderId}">supplierPOId</s:param>
-										<s:param name="supplierModule" value="%{'purchaseOrder'}">supplierModule</s:param>
-									</s:url>
+								<td align="left">
+									<auth:isAuth role="1">
+										<s:url id="displayId" action="editSupplierAction">
+											<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
+											<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
+											<s:param name="po.supplierPurchaseOrderId" value="%{supplierPurchaseOrderId}">supplierPOId</s:param>
+											<s:param name="supplierModule" value="%{'purchaseOrder'}">supplierModule</s:param>
+										</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="supplierPurchaseOrderId"/></s:a>
 								</td>
 								<td align="left"><s:property value="purchaseOrderDate"/></td>
@@ -179,12 +189,15 @@
 							</s:elseif>
 							<s:elseif test="%{#supplierModule == 'receivingReport'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editSupplierAction">
-										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
-										<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
-										<s:param name="rr.receivingReportNo" value="%{receivingReportNo}">RRNo</s:param>
-										<s:param name="supplierModule" value="%{'receivingReport'}">supplierModule</s:param>
-									</s:url>
+								<td align="left">
+									<auth:isAuth role="2">
+										<s:url id="displayId" action="editSupplierAction">
+											<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
+											<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
+											<s:param name="rr.receivingReportNo" value="%{receivingReportNo}">RRNo</s:param>
+											<s:param name="supplierModule" value="%{'receivingReport'}">supplierModule</s:param>
+										</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="receivingReportNo"/></s:a>
 								</td>
 								<td align="left"><s:property value="receivingReportDate"/></td>
@@ -195,12 +208,15 @@
 							</s:elseif>
 							<s:elseif test="%{#supplierModule == 'invoice'}">
 							<tr>
-								<td align="left"><s:url id="displayId" action="editSupplierAction">
+								<td align="left">
+									<auth:isAuth role="3">
+									<s:url id="displayId" action="editSupplierAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="forWhatDisplay" value="%{'edit'}">forEdit</s:param> 
 										<s:param name="invoice.supplierInvoiceNo" value="%{supplierInvoiceNo}">invoiceNo</s:param>
 										<s:param name="supplierModule" value="%{'invoice'}">supplierModule</s:param>
 									</s:url>
+									</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="supplierInvoiceNo"/></s:a>
 								</td>
 								<td align="left"><s:property value="supplierInvoiceDate"/></td>

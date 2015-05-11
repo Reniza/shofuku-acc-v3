@@ -126,8 +126,7 @@ public class AddSupplierAction extends ActionSupport {
 		try {
 			boolean addResult = false;
 			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);		
-			
-			
+
 			if (getSubModule().equalsIgnoreCase("supplierProfile")) {
 				if (validateSupplierProfile()) {
 				} else {

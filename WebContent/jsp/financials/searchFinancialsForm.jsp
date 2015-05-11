@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 
 <html>
 <head>
@@ -102,11 +103,14 @@
 				<s:iterator value="financialsList" status="financialsList">
 					<s:if test="%{#financialModule == 'accountEntryProfile'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editFinancialsAction">
+							<td align="left">
+								<auth:isAuth role="28">
+									<s:url id="displayId" action="editFinancialsAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="aep.accountCode" value="%{accountCode}">Account Code</s:param>
 										<s:param name="financialModule" value="%{financialModule}">financialModule</s:param> 
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="accountCode"/></s:a>
 							</td>
 							<td align="left"><s:property value="name"/></td>
@@ -115,11 +119,14 @@
 					</s:if>
 					<s:elseif test="%{#financialModule == 'journalEntryProfile'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editFinancialsAction">
+							<td align="left">
+								<auth:isAuth role="29">
+									<s:url id="displayId" action="editFinancialsAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="jep.entryNo" value="%{entryNo}">entryNo</s:param>
 										<s:param name="financialModule" value="%{financialModule}">financialModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="entryNo"/></s:a>
 							</td>
 							<td align="left"><s:property value="entryName"/></td>

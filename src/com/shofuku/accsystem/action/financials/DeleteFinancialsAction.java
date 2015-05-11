@@ -30,6 +30,7 @@ public class DeleteFinancialsAction extends ActionSupport{
 			if (getSubModule().equalsIgnoreCase("accountEntryProfile")) {
 				deleteResult = manager.deleteAccountEntryProfile(this.aep.getAccountCode(), AccountEntryProfile.class, session);
 				if (deleteResult == true) {
+					aep = new AccountEntryProfile();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -38,6 +39,7 @@ public class DeleteFinancialsAction extends ActionSupport{
 			} else  {
 				deleteResult = manager.deleteAccountEntryProfile(this.jep.getAccountCode(), JournalEntryProfile.class, session);
 				if (deleteResult == true) {
+					jep = new JournalEntryProfile();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);

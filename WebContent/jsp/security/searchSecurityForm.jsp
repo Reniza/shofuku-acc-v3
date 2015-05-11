@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 
 <html>
 <head>
@@ -98,11 +99,14 @@
 				<s:iterator value="securityList" status="securityList">
 					<s:if test="%{#securityModule == 'userAccount'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editSecurityAction">
+							<td align="left">
+								<auth:isAuth role="32">
+									<s:url id="displayId" action="editSecurityAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="user.userName" value="%{userName}">userName</s:param>
 										<s:param name="securityModule" value="%{securityModule}">securityModule</s:param> 
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="userName"/></s:a>
 							</td>
 							<td align="left"><s:property value="fullName"/></td>
@@ -111,11 +115,14 @@
 					</s:if>
 					<s:elseif test="%{#securityModule == 'userRole'}">
 						<tr>
-							<td align="left"><s:url id="displayId" action="editSecurityAction">
+							<td align="left">
+								<auth:isAuth role="33">
+									<s:url id="displayId" action="editSecurityAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="role.roleName" value="%{roleName}">roleName</s:param>
 										<s:param name="securityModule" value="%{securityModule}">securityModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="roleName"/></s:a>
 							</td>
 						</tr>

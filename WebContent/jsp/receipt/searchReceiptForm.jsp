@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 
 <html>
 <head>
@@ -120,11 +121,14 @@
 				<s:iterator value="receiptList" status="receiptList">
 					<s:if test="%{#receiptModule == 'orSales'}">
 						<tr>
-							<td><s:url id="displayId" action="editReceiptAction">
+							<td>
+								<auth:isAuth role="24">
+									<s:url id="displayId" action="editReceiptAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="orSales.orNumber" value="%{orNumber}">orNumber</s:param>
 										<s:param name="receiptModule" value="%{'orSales'}">receiptModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="orNumber"/></s:a>
 							</td>
 						
@@ -137,11 +141,14 @@
 					</s:if>
 					<s:elseif test="%{#receiptModule == 'orOthers'}">
 						<tr>
-							<td><s:url id="displayId" action="editReceiptAction">
+							<td>
+								<auth:isAuth role="25">
+									<s:url id="displayId" action="editReceiptAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="orOthers.orNumber" value="%{orNumber}">orNumber</s:param>
 										<s:param name="receiptModule" value="%{'orOthers'}">receiptModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="orNumber"/></s:a>
 							</td>
 							<td><s:property value="orDate"/></td>
@@ -151,11 +158,14 @@
 					</s:elseif>
 					<s:elseif test="%{#receiptModule == 'ccReceipts'}">
 						<tr>
-							<td><s:url id="displayId" action="editReceiptAction">
+							<td>
+								<auth:isAuth role="26">
+									<s:url id="displayId" action="editReceiptAction">
 										<s:param name="forWhat" value="%{'true'}">forEdit</s:param>
 										<s:param name="ccReceipts.cashReceiptNo" value="%{cashReceiptNo}">cashReceiptNo</s:param>
 										<s:param name="receiptModule" value="%{'ccReceipts'}">receiptModule</s:param>
 									</s:url>
+								</auth:isAuth>
 									<s:a href="%{displayId}"><s:property value="cashReceiptNo"/></s:a>
 							</td>
 							

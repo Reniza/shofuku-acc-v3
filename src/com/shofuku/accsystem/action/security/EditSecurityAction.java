@@ -59,6 +59,7 @@ public class EditSecurityAction extends ActionSupport{
 						UserAccount.class, "userName",
 						this.getUser().getUserName(),session).get(0);
 				this.setUser(users);
+				
 				return "userAccount";
 			} else {
 				Role userRole = new Role();

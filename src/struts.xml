@@ -32,6 +32,10 @@
 			<result name="cancel" type="redirect">/jsp/util/loginForm.jsp</result>
 			<result name="success" type="tiles">baseLayout.tiles</result>
 		</action>
+		
+		<action name="logout" class="com.shofuku.accsystem.action.LoginAction" method="logout">
+			<result name="success">/jsp/util/loginForm.jsp</result>
+		</action>
 
 		<action name="showBaselayout">
 			<result type="tiles">baseLayout.tiles</result>

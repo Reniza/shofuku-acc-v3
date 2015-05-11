@@ -13,9 +13,11 @@
 <div align="center">
 <table class="layout">
 	<tr>
-		<td height="50px" colspan="2" BGCOLOR="#ffffff">
+		<td height="50px" colspan="2" BGCOLOR="aad6f5" align="right">
 			<tiles:insertAttribute name="header" />
-			Welcome < ${user.fullName} > 
+			<label style="font-family:verdana, sans-serif; font-size: 14px;color: #426c85;font-weight: 700;">
+			Welcome [ ${loggedUser} ] 
+			<s:a style="text-decoration: none;color: #426c85;" href="logout.action">[ LOGOUT ]</s:a></label>
 		</td>
 	</tr>
 	<tr height="500px">

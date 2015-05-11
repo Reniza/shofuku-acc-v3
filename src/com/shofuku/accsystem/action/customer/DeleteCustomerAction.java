@@ -56,6 +56,7 @@ public class DeleteCustomerAction extends ActionSupport {
 						Customer.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMER, "delete");
+					customer = new Customer();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -66,6 +67,7 @@ public class DeleteCustomerAction extends ActionSupport {
 						CustomerPurchaseOrder.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMERPO, "delete");
+					custpo = new CustomerPurchaseOrder();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -106,6 +108,7 @@ public class DeleteCustomerAction extends ActionSupport {
 						DeliveryReceipt.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.DELIVERYREPORT, "delete");
+					dr = new DeliveryReceipt();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -116,6 +119,7 @@ public class DeleteCustomerAction extends ActionSupport {
 						CustomerSalesInvoice.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMERINVOICE, "delete");
+					invoice = new CustomerSalesInvoice();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);

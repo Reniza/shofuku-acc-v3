@@ -9,12 +9,12 @@
    <title>Login Page</title>
    <LINK Rel="stylesheet" Href="CSS/design.css" Type="text/css">
 </head>
-<body background="images/background.jpg">
+<body background="images/background.jpg" >
   <div align="center">
   	<s:form action="login" validate="true">
-  	<h1 id="login">Welcome to SHO FUKU Trading Portal </h1>
- 	 <table id="login">
- 		<tr>
+     <br><br><br><br><br><br><br><br><br><br><br><br><br>
+ 	 <table id="login" class="login" >
+ 		<tr valign="bottom">
 		 	<td id="error" colspan="2"><s:actionerror/></td>  
 		</tr>
 		<tr> 
@@ -26,7 +26,6 @@
 		<tr>
 		  <td><s:submit value="Submit" name="Submit"/></td>
 		</tr> 
-		  
 	 </table>
  	 </s:form>
    </div>

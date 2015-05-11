@@ -4,6 +4,8 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
 <%@ taglib prefix="c" uri="/tld/c.tld"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -21,7 +23,8 @@
 	</script>
 <title>Supplier Invoice Form</title>
 </head>
-<body >
+
+<body>
 <s:if test="%{forWhat != 'print'}">
 <div class="mainForm">
 <h4 class="title">SUPPLIER</h4>

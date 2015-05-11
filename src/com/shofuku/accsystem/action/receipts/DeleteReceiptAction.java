@@ -37,6 +37,7 @@ public class DeleteReceiptAction extends ActionSupport{
 			if (getSubModule().equalsIgnoreCase("orSales")) {
 				deleteResult = manager.deleteReceiptsByParameter(getOrSNo(), ORSales.class,session);
 				if (deleteResult == true) {
+					orSales = new ORSales();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -46,6 +47,7 @@ public class DeleteReceiptAction extends ActionSupport{
 				deleteResult = manager.deleteReceiptsByParameter(getOrONo(),
 						OROthers.class,session);
 				if (deleteResult == true) {
+					orOthers = new OROthers();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
@@ -54,6 +56,7 @@ public class DeleteReceiptAction extends ActionSupport{
 			} else  {
 				deleteResult = manager.deleteReceiptsByParameter(getCrNo(), CashCheckReceipts.class,session);
 				if (deleteResult == true) {
+					ccReceipts = new CashCheckReceipts();
 					addActionMessage(SASConstants.DELETED);
 				} else {
 					addActionError(SASConstants.NON_DELETED);
