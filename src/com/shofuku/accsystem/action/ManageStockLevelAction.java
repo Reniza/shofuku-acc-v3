@@ -17,6 +17,7 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -34,12 +35,15 @@ public class ManageStockLevelAction extends ActionSupport{
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
 	
+	// add other managers for other modules Manager()
+	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+	
 	private String fileUpload;
 	Customer customer;
 	String result;
 	List stockLevelList;
 	String cusId;
-	CustomerManager manager = new CustomerManager();
+	
 	POIUtil poiUtil = new POIUtil();
 	private String forWhat = "false";
 	private String forWhatDisplay ="edit"; 
@@ -51,7 +55,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	public String execute() {
 		Session session = getSession();
 		
-		customer = (Customer) manager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
+		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
 		stockLevelList = new ArrayList();
 		
@@ -69,13 +73,13 @@ public class ManageStockLevelAction extends ActionSupport{
 	public String readStockLevelExcel() {
 		Session session = getSession();
 		//customer = this.getCustomer();
-		customer = (Customer) manager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
+		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		
 		if (null == fileUpload) {
 			addActionError(SASConstants.NO_LIST);
 		}else {
 			customer = poiUtil.readCustomerStockLevelForm(customer, fileUpload, session);
-			manager.updateCustomer(customer, session);
+			customerManager.updateCustomer(customer, session);
 			
 			Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
 			stockLevelList = new ArrayList();
@@ -91,7 +95,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	
 	public String showCustomerProfile() {
 		Session session = getSession();
-			customer = (Customer) manager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
+			customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 			
 			Map sess = ActionContext.getContext().getSession();
 			sess.put("customerStockLevelMap",customer.getCustomerStockLevelMap());

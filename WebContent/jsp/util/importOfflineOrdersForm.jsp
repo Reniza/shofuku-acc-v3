@@ -24,7 +24,7 @@
 <body>
 <div class="mainForm">
 <h4 class="title">Import Offline Orders</h4>
-<s:form id="importForm" action="exportOrderingFormTemplateAction" enctype="multipart/form-data" >
+<s:form id="importForm" action="importOfflineOrdersAction" enctype="multipart/form-data" >
 		<div class="errors">
 			<s:actionerror/>
 			<s:actionmessage/>
@@ -37,8 +37,9 @@
 						<td>Browse file to import (*.xls only):  &nbsp;&nbsp;
 							<s:file size="70" theme="simple"  cssClass="myButtons" name="fileUpload" />
 						</td>
+						<td><s:select disabled="%{forWhat}" label="PO Type" name="importType" list="#{'Supplier':'Supplier','Customer':'Customer'}"></s:select></td>
 						<td colspan="2" style="text-align: left;"> 
-							<input type="button"  value="Import File" />
+						<s:submit cssClass="myButtons" type="button" value="Import File" name="ImportFile"  action="importOfflineOrdersAction"></s:submit>
 						</td>
 					</tr>
 				</table>
@@ -46,15 +47,23 @@
 			
 			<div class="results">
 			<p></p><p></p>
+			
 			<table class="results">
 				<tr class="others" align="left">
 					<td class="desc" width="20px">Error Logs</td>
 				</tr>
-				<s:iterator value="errorStringList" >
-				<tr align="left">
-					<td><s:property/></td>
-				</tr>
+				
+				<s:iterator value="errorStringList" status="errorStringStatus">
+				  <tr align="left">
+				  	<s:if test="#errorStringStatus.even == true">
+				      <td style="background: #CCCCCC"><s:property/></td>
+				    </s:if>
+				    <s:else>
+				      <td><s:property/></td>
+				    </s:else>
+				  </tr>
 				</s:iterator>
+				
 			</table>
 		</div>
 		</div>

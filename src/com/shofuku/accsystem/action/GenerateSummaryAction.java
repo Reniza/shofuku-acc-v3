@@ -80,12 +80,13 @@ public class GenerateSummaryAction extends ActionSupport {
 	boolean soaReport = false;
 	boolean isInventorySummaryReport=false;
 
-	LookupManager lookUpManager = new LookupManager();
+	// add other managers for other modules Manager()
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-	ReceiptsManager receiptsManager = new ReceiptsManager();
-	DisbursementManager disbursementManager = new DisbursementManager();
-	CustomerManager customerManager = new CustomerManager();
-	SupplierManager supplierManager = new SupplierManager();
+	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
+	SupplierManager supplierManager = (SupplierManager)actionSession.get("supplierManager"); 
 	
 	
 
@@ -129,9 +130,9 @@ public class GenerateSummaryAction extends ActionSupport {
 	public String loadReferenceNo() {
 		Session session = getSession();
 		try {
-			lookUpManager.setUser(user);
+			lookupManager.setUser(user);
 			disbursementManager.setUser(user);
-			referenceList = lookUpManager.getDistinctReferenceNo(
+			referenceList = lookupManager.getDistinctReferenceNo(
 					PettyCash.class, session);
 				pettyList = disbursementManager.listDistinctAlphabeticalAscByParameter(PettyCash.class, "payee", session);
 				checkList = disbursementManager.listDistinctAlphabeticalAscByParameter(CheckPayments.class, "payee", session);

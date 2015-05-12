@@ -1,22 +1,32 @@
 package com.shofuku.accsystem.action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.helpers.UserRoleHelper;
-import com.shofuku.accsystem.utils.HibernateUtil;
-import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
-import com.shofuku.accsystem.controllers.SecurityManager;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.DisbursementManager;
+import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.ReceiptsManager;
+import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
+import com.shofuku.accsystem.controllers.SecurityManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
+import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
+import com.shofuku.accsystem.utils.HibernateUtil;
+
 
 public class LoginAction extends ActionSupport {
-/**
+	
+	private static final long serialVersionUID = 1162594281489858399L;
+	
+	/**
 	 * <p> Validate a user login. </p>
 	 */
 	SecurityManager manager = new SecurityManager();
@@ -25,7 +35,7 @@ public class LoginAction extends ActionSupport {
 	private String forWhat;
 	private String forWhatDisplay;
 	
-	List userList = new ArrayList();
+	List<UserAccount> userList = new ArrayList<UserAccount>();
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -33,6 +43,7 @@ public class LoginAction extends ActionSupport {
 	
 	UserRoleHelper roleHelper = new UserRoleHelper();
 	
+	@SuppressWarnings("unchecked")
 	public String execute() throws Exception {
 		Session session = getSession();
 		
@@ -48,14 +59,12 @@ public class LoginAction extends ActionSupport {
 					addActionError("Invalid password! Please try again!");
 					return "error";
 				}else if (getUsername().equals(user.getUserName()) && getPassword().equals(user.getPassword())){
-						Map sess = ActionContext.getContext().getSession();
+						Map<String,Object> sess = ActionContext.getContext().getSession();
 						sess.put("user",user);
 						sess.put("loggedUser",user.getUserName());
 						sess.put("rolesList", roleHelper.loadModules());
 						
-						ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager(); 
-						reportSummaryMgr.setUser(user);
-						sess.put("reportSummaryMgr", reportSummaryMgr);						
+						initializeControllers(sess,user);
 						
 				}
 				return "success";
@@ -64,6 +73,44 @@ public class LoginAction extends ActionSupport {
 		return "input";
 	}
 	 
+		private void initializeControllers(Map<String,Object> sess, UserAccount user) {
+			
+			//controllers
+			
+			AccountEntryManager accountEntryManager = new AccountEntryManager();
+			CustomerManager customerManager = new CustomerManager();
+			DisbursementManager disbursementManager = new DisbursementManager();
+			InventoryManager inventoryManager 		= new InventoryManager(); 
+			LookupManager lookupManager = new LookupManager();
+			ReceiptsManager receiptsManager = new ReceiptsManager();
+			ReportAndSummaryManager reportAndSummaryManager = new ReportAndSummaryManager(); 
+			SupplierManager supplierManager = new SupplierManager ();
+			TransactionManager transactionMananger = new TransactionManager();
+			
+			accountEntryManager.setUser(user);
+			customerManager.setUser(user);
+			disbursementManager.setUser(user);
+			inventoryManager.setUser(user);
+			lookupManager.setUser(user);
+			receiptsManager.setUser(user);
+			reportAndSummaryManager.setUser(user);
+			supplierManager.setUser(user);
+			transactionMananger.setUser(user);
+			
+			//include in context session for use
+			sess.put("accountEntryManager", accountEntryManager);
+			sess.put("customerManager",customerManager);
+			sess.put("disbursementManager",disbursementManager);
+			sess.put("inventoryManager",inventoryManager);
+			sess.put("lookupManager", lookupManager);
+			sess.put("receiptsManager",receiptsManager);
+			sess.put("reportAndSummaryManager", reportAndSummaryManager);
+			sess.put("supplierManager",supplierManager);
+			sess.put("transactionMananger",transactionMananger);
+			
+			
+	}
+
 		public boolean validateLogin() {
 			boolean errorFound= false;
 		  if (getUsername().length() == 0){
@@ -78,9 +125,7 @@ public class LoginAction extends ActionSupport {
 		}
 	  
 	public String logout(){
-		Session session = getSession();
-		Map sess = ActionContext.getContext().getSession();
-		
+		Map<String,Object> sess = ActionContext.getContext().getSession();
 		sess.remove("user");	
 		sess.remove("rolesList");
 		return "success";

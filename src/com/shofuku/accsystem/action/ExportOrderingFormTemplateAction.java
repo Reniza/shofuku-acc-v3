@@ -23,8 +23,13 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
@@ -59,8 +64,11 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	List customerNoList;
 	
 	
-	InventoryManager manager=new InventoryManager();
-	CustomerManager customerManager = new CustomerManager();
+	
+	
+	// add other managers for other modules Manager()
+	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+	InventoryManager inventoryManager		= (InventoryManager) 	actionSession.get("inventoryManager");
 	
 	HashMap<String,HashMap<String,ArrayList<Item>>> itemMap = new HashMap<String,HashMap<String,ArrayList<Item>>>(); 
 	
@@ -97,19 +105,19 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 		Map customerSpecificStockLevel = new HashMap<>();
 		//temp value: CMJCC01
 		if (orderingFormType.equalsIgnoreCase("S")){
-			List result = manager.listByParameter(Customer.class, "customerNo",customer.getCustomerNo(),session);
+			List result = inventoryManager.listByParameter(Customer.class, "customerNo",customer.getCustomerNo(),session);
 			customer =(Customer) result.get(0);
 			customerSpecificStockLevel = customer.getCustomerStockLevelMap();
 			//END: 2015 - PHASE 3a - stock level per customer
 		}
 		
 		
-		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
-		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
-		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<OfficeSupplies> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
-		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
-		List<UnlistedItem> ulList = manager.listAlphabeticalAscByParameter(UnlistedItem.class, "description", session); 
+		List<RawMaterial> rawMatList =inventoryManager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
+		List<TradedItem> tradedItemList =inventoryManager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =inventoryManager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =inventoryManager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<FinishedGood> finList = inventoryManager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
+		List<UnlistedItem> ulList = inventoryManager.listAlphabeticalAscByParameter(UnlistedItem.class, "description", session); 
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
 		

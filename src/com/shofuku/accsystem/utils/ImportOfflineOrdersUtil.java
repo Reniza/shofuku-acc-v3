@@ -21,20 +21,27 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
+import com.shofuku.accsystem.domain.security.UserAccount;
 
 public class ImportOfflineOrdersUtil {
 	protected final Logger logger = LoggerFactory.getLogger(ImportOfflineOrdersUtil.class);
 	
-	CustomerManager customerManager = new CustomerManager();
-	InventoryManager inventoryManager = new InventoryManager();
+	CustomerManager customerManager;
+	InventoryManager inventoryManager;
 	
 	RecordCountHelper rch = new RecordCountHelper();
 	DateFormatHelper dfh = new DateFormatHelper();
@@ -45,6 +52,14 @@ public class ImportOfflineOrdersUtil {
 	private String importType;
 	private	String lastCellRead= "";
 	
+
+	public ImportOfflineOrdersUtil(CustomerManager customerManager,
+			InventoryManager inventoryManager) {
+		this.customerManager = customerManager;
+		this.inventoryManager = inventoryManager;
+	}
+	
+	public ImportOfflineOrdersUtil() {}
 
 	/*
 	 * import Type should be either  "Supplier" or "Customer"
@@ -147,61 +162,64 @@ public class ImportOfflineOrdersUtil {
 						}
 						
 						//check if dr is existing on template, if yes add PO as transient object if not proceed to insert
-						if(null==hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DATE).getDateCellValue()) {
-							boolean addResult =customerManager.addCustomerObject(cpo, session);	
-							if (addResult) {
-								rch.updateCount(SASConstants.CUSTOMERPO, "add");
-							}
-						}else {
-
-							/*
-							 * BEGIN - ADD Delivery Receipt
-							 */
-							
-							DeliveryReceipt dr = new DeliveryReceipt();
-							dr.setDeliveryReceiptNo(rch.getPrefix(SASConstants.DELIVERYREPORT,SASConstants.DELIVERYREPORT_PREFIX));
-							//add transient po
-							dr.setCustomerPurchaseOrder((CustomerPurchaseOrder)customerManager.persistingInsert(cpo,session));
-							
-							try {
-								dr.setDeliveryReceiptDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DATE).getDateCellValue()));
-							} catch (Exception e) {errorStrings.add("DR Date on sheet: "+ x +" is invalid");						}	
-							
-							try {
-								dr.setShippingDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_SHIPPING_DATE).getDateCellValue()));
-							} catch (Exception e) {errorStrings.add("DR Shipping Date on sheet: "+ x +" is invalid");						}
-							
-							try {
-								dr.setDueDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DUE_DATE).getDateCellValue()));
-							} catch (Exception e) {errorStrings.add("DR Due Date on sheet: "+ x +" is invalid");						}
-								
-							try {
-								dr.setShippingMethod(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_SHIPPING_METHOD, Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-							} catch (Exception e) {errorStrings.add("DR Shipping Method on sheet "+x+" is invalid");				}
 						
-							try {
-								dr.setRemarks(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_REMARKS, Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-							} catch (Exception e) {errorStrings.add("DR Remarks on sheet "+x+" is invalid");				}
-
-							
-							// set dr purchase order details
-							// RULES FOR PODETAILS APPLIED HERE
-							poDtlHelper = generateHelperObject(poDtlHelper,SASConstants.IMPORT_COLUMN_DR_ITEM_CODE,customer.getCustomerType(),dfh.dynamicParseDateToTimestamp(dr.getDeliveryReceiptDate(),SASConstants.TIMESTAMP_FORMAT),orderDetailSet,itemList,hssfSheet,session);
-							
-							dr.setPurchaseOrderDetails(poDtlHelper.persistNewSetElements(session));
-							dr.setTotalAmount(poDtlHelper.getTotalAmount());
-						
-							if(updateInventory(new PurchaseOrderDetailHelper(), poDtlHelper, SASConstants.ORDER_TYPE_DR)) {
-								boolean addResult =customerManager.addCustomerObject(dr, session);	
+						try {
+							if(null==hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DATE).getDateCellValue()) {
+								boolean addResult =customerManager.addCustomerObject(cpo, session);	
 								if (addResult) {
-									rch.updateCount(SASConstants.DELIVERYREPORT, "add");
-								}	
+									rch.updateCount(SASConstants.CUSTOMERPO, "add");
+								}
 							}else {
-								continue;
+
+								/*
+								 * BEGIN - ADD Delivery Receipt
+								 */
+								
+								DeliveryReceipt dr = new DeliveryReceipt();
+								dr.setDeliveryReceiptNo(rch.getPrefix(SASConstants.DELIVERYREPORT,SASConstants.DELIVERYREPORT_PREFIX));
+								//add transient po
+								dr.setCustomerPurchaseOrder((CustomerPurchaseOrder)customerManager.persistingInsert(cpo,session));
+								
+								try {
+									dr.setDeliveryReceiptDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DATE).getDateCellValue()));
+								} catch (Exception e) {errorStrings.add("DR Date on sheet: "+ x +" is invalid");						}	
+								
+								try {
+									dr.setShippingDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_SHIPPING_DATE).getDateCellValue()));
+								} catch (Exception e) {errorStrings.add("DR Shipping Date on sheet: "+ x +" is invalid");						}
+								
+								try {
+									dr.setDueDate(dfh.dynamicParseWordedDateToTimestamp(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_DUE_DATE).getDateCellValue()));
+								} catch (Exception e) {errorStrings.add("DR Due Date on sheet: "+ x +" is invalid");						}
+									
+								try {
+									dr.setShippingMethod(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_SHIPPING_METHOD, Row.CREATE_NULL_AS_BLANK).getStringCellValue());
+								} catch (Exception e) {errorStrings.add("DR Shipping Method on sheet "+x+" is invalid");				}
+							
+								try {
+									dr.setRemarks(hssfRow.getCell(SASConstants.IMPORT_COLUMN_DR_REMARKS, Row.CREATE_NULL_AS_BLANK).getStringCellValue());
+								} catch (Exception e) {errorStrings.add("DR Remarks on sheet "+x+" is invalid");				}
+
+								
+								// set dr purchase order details
+								// RULES FOR PODETAILS APPLIED HERE
+								poDtlHelper = generateHelperObject(poDtlHelper,SASConstants.IMPORT_COLUMN_DR_ITEM_CODE,customer.getCustomerType(),dfh.dynamicParseDateToTimestamp(dr.getDeliveryReceiptDate(),SASConstants.TIMESTAMP_FORMAT),orderDetailSet,itemList,hssfSheet,session);
+								
+								dr.setPurchaseOrderDetails(poDtlHelper.persistNewSetElements(session));
+								dr.setTotalAmount(poDtlHelper.getTotalAmount());
+							
+								if(updateInventory(new PurchaseOrderDetailHelper(), poDtlHelper, SASConstants.ORDER_TYPE_DR)) {
+									boolean addResult =customerManager.addCustomerObject(dr, session);	
+									if (addResult) {
+										rch.updateCount(SASConstants.DELIVERYREPORT, "add");
+									}	
+								}else {
+									continue;
+								}
 							}
-							
-							
-							
+						} catch (IllegalStateException ise) {
+							errorStrings.add("Invalid Date on sheet "+x+" unable to add order");
+							ise.printStackTrace();
 						}
 					
 					}

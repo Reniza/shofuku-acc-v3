@@ -23,7 +23,9 @@ public class LookupAction extends ActionSupport {
 
 	private String expenseClassification;
  
-	LookupManager lookupMgr = new LookupManager();
+	
+	// add other managers for other modules Manager()
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -31,7 +33,7 @@ public class LookupAction extends ActionSupport {
 	public String execute() throws Exception{
 		Session session = getSession();
 		try{
-    	expenseClassifications = lookupMgr.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
+    	expenseClassifications = lookupManager.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
     	return SUCCESS;
 		}catch(Exception e ){
 			return SUCCESS;

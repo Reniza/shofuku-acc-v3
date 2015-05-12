@@ -26,7 +26,8 @@ public class LoadLookUpAction extends ActionSupport {
 	UserAccount user = (UserAccount) actionSession.get("user");
 
 	List classifList;
-	LookupManager manager = new LookupManager();
+	// add other managers for other modules Manager()
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -37,16 +38,16 @@ public class LoadLookUpAction extends ActionSupport {
 		try {
 			if (getWhatLookUp().equals("pettyCash")) {
 
-				classifList = manager.getLookupElements(
+				classifList = lookupManager.getLookupElements(
 						ExpenseClassification.class, "PETTYCASH",session);
 				return "pettyCash";
 			} else if (getWhatLookUp().equals("cashPayment")) {
 
-				classifList = manager.getLookupElements(
+				classifList = lookupManager.getLookupElements(
 						PaymentClassification.class, "CASHPAYMENT",session);
 				return "cashPayment";
 			} else {
-				classifList = manager.getLookupElements(PaymentTerms.class,
+				classifList = lookupManager.getLookupElements(PaymentTerms.class,
 						"CHECKPAYMENT",session);
 			}
 			return "checkPayment";

@@ -94,9 +94,14 @@ public class AddOrderDetailsAction extends ActionSupport {
 	 * list ready for table iteration
 	 */
 
-	// add other managers for other modules
-	SupplierManager supplierManager = new SupplierManager();
-	CustomerManager customerManager = new CustomerManager();
+	// add other managers for other modules Manager()
+	SupplierManager supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+	InventoryManager inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger 	= (TransactionManager) 	actionSession.get("transactionMananger");
+	LookupManager lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 
 	PurchaseOrderDetails orderDetails;
 
@@ -153,16 +158,11 @@ public class AddOrderDetailsAction extends ActionSupport {
 	List UOMList;
 
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-			List accountProfileCodeList;
-			List<Transaction> transactionList;
-			List<Transaction> transactions;
-			Iterator itr;
-			AccountEntryManager accountEntryManager = new AccountEntryManager();
-			TransactionManager transactionMananger = new TransactionManager();
-			
-			//END 2013 - PHASE 3 : PROJECT 1: MARK 
-	LookupManager lookupManager = new LookupManager();
-	DisbursementManager disbursementManager = new DisbursementManager();
+	List accountProfileCodeList;
+	List<Transaction> transactionList;
+	List<Transaction> transactions;
+	Iterator itr;
+	//END 2013 - PHASE 3 : PROJECT 1: MARK 
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -170,10 +170,9 @@ public class AddOrderDetailsAction extends ActionSupport {
 
 	public String loadLookLists() {
 		Session session = getSession();
-		InventoryManager invManager = new InventoryManager();
 		
 		try {
-			itemCodeList = invManager.loadItemListFromRawAndFin(session);
+			itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 			return "finGood";
 		} catch (Exception e) {
 			return SUCCESS;
@@ -185,8 +184,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 		}
 	}
 
-	InventoryManager invMgr = new InventoryManager();
-
 	public String loadOrdersByReferenceNo() throws Exception{
 		Session session = getSession();
 		accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);
@@ -194,9 +191,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 		if(rs==null) {
 			addActionError("NO RS");
 		}else {
-			SupplierManager supplierManager = new SupplierManager();
-			CustomerManager customerManager = new CustomerManager();
-			InventoryManager inventoryManager = new InventoryManager();
+			
 			try {
 				
 			ReceivingReport rr = (ReceivingReport)supplierManager.listSuppliersByParameter(
@@ -283,10 +278,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 		if(rs==null) {
 			addActionError("NO RS");
 		}else {
-			
-			SupplierManager supplierManager = new SupplierManager();
-			CustomerManager customerManager = new CustomerManager();
-			InventoryManager inventoryManager = new InventoryManager();
+						
 			try {
 			ReceivingReport rr = (ReceivingReport)supplierManager.listSuppliersByParameter(
 					ReceivingReport.class,
@@ -422,8 +414,8 @@ public class AddOrderDetailsAction extends ActionSupport {
 			
 			return "returnSlip";
 		}else {
-			List list = invMgr.listInventoryByParameter(RawMaterial.class, "itemCode", orderDetails.getItemCode(),session);
-			List tradedItemlist = invMgr.listInventoryByParameter(TradedItem.class, "itemCode", orderDetails.getItemCode(),session);
+			List list = inventoryManager.listInventoryByParameter(RawMaterial.class, "itemCode", orderDetails.getItemCode(),session);
+			List tradedItemlist = inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode", orderDetails.getItemCode(),session);
 			
 			if(list.size()>0) {
 				RawMaterial tempItem = (RawMaterial)list.get(0);
@@ -435,7 +427,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 						TradedItem tempItem = (TradedItem)tradedItemlist.get(0);
 						orderDetails= new PurchaseOrderDetails(tempItem.getItemCode(), tempItem.getDescription(), 0, tempItem.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem.getItemPricing(), customerType, priceType), 0,tempItem.getIsVattable(),0,0);
 				 }else{
-				list = invMgr.listInventoryByParameter(FinishedGood.class, "productCode", orderDetails.getItemCode(),session);
+				list = inventoryManager.listInventoryByParameter(FinishedGood.class, "productCode", orderDetails.getItemCode(),session);
 				FinishedGood tempItem2 = (FinishedGood)list.get(0);
 				orderDetails= new PurchaseOrderDetails(tempItem2.getProductCode(), tempItem2.getDescription(), 0, tempItem2.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem2.getItemPricing(), customerType, priceType), 0,tempItem2.getIsVattable(),0,0);
 				 }
@@ -600,8 +592,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 		
 		//2013 - PHASE 3 : PROJECT 4: MARK
 		
-		InventoryManager inventoryManager=new InventoryManager();
-		
 		List<Item> allItemList = new ArrayList<Item>();
 		allItemList = inventoryManager.getAllItemList(session);
 						
@@ -667,8 +657,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 		Session session = getSession();
 		customerNoList = customerManager.listAllCustomerNo(session);
 		//2013 - PHASE 3 : PROJECT 4: MARK
-		
-		InventoryManager inventoryManager=new InventoryManager();
 		
 		List<Item> allItemList = new ArrayList<Item>();
 		allItemList = inventoryManager.getAllItemList(session);
@@ -832,7 +820,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 			double totalAmountToCompareTo = 0;
 			totalAmount = computerForTotalAmount(poDetailsHelper);
 			//2013 - PHASE 3 : PROJECT 4: MARK
-			InventoryManager inventoryManager=new InventoryManager();
 			List<Item> allItemList = new ArrayList<Item>();
 			allItemList = inventoryManager.getAllItemList(session);
 			
@@ -965,7 +952,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				return "customerDR";
 				
 			}else if (parentPage.equalsIgnoreCase("InventoryFPTS")) {
-				fpts = (FPTS) invMgr.listInventoryByParameter(FPTS.class,"fptsNo", fptsId,session).get(0);
+				fpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo", fptsId,session).get(0);
 				//poDetailsHelper.prepareSetAndList(); <--double display
 				poDetailsHelperToCompare.prepareSetAndList();
 				//START Phase 3 - Azhee
@@ -994,7 +981,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				forWhat="false";
 				return "fpts";
 			}else if (parentPage.equalsIgnoreCase("InventoryOrderRequisition")) {
-				rf = (RequisitionForm) invMgr.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfId,session).get(0);
+				rf = (RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfId,session).get(0);
 				//poDetailsHelper.prepareSetAndList(); <--double display
 				//START Phase 3 - Azhee
 				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rf.getRequisitionNo(), session);
