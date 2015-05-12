@@ -10,8 +10,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class LookupManager extends BaseController {
 	
-	LookupDaoImpl lookupDao = new LookupDaoImpl();
-	
 	@SuppressWarnings("rawtypes")
 	public List getLookupElements(Class clazz, String module,Session session) {
 		return lookupDao.listAlphabeticalAscByParameter(clazz, "value",session);

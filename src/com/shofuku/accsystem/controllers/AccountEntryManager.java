@@ -12,9 +12,6 @@ import com.shofuku.accsystem.domain.financials.Vat;
 
 public class AccountEntryManager extends BaseController{
 	
-	AccountEntryDaoImpl accountEntryDao = new AccountEntryDaoImpl();
-	
-	
 	public AccountEntryProfile loadAccountEntryProfile(String accountCode) {
 		AccountEntryProfile accountEntry =(AccountEntryProfile) accountEntryDao.load(accountCode, AccountEntryProfile.class);
 		if(accountEntry==null){

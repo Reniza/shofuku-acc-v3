@@ -14,8 +14,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class TransactionManager extends BaseController {
 	
-	TransactionsDaoImpl transactionsDao = new TransactionsDaoImpl();
-	
 	
 /*	public Transaction loadTransaction(String referenceId) {
 		Transaction transaction = (Transaction) transactionsDao.load(referenceId, Transaction.class);

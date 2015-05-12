@@ -4,32 +4,23 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.ListUtils;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-import com.shofuku.accsystem.dao.impl.InventoryDaoImpl;
-import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
 import com.shofuku.accsystem.domain.inventory.Memo;
 import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
-import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
-import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
-import com.shofuku.accsystem.utils.DoubleConverter;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 
@@ -39,96 +30,94 @@ import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 @SuppressWarnings("rawtypes")
 public class InventoryManager extends BaseController{
 
-	InventoryDaoImpl dao = new InventoryDaoImpl();
-	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 
 	public boolean addInventoryObject(Object inventoryObject,Session session) {
-		return dao.save(inventoryObject,session);
+		return inventoryDao.save(inventoryObject,session);
 	}
 
 	public boolean addPersistingInventoryObject(Object inventoryObject,Session session) {
-		return dao.persistingInsert(inventoryObject,session);
+		return inventoryDao.persistingInsert(inventoryObject,session);
 	}
 	
 
 	public boolean deleteInventoryByParameter(Object object, Class clazz,Session session) {
-		return dao.deleteByParameter(object, clazz,session);
+		return inventoryDao.deleteByParameter(object, clazz,session);
 	}
 	
 	
 	public boolean deletePersistingInventoryItem(Object object, Session session) {
-		return dao.persistingDelete(object,session);
+		return inventoryDao.persistingDelete(object,session);
 	}
 	
 	
 	public boolean mergeInventoryByParameter(Object object, Class clazz,Session session) {
-		return dao.mergeByParameter(object, clazz,session);
+		return inventoryDao.mergeByParameter(object, clazz,session);
 	}
 
 	public boolean updateInventory(Object persistentObject,Session session) {
-		return dao.update(persistentObject,session);
+		return inventoryDao.update(persistentObject,session);
 	}
 	
 	public boolean addStockStatus(Object inventoryObject,Session session) {
-		return dao.saveStockStatus(inventoryObject,session);
+		return inventoryDao.saveStockStatus(inventoryObject,session);
 	}
 	
 	public boolean updateStockStatus(Object persistentObject,Session session) {
-		return dao.updateStockStatus(persistentObject,session);
+		return inventoryDao.updateStockStatus(persistentObject,session);
 	}
 	
 	public boolean updatePersistingInventoryObject(Object persistentObject,Session session) {
-		return dao.persistingUpdate(persistentObject,session);
+		return inventoryDao.persistingUpdate(persistentObject,session);
 	}
 
 	public List listInventoryByParameter(Class clazz, String parameter,
 			String value,Session session) {
-		return dao.listByParameter(clazz, parameter, value,session);
+		return inventoryDao.listByParameter(clazz, parameter, value,session);
 	}
 
 	public List listInventoryByParameterLike(Class clazz, String parameter,
 			String value,Session session) {
-		return dao.listByParameterLike(clazz, parameter, value,session);
+		return inventoryDao.listByParameterLike(clazz, parameter, value,session);
 	}
 	
 	public List listInventoryByParametersLike(Class clazz, Map<String,Object> parameterMap,List parameterFields, String orderByString,
 			Session session) {
-		return dao.listByParametersLike(clazz, parameterMap, parameterFields,orderByString, session);
+		return inventoryDao.listByParametersLike(clazz, parameterMap, parameterFields,orderByString, session);
 	}
 	public List listByParameters(Class clazz, Map<String,Object> parameterMap,List parameterFields, String orderByString,
 			Session session) {
-		return dao.listByParameters(clazz, parameterMap, parameterFields,orderByString, session);
+		return inventoryDao.listByParameters(clazz, parameterMap, parameterFields,orderByString, session);
 	}
 	public boolean addPurchaseOrderDetails(Object purchaseOrderDetail,Session session) {
-		return dao.save(purchaseOrderDetail,session);
+		return inventoryDao.save(purchaseOrderDetail,session);
 	}
 	
 	public List getInventoryElementsByDate(Date date,
 			String className,String parameter,Session session) {
-		return  dao.getBetweenDates(date, date,className, parameter,session);
+		return  inventoryDao.getBetweenDates(date, date,className, parameter,session);
 	}
 
 	
 	public Set<Ingredient> persistsIngredients(Set<Ingredient> ingredients,Session session) {
-		return dao.persistsIngredients(ingredients,session);
+		return inventoryDao.persistsIngredients(ingredients,session);
 	}
 	
 	public boolean persistMemo(Memo memo,Session session) {
-		return dao.persistMemo(memo,session);
+		return inventoryDao.persistMemo(memo,session);
 	}
 	
 	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
-		return dao.listAlphabeticalAscByParameter(clazz, parameter,session);
+		return inventoryDao.listAlphabeticalAscByParameter(clazz, parameter,session);
 	}
 	
 	public List searchFPTSByOrderRequisitionNo(Class clazz, String parameter, String value,Session session){
-		return dao.searchFPTSByOrderRequisitionNo(clazz, parameter, value, session);
+		return inventoryDao.searchFPTSByOrderRequisitionNo(clazz, parameter, value, session);
 	}
 	public List listByParameter(Class clazz, String parameter, String value,Session session) {
-		return dao.listByParameter(clazz, parameter, value,session);
+		return inventoryDao.listByParameter(clazz, parameter, value,session);
 	}
 	
 	/*
@@ -141,50 +130,50 @@ public class InventoryManager extends BaseController{
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
-			RawMaterial originalItem = (RawMaterial)dao.load(incomingItem.getItemCode(),RawMaterial.class);
+			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				return dao.updateInventoryPerRecordCount(originalItem, session);
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}			
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
-			FinishedGood originalItem = (FinishedGood)dao.load(incomingItem.getProductCode(),FinishedGood.class);
+			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				return dao.updateInventoryPerRecordCount(originalItem, session);
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
-			TradedItem originalItem = (TradedItem)dao.load(incomingItem.getItemCode(),TradedItem.class);
+			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				return dao.updateInventoryPerRecordCount(originalItem, session);
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
-			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				return dao.updateInventoryPerRecordCount(originalItem, session);
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
-			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
+			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				return dao.updateInventoryPerRecordCount(originalItem, session);
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}
 
@@ -203,45 +192,45 @@ public class InventoryManager extends BaseController{
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
-			RawMaterial originalItem = (RawMaterial)dao.load(incomingItem.getItemCode(),RawMaterial.class);
+			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 dao.updateInventoryPerRecordCount(originalItem, session);
+				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}			
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
-			FinishedGood originalItem = (FinishedGood)dao.load(incomingItem.getProductCode(),FinishedGood.class);
+			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 dao.updateInventoryPerRecordCount(originalItem, session);
+				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
-			TradedItem originalItem = (TradedItem)dao.load(incomingItem.getItemCode(),TradedItem.class);
+			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 dao.updateInventoryPerRecordCount(originalItem, session);
+				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
-			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 dao.updateInventoryPerRecordCount(originalItem, session);
+				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
-			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
+			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 dao.updateInventoryPerRecordCount(originalItem, session);
+				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 		}
 
@@ -260,47 +249,47 @@ public class InventoryManager extends BaseController{
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
-			RawMaterial originalItem = (RawMaterial)dao.load(incomingItem.getItemCode(),RawMaterial.class);
+			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				dao.updateInventoryPerRecordCount(originalItem, session);
+				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}			
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
-			FinishedGood originalItem = (FinishedGood)dao.load(incomingItem.getProductCode(),FinishedGood.class);
+			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				dao.updateInventoryPerRecordCount(originalItem, session);
+				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
-			TradedItem originalItem = (TradedItem)dao.load(incomingItem.getItemCode(),TradedItem.class);
+			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				dao.updateInventoryPerRecordCount(originalItem, session);
+				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 				
 			}
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
-			Utensils originalItem = (Utensils)dao.load(incomingItem.getItemCode(),Utensils.class);
+			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				dao.updateInventoryPerRecordCount(originalItem, session);
+				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 				
 			}
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
-			OfficeSupplies originalItem = (OfficeSupplies)dao.load(incomingItem.getItemCode(),OfficeSupplies.class);
+			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
 				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				dao.updateInventoryPerRecordCount(originalItem, session);
+				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 				
 			}
 		}
@@ -333,23 +322,23 @@ public class InventoryManager extends BaseController{
 				qtyOut=podetails.getQuantityOut();
 				try {
 				if(item.getItemType().equalsIgnoreCase("rawMat")) {
-					object = (RawMaterial)dao.load(podetails.getItemCode(), RawMaterial.class);	
+					object = (RawMaterial)inventoryDao.load(podetails.getItemCode(), RawMaterial.class);	
 					((RawMaterial)object).setQuantityIn(podetails.getQuantityIn());
 					((RawMaterial)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("tradedItems")) {
-					object = (TradedItem)dao.load(podetails.getItemCode(),TradedItem.class);
+					object = (TradedItem)inventoryDao.load(podetails.getItemCode(),TradedItem.class);
 					((TradedItem)object).setQuantityIn(podetails.getQuantityIn());
 					((TradedItem)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("utensils")) {
-					object = (Utensils)dao.load(podetails.getItemCode(),Utensils.class);
+					object = (Utensils)inventoryDao.load(podetails.getItemCode(),Utensils.class);
 					((Utensils)object).setQuantityIn(podetails.getQuantityIn());
 					((Utensils)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("ofcSup")) {
-					object = (OfficeSupplies)dao.load(podetails.getItemCode(),OfficeSupplies.class);
+					object = (OfficeSupplies)inventoryDao.load(podetails.getItemCode(),OfficeSupplies.class);
 					((OfficeSupplies)object).setQuantityIn(podetails.getQuantityIn());
 					((OfficeSupplies)object).setQuantityOut(podetails.getQuantityOut());
 				}else if(item.getItemType().equalsIgnoreCase("finGood")) {
-					object = (FinishedGood)dao.load(podetails.getItemCode(),FinishedGood.class);
+					object = (FinishedGood)inventoryDao.load(podetails.getItemCode(),FinishedGood.class);
 					((FinishedGood)object).setQuantityIn(podetails.getQuantityIn());
 					((FinishedGood)object).setQuantityOut(podetails.getQuantityOut());
 				}
@@ -368,11 +357,11 @@ public class InventoryManager extends BaseController{
 					//do nothing
 				}
 			}
-		dao.commitChanges(session);
+		inventoryDao.commitChanges(session);
 	}
 	
 	public void commitChanges(Session session) {
-		dao.commitChanges(session);		
+		inventoryDao.commitChanges(session);		
 	}
 
 	private Item getInventoryObject(String itemCode, List<Item> fullItemList) {
@@ -387,31 +376,31 @@ public class InventoryManager extends BaseController{
 
 	public Object determineItemTypeFromPoDetails(PurchaseOrderDetails poDetails) {
 		Object object= null;
-		object = (RawMaterial)dao.load(poDetails.getItemCode(), RawMaterial.class);
+		object = (RawMaterial)inventoryDao.load(poDetails.getItemCode(), RawMaterial.class);
 		if(object!=null) {
 			((RawMaterial)object).setQuantityIn(poDetails.getQuantity());
 			((RawMaterial)object).setQuantityOut(poDetails.getQuantity());
 			return object;
 		}else {
-			object = (TradedItem)dao.load(poDetails.getItemCode(),TradedItem.class);
+			object = (TradedItem)inventoryDao.load(poDetails.getItemCode(),TradedItem.class);
 			if(object!=null) {
 				((TradedItem)object).setQuantityIn(poDetails.getQuantity());
 				((TradedItem)object).setQuantityOut(poDetails.getQuantity());
 				return object;
 			}else {
-				object = (FinishedGood)dao.load(poDetails.getItemCode(),FinishedGood.class);
+				object = (FinishedGood)inventoryDao.load(poDetails.getItemCode(),FinishedGood.class);
 				if(object!=null) {
 					((FinishedGood)object).setQuantityIn(poDetails.getQuantity());
 					((FinishedGood)object).setQuantityOut(poDetails.getQuantity());
 					return object;
 				}else {
-					object = (Utensils)dao.load(poDetails.getItemCode(),Utensils.class);
+					object = (Utensils)inventoryDao.load(poDetails.getItemCode(),Utensils.class);
 					if(object!=null) {
 						((Utensils)object).setQuantityIn(poDetails.getQuantity());
 						((Utensils)object).setQuantityOut(poDetails.getQuantity());
 						return object;
 					}else{
-						object = (OfficeSupplies)dao.load(poDetails.getItemCode(),OfficeSupplies.class);
+						object = (OfficeSupplies)inventoryDao.load(poDetails.getItemCode(),OfficeSupplies.class);
 						if(object!=null) {
 							((OfficeSupplies)object).setQuantityIn(poDetails.getQuantity());
 							((OfficeSupplies)object).setQuantityOut(poDetails.getQuantity());
@@ -512,7 +501,7 @@ public class InventoryManager extends BaseController{
 	public Ingredient loadIngredientPrices(Ingredient originalIngredient,Session session){
 		Ingredient ingredient = null;
 		try{
-		List list = dao.listByParameter(RawMaterial.class, "itemCode",
+		List list = inventoryDao.listByParameter(RawMaterial.class, "itemCode",
 				originalIngredient.getProductCode(), session);
 		RawMaterial item = (RawMaterial) list.get(0);
 		ingredient = new Ingredient(
@@ -527,7 +516,7 @@ public class InventoryManager extends BaseController{
 						* originalIngredient.getQuantity());
 		}catch (IndexOutOfBoundsException iobe) {
 			try{
-				List list = dao.listByParameter(FinishedGood.class, "productCode",
+				List list = inventoryDao.listByParameter(FinishedGood.class, "productCode",
 					originalIngredient.getProductCode(), session);
 			FinishedGood item = (FinishedGood) list.get(0);
 			ingredient = new Ingredient(
@@ -542,7 +531,7 @@ public class InventoryManager extends BaseController{
 							* originalIngredient.getQuantity());
 			}catch(IndexOutOfBoundsException ioeb2) {
 				try{
-				List list = dao.listByParameter(TradedItem.class, "itemCode",
+				List list = inventoryDao.listByParameter(TradedItem.class, "itemCode",
 						originalIngredient.getProductCode(), session);
 				TradedItem item = (TradedItem) list.get(0);
 				ingredient = new Ingredient(
@@ -559,7 +548,7 @@ public class InventoryManager extends BaseController{
 				//added utensils
 				catch(IndexOutOfBoundsException ioeb3){
 					try{
-					List list = dao.listByParameter(Utensils.class, "itemCode",
+					List list = inventoryDao.listByParameter(Utensils.class, "itemCode",
 							originalIngredient.getProductCode(), session);
 					Utensils item = (Utensils) list.get(0);
 					ingredient = new Ingredient(
@@ -575,7 +564,7 @@ public class InventoryManager extends BaseController{
 					}
 					//added Office supplies
 					catch(IndexOutOfBoundsException ioeb4){
-						List list = dao.listByParameter(OfficeSupplies.class, "itemCode",
+						List list = inventoryDao.listByParameter(OfficeSupplies.class, "itemCode",
 								originalIngredient.getProductCode(), session);
 						OfficeSupplies item = (OfficeSupplies) list.get(0);
 						ingredient = new Ingredient(
@@ -598,11 +587,11 @@ public class InventoryManager extends BaseController{
 	
 	public List loadItemListFromRawAndFin(Session session){
 		
-		List rawAndFinList = dao.listAlphabeticalAscByParameter(RawMaterial.class, "itemCode",session);
-		List finList = dao.listAlphabeticalAscByParameter(FinishedGood.class, "productCode", session);
-		List tradedItemList = dao.listAlphabeticalAscByParameter(TradedItem.class, "itemCode", session);
-		List utensilsList = dao.listAlphabeticalAscByParameter(Utensils.class, "itemCode", session);
-		List ofcSupList = dao.listAlphabeticalAscByParameter(OfficeSupplies.class, "itemCode", session);
+		List rawAndFinList = inventoryDao.listAlphabeticalAscByParameter(RawMaterial.class, "itemCode",session);
+		List finList = inventoryDao.listAlphabeticalAscByParameter(FinishedGood.class, "productCode", session);
+		List tradedItemList = inventoryDao.listAlphabeticalAscByParameter(TradedItem.class, "itemCode", session);
+		List utensilsList = inventoryDao.listAlphabeticalAscByParameter(Utensils.class, "itemCode", session);
+		List ofcSupList = inventoryDao.listAlphabeticalAscByParameter(OfficeSupplies.class, "itemCode", session);
 		
 		Iterator finListItr = finList.iterator();
 		Iterator tradedListItr = tradedItemList.iterator();
@@ -648,7 +637,7 @@ public class InventoryManager extends BaseController{
 	}
 	
 	public double getItemPricingByItemCodeAndParameter(Session session, String itemCode, String customerType, String priceType) {
-		ItemPricing itemPricing = dao.getItemPricingByItemCodeAndParameter(session, itemCode);
+		ItemPricing itemPricing = inventoryDao.getItemPricingByItemCodeAndParameter(session, itemCode);
 		double price = 0.0;
 
 		/*
@@ -765,17 +754,17 @@ public class InventoryManager extends BaseController{
 	
 	public List getStockStatusInBetweenMonthAndYear(String dateFrom, String dateTo, String className,
 			Session session) {
-		return dao.getStockStatusInBetweenMonthAndYear(dateFrom, dateTo, className, session);
+		return inventoryDao.getStockStatusInBetweenMonthAndYear(dateFrom, dateTo, className, session);
 	}
 
 	public List<PurchaseOrderDetails> getRelatedOrders(String itemCode,List<String> ordersRelated) {
 		// TODO Auto-generated method stub
-		return dao.getRelatedOrders(itemCode,ordersRelated);
+		return inventoryDao.getRelatedOrders(itemCode,ordersRelated);
 	}
 	
 	public Map<String, String> getRelatedReturnSlipIds(String itemCode,List<String> ordersRelated) {
 		// TODO Auto-generated method stub
-		return dao.getRelatedReturnSlipIds(itemCode,ordersRelated);
+		return inventoryDao.getRelatedReturnSlipIds(itemCode,ordersRelated);
 	}
 
 }

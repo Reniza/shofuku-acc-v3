@@ -20,11 +20,11 @@ import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 @SuppressWarnings("rawtypes")
 public class SupplierManager extends BaseController{
 
-	SupplierDaoImpl dao = new SupplierDaoImpl();
+	
 	InventoryManager invMgr = new InventoryManager();
 
 	public Supplier loadSupplier(String supplierId) {
-		Supplier supplier =(Supplier) dao.load(new Supplier(supplierId), Supplier.class);
+		Supplier supplier =(Supplier) supplierDao.load(new Supplier(supplierId), Supplier.class);
 		if(supplier==null){
 			return null;
 		}else {
@@ -33,62 +33,62 @@ public class SupplierManager extends BaseController{
 	}
 	
 	public boolean addSupplierObject(Object supplierObject,Session session) {
-			return dao.save(supplierObject,session);
+			return supplierDao.save(supplierObject,session);
 	}
 	
 	public boolean saveOrUpdate(Object supplierObject,Session session) {
-		return dao.saveOrUpdate(supplierObject,session);
+		return supplierDao.saveOrUpdate(supplierObject,session);
 }
 
 	public boolean deleteSupplierByParameter(Object object, Class clazz,Session session) {
-		return dao.deleteByParameter(object, clazz,session);
+		return supplierDao.deleteByParameter(object, clazz,session);
 	}
 
 	public boolean updateSupplier(Object persistentObject,Session session) {
-		return dao.update(persistentObject,session);
+		return supplierDao.update(persistentObject,session);
 	}
 
 	public List getSupplierElementsBetweenDatesByParameter(Date startDate,
 			Date endDate,String className,String parameter,Session session) {
-		return  dao.getBetweenDates(startDate, endDate,className, parameter,session);
+		return  supplierDao.getBetweenDates(startDate, endDate,className, parameter,session);
 	}
 	
 	public List getSupplierElementsByDate(Date date,
 			String className,String parameter,Session session) {
-		return  dao.getBetweenDates(date, date,className, parameter,session);
+		return  supplierDao.getBetweenDates(date, date,className, parameter,session);
 	}
 
 	public List listSuppliersByParameter(Class clazz,
 			String parameter, String value,Session session) {
-		return dao.listByParameter(clazz, parameter, value,session);
+		return supplierDao.listByParameter(clazz, parameter, value,session);
 	}
 	
 	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
-		return dao.listAlphabeticalAscByParameter(clazz, parameter,session);
+		return supplierDao.listAlphabeticalAscByParameter(clazz, parameter,session);
 	}
 	public List listSupplierByParameterLike(Class clazz, String parameter, String value,Session session) {
-		return dao.listByParameterLike(clazz, parameter, value,session);
+		return supplierDao.listByParameterLike(clazz, parameter, value,session);
 	}
 	public List listByName(Class clazz, String parameter, String value,Session session) {
-		return dao.listByName(clazz, parameter, value,session);
+		return supplierDao.listByName(clazz, parameter, value,session);
 	}
 	public List getPODetails(Class clazz,String spoid,Session session) {
-		return dao.listPurchaseOrderDetails(clazz,spoid,session);
+		return supplierDao.listPurchaseOrderDetails(clazz,spoid,session);
 		
 	}
 	
 	public List searchSupplierInvoiceBySupplierName(Class clazz, String parameter, String value,Session session){
-		return dao.searchSupplierInvoiceBySupplierName(clazz, parameter, value,session);
+		return supplierDao.searchSupplierInvoiceBySupplierName(clazz, parameter, value,session);
 	}
 	
 	public List searchSupplierReceivingReportBySupplierName(Class clazz, String parameter, String value,Session session){
-		return dao.searchSupplierRecevingReportBySupplierName(clazz, parameter, value,session);
+		return supplierDao.searchSupplierRecevingReportBySupplierName(clazz, parameter, value,session);
 	}
 	
 	public void generateSupplierOrderForm(Session session){
 		
 	}
 	public List listByParameter(Class clazz, String parameter, String value,Session session) {
-		return dao.listByParameter(clazz, parameter, value,session);
+		return supplierDao.listByParameter(clazz, parameter, value,session);
 	}
 }

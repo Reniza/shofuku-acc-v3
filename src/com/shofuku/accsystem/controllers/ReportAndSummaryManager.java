@@ -6,31 +6,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
-import com.shofuku.accsystem.dao.impl.CustomerDaoImpl;
-import com.shofuku.accsystem.dao.impl.InventoryDaoImpl;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
@@ -51,7 +40,6 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
-import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -59,7 +47,6 @@ import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.ExportSearchResultsHelper;
 import com.shofuku.accsystem.utils.POIUtil;
-import com.shofuku.accsystem.utils.SASConstants;
 
 @SuppressWarnings("rawtypes")
 public class ReportAndSummaryManager extends BaseController{
@@ -70,9 +57,6 @@ public class ReportAndSummaryManager extends BaseController{
 	
 	DateFormatHelper dfh = new DateFormatHelper();
 
-	private BaseHibernateDaoImpl dao = new BaseHibernateDaoImpl();
-	private InventoryDaoImpl inventoryDao = new InventoryDaoImpl();
-	
 	public InputStream generateSoaSummary(ServletContext servletContext,
 			String dateFrom, String dateTo, String subModule,
 			List customerList, Session session) {
@@ -84,7 +68,7 @@ public class ReportAndSummaryManager extends BaseController{
 				poiHelper.setMaxDate(endDate.toString());
 			if(dateFrom!=null && !dateFrom.equalsIgnoreCase(""))
 				poiHelper.setMinDate(startDate.toString());
-			List list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
+			List list = baseHibernateDao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
 			list=filterCustomerInvoiceByCustomerNumber(list,customerList);
 			HSSFWorkbook wb = new HSSFWorkbook();
 			wb = poiHelper.generateSummary(servletContext, subModule, list);
@@ -122,12 +106,12 @@ public class ReportAndSummaryManager extends BaseController{
 			
 			List summarizedInvoice= null;
 			if (subModule.equalsIgnoreCase("ItemSoldToCustomers")){
-				List list = dao.getCustomerSalesInvoiceByCustomers(dateFrom, dateTo,parameterList,session);
+				List list = baseHibernateDao.getCustomerSalesInvoiceByCustomers(dateFrom, dateTo,parameterList,session);
 				list = filterCustomerInvoiceByCustomerNumber(list,parameterList);
 				summarizedInvoice = summarizeItemsFromInvoice(list);
 				wb = poiHelper.generateSummary(servletContext, subModule, summarizedInvoice);
 			}else if(subModule.equalsIgnoreCase("ItemPurchasedFromSupplier")) {
-				List list = dao.getReceivingReportBySupplier(dateFrom, dateTo,parameterList,session);
+				List list = baseHibernateDao.getReceivingReportBySupplier(dateFrom, dateTo,parameterList,session);
 				list = filterReceivingReportBySupplierId(list,parameterList);
 				summarizedInvoice = summarizeItemsFromReceivingReport(list);
 				wb = poiHelper.generateSummary(servletContext, subModule, summarizedInvoice);
@@ -231,7 +215,7 @@ public class ReportAndSummaryManager extends BaseController{
 			String dateFrom, String dateTo, String subModule,String referenceParameter,Session session) {
 		
 		try {
-			List list = dao.listByParameterLike(PettyCash.class,"referenceNo",referenceParameter,session);
+			List list = baseHibernateDao.listByParameterLike(PettyCash.class,"referenceNo",referenceParameter,session);
 			((PettyCash)(list.get(0))).setByRef(true);
 			HSSFWorkbook wb = new HSSFWorkbook();
 			if(dateTo!=null && !dateTo.equalsIgnoreCase("")){
@@ -359,24 +343,24 @@ public class ReportAndSummaryManager extends BaseController{
 	private List getDataList(String dateFrom, String dateTo, String subModule,Session session) {
 		
 		List list = new ArrayList();
-		dao.setUser(super.getUser());
+		baseHibernateDao.setUser(super.getUser());
 		
 		if (subModule.equalsIgnoreCase("Supplier")) {
-			list = dao.listSummaryByLocation(Supplier.class,"supplierName","supplierId",session);
+			list = baseHibernateDao.listSummaryByLocation(Supplier.class,"supplierName","supplierId",session);
 		}else if(subModule.equalsIgnoreCase("Customer")) {
-			list = dao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
 		}else if(subModule.equalsIgnoreCase("RawMaterials")) {
-			list = dao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("TradedItems")) {
-			list = dao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("Utensils")) {
-			list = dao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("OfficeSupplies")) {
-			list = dao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("FinishedGoods")) {
-			list = dao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
 		}else if(subModule.equalsIgnoreCase("AccountEntryProfile")) {
-			list = dao.listAlphabeticalAscByParameter(AccountEntryProfile.class,"accountCode",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(AccountEntryProfile.class,"accountCode",session);
 		}else {
 			list=getDataListByDateRange(dateFrom,dateTo,subModule,session);
 			
@@ -398,45 +382,45 @@ public class ReportAndSummaryManager extends BaseController{
 			poiHelper.setMinDate(startDate.toString());
 		
 		if(subModule.equalsIgnoreCase("SupplierPurchaseOrder")) {
-			list = dao.getBetweenDates(startDate, endDate, SupplierPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, SupplierPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
 		}else if(subModule.equalsIgnoreCase("ReceivingReport")) {
-			list = dao.getBetweenDates(startDate, endDate, ReceivingReport.class.getName(), "receivingReportDate",session,"receivingReportDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, ReceivingReport.class.getName(), "receivingReportDate",session,"receivingReportDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("SupplierInvoice")) {
-			list = dao.getBetweenDates(startDate, endDate, SupplierInvoice.class.getName(), "supplierInvoiceDate",session,"supplierInvoiceDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, SupplierInvoice.class.getName(), "supplierInvoiceDate",session,"supplierInvoiceDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("CustomerPurchaseOrder")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CustomerPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
 		}else if(subModule.equalsIgnoreCase("DeliveryReceipt")) {
-			list = dao.getBetweenDates(startDate, endDate, DeliveryReceipt.class.getName(), "deliveryReceiptDate",session,"deliveryReceiptDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, DeliveryReceipt.class.getName(), "deliveryReceiptDate",session,"deliveryReceiptDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("CustomerSalesInvoice")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"customerInvoiceDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"customerInvoiceDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("StatementOfAccount")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
 		}else if(subModule.equalsIgnoreCase("PettyCash")) {
-			list = dao.getBetweenDates(startDate, endDate, PettyCash.class.getName(), "pcVoucherDate",session,"pcVoucherDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, PettyCash.class.getName(), "pcVoucherDate",session,"pcVoucherDate");
 		}else if(subModule.equalsIgnoreCase("CashPayment")) {
-			list = dao.getBetweenDates(startDate, endDate, CashPayment.class.getName(), "cashVoucherDate",session,"cashVoucherDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CashPayment.class.getName(), "cashVoucherDate",session,"cashVoucherDate");
 		}else if(subModule.equalsIgnoreCase("CheckPayment")) {
-			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
 		}else if(subModule.equalsIgnoreCase("InvoiceCheckVoucher")) {
-			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
 		}else if(subModule.equalsIgnoreCase("CashReceipts")) {
-			list = dao.getBetweenDates(startDate, endDate, CashCheckReceipts.class.getName(), "cashReceiptDate",session,"cashReceiptDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, CashCheckReceipts.class.getName(), "cashReceiptDate",session,"cashReceiptDate");
 		}else if(subModule.equalsIgnoreCase("ORSales")) {
-			list = dao.getBetweenDates(startDate, endDate, ORSales.class.getName(), "orDate",session,"orDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, ORSales.class.getName(), "orDate",session,"orDate");
 		}else if(subModule.equalsIgnoreCase("OROthers")) {
-			list = dao.getBetweenDates(startDate, endDate, OROthers.class.getName(), "orDate",session,"orDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, OROthers.class.getName(), "orDate",session,"orDate");
 		}else if(subModule.equalsIgnoreCase("FinishedProductTransferSlip")) {
-			list = dao.getBetweenDates(startDate, endDate, FPTS.class.getName(), "transactionDate",session,"transactionDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, FPTS.class.getName(), "transactionDate",session,"transactionDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("OrderRequisition")) {
-			list = dao.getBetweenDates(startDate, endDate, RequisitionForm.class.getName(), "requisitionDate",session,"requisitionDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, RequisitionForm.class.getName(), "requisitionDate",session,"requisitionDate");
 			list = setReturnSlipsForEachObj(list, session);
 		}else if(subModule.equalsIgnoreCase("ReturnSlip")) {
-			list = dao.getBetweenDates(startDate, endDate, ReturnSlip.class.getName(), "returnDate",session,"returnDate");
+			list = baseHibernateDao.getBetweenDates(startDate, endDate, ReturnSlip.class.getName(), "returnDate",session,"returnDate");
 		}
 		
 		return list;

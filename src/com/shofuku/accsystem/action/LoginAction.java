@@ -108,6 +108,16 @@ public class LoginAction extends ActionSupport {
 			sess.put("supplierManager",supplierManager);
 			sess.put("transactionMananger",transactionMananger);
 			
+			accountEntryManager.initializeDaos();
+			customerManager.initializeDaos();
+			disbursementManager.initializeDaos();
+			inventoryManager.initializeDaos();
+			lookupManager.initializeDaos();
+			receiptsManager.initializeDaos();
+			reportAndSummaryManager.initializeDaos();
+			supplierManager.initializeDaos();
+			transactionMananger.initializeDaos();
+			
 			
 	}
 
