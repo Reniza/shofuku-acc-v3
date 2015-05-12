@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
 import com.shofuku.accsystem.controllers.SecurityManager;
 
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ public class LoginAction extends ActionSupport {
 						sess.put("user",user);
 						sess.put("loggedUser",user.getUserName());
 						sess.put("rolesList", roleHelper.loadModules());
+						
+						ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager(); 
+						reportSummaryMgr.setUser(user);
+						sess.put("reportSummaryMgr", reportSummaryMgr);						
+						
 				}
 				return "success";
 			}

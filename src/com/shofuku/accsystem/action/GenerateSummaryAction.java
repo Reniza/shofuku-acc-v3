@@ -36,9 +36,12 @@ public class GenerateSummaryAction extends ActionSupport {
 	
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	InputStream excelStream;
 	String contentDisposition;
 	String isFormatReport;
+	
+	
 	public String getIsFormatReport() {
 		return isFormatReport;
 	}
@@ -78,7 +81,11 @@ public class GenerateSummaryAction extends ActionSupport {
 	boolean isInventorySummaryReport=false;
 
 	LookupManager lookUpManager = new LookupManager();
-	ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+	ReceiptsManager receiptsManager = new ReceiptsManager();
+	DisbursementManager disbursementManager = new DisbursementManager();
+	CustomerManager customerManager = new CustomerManager();
+	SupplierManager supplierManager = new SupplierManager();
 	
 	
 
@@ -121,13 +128,14 @@ public class GenerateSummaryAction extends ActionSupport {
 
 	public String loadReferenceNo() {
 		Session session = getSession();
-		DisbursementManager manager = new DisbursementManager();
 		try {
+			lookUpManager.setUser(user);
+			disbursementManager.setUser(user);
 			referenceList = lookUpManager.getDistinctReferenceNo(
 					PettyCash.class, session);
-				pettyList = manager.listDistinctAlphabeticalAscByParameter(PettyCash.class, "payee", session);
-				checkList = manager.listDistinctAlphabeticalAscByParameter(CheckPayments.class, "payee", session);
-				cashList = manager.listDistinctAlphabeticalAscByParameter(CashPayment.class, "payee", session);
+				pettyList = disbursementManager.listDistinctAlphabeticalAscByParameter(PettyCash.class, "payee", session);
+				checkList = disbursementManager.listDistinctAlphabeticalAscByParameter(CheckPayments.class, "payee", session);
+				cashList = disbursementManager.listDistinctAlphabeticalAscByParameter(CashPayment.class, "payee", session);
 			
 			return "summaryDisbursementForm";
 		} catch (Exception e) {
@@ -143,8 +151,7 @@ public class GenerateSummaryAction extends ActionSupport {
 	public String loadCustomers() {
 		Session session = getSession();
 		try {
-			CustomerManager manager = new CustomerManager();
-			customerList = manager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
+			customerList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
 			return "summaryCustomerForm";
 		} catch (Exception e) {
 			return SUCCESS;
@@ -159,8 +166,7 @@ public class GenerateSummaryAction extends ActionSupport {
 	public String loadSuppliers() {
 		Session session = getSession();
 		try {
-			SupplierManager manager = new SupplierManager();
-			supplierList = manager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
+			supplierList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
 			return "summarySupplierForm";
 		} catch (Exception e) {
 			return SUCCESS;
@@ -175,10 +181,10 @@ public class GenerateSummaryAction extends ActionSupport {
 	public String loadReceipts() {
 		Session session = getSession();
 		try {
-			ReceiptsManager manager = new ReceiptsManager();
-			orSalesList = manager.listAlphabeticalAscByParameter(ORSales.class, "receivedFrom", session);
-			orOthersList = manager.listAlphabeticalAscByParameter(OROthers.class, "receivedFrom", session);
-			cashCheckList = manager.listAlphabeticalAscByParameter(CashCheckReceipts.class, "cashReceiptNo", session);
+			receiptsManager.setUser(user);
+			orSalesList = receiptsManager.listAlphabeticalAscByParameter(ORSales.class, "receivedFrom", session);
+			orOthersList = receiptsManager.listAlphabeticalAscByParameter(OROthers.class, "receivedFrom", session);
+			cashCheckList = receiptsManager.listAlphabeticalAscByParameter(CashCheckReceipts.class, "cashReceiptNo", session);
 			
 			return "summaryReceiptForm";
 		} catch (Exception e) {
@@ -200,76 +206,74 @@ public class GenerateSummaryAction extends ActionSupport {
 
 			getModuleAndSubmodule();
 
-			reportSummaryMgr.setUser(user);
-			
 			if (byRef) {
-				excelStream = reportSummaryMgr.generateSummary(servletContext,
+				excelStream = reportAndSummaryManager.generateSummary(servletContext,
 						dateFrom, dateTo, subModule, referenceNo,session);
 			} else {
 				if(itemsSoldReport){
 					if(validateFields()){
 					}else{
-						excelStream = reportSummaryMgr.generateSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo, subModule, customerList,isFormatReport,session);
 					}
 				}else if(itemsPurchasedReport){
 					if(validateFields()){
 					}else{
-						excelStream = reportSummaryMgr.generateSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo, subModule, supplierList,isFormatReport,session);
 					}
 				}else if(soaReport){
 					if(validateFields()){
 					}else{
-						excelStream = reportSummaryMgr.generateSoaSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSoaSummary(servletContext,
 								dateFrom, dateTo, subModule, customerList,session);
 					}
 				}else{
 					if(supplierList!=null) {
-						excelStream = reportSummaryMgr.generateSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo,subModule, supplierList,isFormatReport,session);
 					}else if(customerList!=null) {
-						excelStream = reportSummaryMgr.generateSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo,subModule, customerList,isFormatReport,session);
 					}else if(pettyList!=null || cashList!=null || checkList!=null) {
 						if (isFormatReport.equalsIgnoreCase("true")) {
 							if (disbursementModule.equalsIgnoreCase("PettyCash")) {
-								excelStream = reportSummaryMgr.generateSummary(servletContext,
+								excelStream = reportAndSummaryManager.generateSummary(servletContext,
 										dateFrom, dateTo,subModule, pettyList,isFormatReport,session);
 							}else if (disbursementModule.equalsIgnoreCase("CashPayment")) {
-								excelStream = reportSummaryMgr.generateSummary(servletContext,
+								excelStream = reportAndSummaryManager.generateSummary(servletContext,
 										dateFrom, dateTo,subModule, cashList,isFormatReport,session);
 							}else {
 							
-							excelStream = reportSummaryMgr.generateSummary(servletContext,
+							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo,subModule, checkList,isFormatReport,session);
 							}
 						}else {
 							
-							excelStream = reportSummaryMgr.generateSummary(servletContext,
+							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
 						}
 					}else if(orSalesList!=null || orOthersList!=null || cashCheckList!=null) {
 						if (isFormatReport.equalsIgnoreCase("true")) {
 							if (receiptsModule.equalsIgnoreCase("ORSales")) {
-								excelStream = reportSummaryMgr.generateSummary(servletContext,
+								excelStream = reportAndSummaryManager.generateSummary(servletContext,
 										dateFrom, dateTo,subModule, orSalesList,isFormatReport,session);
 							}else if (receiptsModule.equalsIgnoreCase("OROthers")) {
-								excelStream = reportSummaryMgr.generateSummary(servletContext,
+								excelStream = reportAndSummaryManager.generateSummary(servletContext,
 										dateFrom, dateTo,subModule, orOthersList,isFormatReport,session);
 							}else {
-								excelStream = reportSummaryMgr.generateSummary(servletContext,
+								excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo,subModule, cashCheckList,isFormatReport,session);
 							}
 						}else {
-							excelStream = reportSummaryMgr.generateSummary(servletContext,
+							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
 						}
 					}else if(isInventorySummaryReport) {
-						excelStream = reportSummaryMgr.generateInventorySummaryByStatus(servletContext,
+						excelStream = reportAndSummaryManager.generateInventorySummaryByStatus(servletContext,
 								dateFrom, dateTo, subModule,searchByStatus,session);
 					}else {
-						excelStream = reportSummaryMgr.generateSummary(servletContext,
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo, subModule,session);
 					}
 					addActionError("Summary Report already created...");	

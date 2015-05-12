@@ -359,6 +359,7 @@ public class ReportAndSummaryManager extends BaseController{
 	private List getDataList(String dateFrom, String dateTo, String subModule,Session session) {
 		
 		List list = new ArrayList();
+		dao.setUser(super.getUser());
 		
 		if (subModule.equalsIgnoreCase("Supplier")) {
 			list = dao.listSummaryByLocation(Supplier.class,"supplierName","supplierId",session);
