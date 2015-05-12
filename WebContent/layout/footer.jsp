@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div><img src="images/footer.jpg" width="100%"/></div>
+<div><img src="images/footer2.jpg" width="100%"/></div>
 
 </body>
 </html>
