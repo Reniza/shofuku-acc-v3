@@ -32,7 +32,10 @@ import com.shofuku.accsystem.utils.HibernateUtil;
 public class GenerateSummaryAction extends ActionSupport {
 
 	private static final long serialVersionUID = 5247219508332414659L;
-
+	
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	InputStream excelStream;
 	String contentDisposition;
 	String isFormatReport;
@@ -75,9 +78,9 @@ public class GenerateSummaryAction extends ActionSupport {
 	boolean isInventorySummaryReport=false;
 
 	LookupManager lookUpManager = new LookupManager();
+	ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	
 
 	private void getModuleAndSubmodule() {
 
@@ -196,9 +199,9 @@ public class GenerateSummaryAction extends ActionSupport {
 					.getServletContext();
 
 			getModuleAndSubmodule();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
-			reportSummaryMgr.setUser(user);
 
+			reportSummaryMgr.setUser(user);
+			
 			if (byRef) {
 				excelStream = reportSummaryMgr.generateSummary(servletContext,
 						dateFrom, dateTo, subModule, referenceNo,session);

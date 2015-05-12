@@ -502,6 +502,12 @@ public class SASConstants {
 	public final static int IMPORT_COLUMN_DR_UNLISTED_ITEM_DESCRIPTION =16;
 	public final static int IMPORT_COLUMN_DR_ITEM_QUANTITY =17;
 	
+	
+	/**
+	 * USER LOCATIONS
+	 */
+	public static final String LOCATION_MANILA = "MNL";
+	
 
 
 	

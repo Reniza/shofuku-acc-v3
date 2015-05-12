@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.SecurityManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -20,6 +21,7 @@ public class UpdateSecurityAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = 934004434406221113L;
+	
 	String subModule;
 	UserAccount user;
 	Role role;

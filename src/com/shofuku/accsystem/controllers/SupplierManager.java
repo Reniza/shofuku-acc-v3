@@ -18,7 +18,7 @@ import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
  * add business side logic in this class
  */
 @SuppressWarnings("rawtypes")
-public class SupplierManager {
+public class SupplierManager extends BaseController{
 
 	SupplierDaoImpl dao = new SupplierDaoImpl();
 	InventoryManager invMgr = new InventoryManager();

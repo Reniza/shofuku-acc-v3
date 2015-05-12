@@ -9,7 +9,7 @@ import com.shofuku.accsystem.dao.impl.SecurityDaoImpl;
 import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.utils.DoubleConverter;
 
-public class SecurityManager {
+public class SecurityManager extends BaseController{
 	
 	SecurityDaoImpl dao = new SecurityDaoImpl();
 	DoubleConverter dc = new DoubleConverter();

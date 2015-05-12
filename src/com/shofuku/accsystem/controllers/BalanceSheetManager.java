@@ -1,5 +1,5 @@
 package com.shofuku.accsystem.controllers;
 
-public class BalanceSheetManager {
+public class BalanceSheetManager extends BaseController {
 
 }

@@ -15,7 +15,7 @@ import com.shofuku.accsystem.domain.suppliers.Supplier;
  * add business side logic in this class
  */
 @SuppressWarnings("rawtypes")
-public class CustomerManager {
+public class CustomerManager extends BaseController{
 
 	CustomerDaoImpl dao = new CustomerDaoImpl();
 
@@ -28,8 +28,11 @@ public class CustomerManager {
 		}
 	}
 	
+	
+	
 	public boolean addCustomerObject(Object CustomerObject,Session session) {
 		return dao.save(CustomerObject,session);
+		
 	}
 
 	public boolean deleteCustomerByParameter(Object object, Class clazz,Session session) {

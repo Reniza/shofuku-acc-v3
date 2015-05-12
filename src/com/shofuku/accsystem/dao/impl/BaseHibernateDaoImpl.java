@@ -17,10 +17,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.internal.CriteriaImpl.Subcriteria;
 
 import com.shofuku.accsystem.dao.BaseHibernateDao;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
@@ -28,6 +31,7 @@ import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.utils.DateFormatHelper;
@@ -37,6 +41,15 @@ import com.shofuku.accsystem.utils.SASConstants;
 @SuppressWarnings("rawtypes")
 public class BaseHibernateDaoImpl extends HibernateUtil implements
 		BaseHibernateDao {
+	
+	private UserAccount user;
+	public UserAccount getUser() {
+		return user;
+	}
+	public void setUser(UserAccount user) {
+		this.user = user;
+	}
+	
 	protected Session getSession() {
 		return super.getSessionFactory().getCurrentSession();
 	}
@@ -238,27 +251,49 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 
 	}
 	
-	public List listAndOrderByParameter(Class clazz, String orderByParam,String searchKey,
-			String value,Session session) {
+	
+	private Conjunction limitByLocation(String column,String userLocation, Session session) {
+		
+		Conjunction conjunction = Restrictions.conjunction();
+		
+		
+		List<String> locationList = listDistinctReferenceNo(UserAccount.class, "location", session);
+		for(String location : locationList) {
+			if(location.equalsIgnoreCase(userLocation)) {
+			}else {
+				conjunction.add(Restrictions.not(Restrictions.like(column, location+"-"+"%")));
+			}
+		}
+		
+		return conjunction;
+	}
+	
+	public List listSummaryByLocation(Class clazz, String orderBy,String column,Session session) {
 
 		Transaction tx = null;
+		tx=getCurrentTransaction(session);
+		Criteria criteria = session.createCriteria(clazz);
+		
+		//for old records that dont contain location prefixes , defaults to MNL
+		if (null==user.getLocation() || user.getLocation().equalsIgnoreCase("")) {
+		}else {
+			if(user.getLocation().equalsIgnoreCase(SASConstants.LOCATION_MANILA)) {
+				
+				//get all except those with distinct locations
+				
+			}else {
+				criteria.add(Restrictions.like(column,   user.getLocation() +"-"+ "%"));
+			}
+		}
+		criteria.add(limitByLocation(column,user.getLocation(), session));		
+		criteria.addOrder(Order.asc(orderBy));
 		try {
-			tx=getCurrentTransaction(session);
-			Criteria criteria = session.createCriteria(clazz).add(
-					Restrictions.or(
-							Restrictions.like(searchKey, "%" + value + "%")
-									.ignoreCase(), Restrictions.or(Restrictions
-									.like(searchKey, "%" + value)
-									.ignoreCase(),
-									Restrictions
-											.like(searchKey, value + "%")
-											.ignoreCase())));
-					criteria.addOrder(Order.asc(orderByParam));
 			return criteria.list();
 		} catch (RuntimeException re) {
 			tx.rollback();
 			re.printStackTrace();
 		}
+		
 		return null;
 
 	}
@@ -511,4 +546,5 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 				return null;
 			} 
 	}
+
 }

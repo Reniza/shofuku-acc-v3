@@ -9,7 +9,7 @@ import com.shofuku.accsystem.dao.impl.ReceiptsDaoImpl;
 /*
  * add business side logic in this class
  */
-public class ReceiptsManager {
+public class ReceiptsManager extends BaseController{
 	
 	ReceiptsDaoImpl dao = new ReceiptsDaoImpl();
 

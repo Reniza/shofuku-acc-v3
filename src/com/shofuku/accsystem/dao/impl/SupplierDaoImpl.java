@@ -9,13 +9,13 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 
 @SuppressWarnings("rawtypes")
 public class SupplierDaoImpl extends BaseHibernateDaoImpl {
-
 	//add specific HQL / criteria calls here if any
 		public List listByName(Class clazz, String propertyName, String value,Session session) {
 

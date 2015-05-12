@@ -1,18 +1,24 @@
 package com.shofuku.accsystem.action.financials;
 
 
+import java.util.Map;
+
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
-
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
 public class PrintFinancialsAction extends ActionSupport{
 
 private static final long serialVersionUID = 1L;
+
+Map actionSession = ActionContext.getContext().getSession();
+UserAccount user = (UserAccount) actionSession.get("user");
 	
 	private String accId;
 	private String subModule;

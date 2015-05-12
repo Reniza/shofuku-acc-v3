@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.SecurityManager;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
@@ -28,6 +29,9 @@ public class SearchSecurityAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = -5977333283601416207L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	private String securityModule;
 	private String moduleParameter;

@@ -26,6 +26,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
@@ -38,6 +39,7 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.StockStatus;
 import com.shofuku.accsystem.domain.inventory.StockStatusReport;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateSessionWatcher;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -50,6 +52,9 @@ public class GenerateStockStatusReportAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	
 	HibernateSessionWatcher watcher = new HibernateSessionWatcher();

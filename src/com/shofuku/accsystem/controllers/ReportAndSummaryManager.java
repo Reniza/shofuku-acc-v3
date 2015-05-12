@@ -62,7 +62,7 @@ import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
 @SuppressWarnings("rawtypes")
-public class ReportAndSummaryManager {
+public class ReportAndSummaryManager extends BaseController{
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -71,10 +71,8 @@ public class ReportAndSummaryManager {
 	DateFormatHelper dfh = new DateFormatHelper();
 
 	private BaseHibernateDaoImpl dao = new BaseHibernateDaoImpl();
+	private InventoryDaoImpl inventoryDao = new InventoryDaoImpl();
 	
-	private UserAccount user;
-	
-
 	public InputStream generateSoaSummary(ServletContext servletContext,
 			String dateFrom, String dateTo, String subModule,
 			List customerList, Session session) {
@@ -165,6 +163,282 @@ public class ReportAndSummaryManager {
 		}
 
 		return null;
+	}
+	
+
+	public InputStream printReceipt(Map receiptMap, String subModule,ServletContext servletContext ) {
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.printReceipts(subModule, receiptMap,servletContext);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("generateSummary" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public InputStream printCheckPayments(CheckPayments chp, String subModule,ServletContext servletContext ) {
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.printCheckPayments(subModule, chp,servletContext);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("print check payments" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	
+	public InputStream printCustomerInvoice(CustomerSalesInvoice csi, String subModule,ServletContext servletContext ) {
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.printCustomerInvoice(subModule, csi,servletContext);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("print customer invoice" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public InputStream printSupplierPurchaseOrder(SupplierPurchaseOrder spo, String subModule,ServletContext servletContext ) {
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.printSupplierPurchaseOrderInExcel(subModule, spo,servletContext);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("print supplier purchase order" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public InputStream generateSummary(ServletContext servletContext,
+			String dateFrom, String dateTo, String subModule,String referenceParameter,Session session) {
+		
+		try {
+			List list = dao.listByParameterLike(PettyCash.class,"referenceNo",referenceParameter,session);
+			((PettyCash)(list.get(0))).setByRef(true);
+			HSSFWorkbook wb = new HSSFWorkbook();
+			if(dateTo!=null && !dateTo.equalsIgnoreCase("")){
+				Date endDate = dfh.parseStringToTime(dateTo);
+				poiHelper.setMaxDate(endDate.toString());
+				
+			}
+			if(dateFrom!=null && !dateFrom.equalsIgnoreCase("")){
+				Date startDate = dfh.parseStringToTime(dateFrom);
+				poiHelper.setMinDate(startDate.toString());
+				
+			}
+			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("generateSummary" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+		
+	}
+	
+	
+	public InputStream generateSummary(ServletContext servletContext,
+			String dateFrom, String dateTo, String subModule,Session session) {
+
+		try {
+			List list = getDataList(dateFrom, dateTo, subModule,session);
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("generateSummary" + ioex.toString());
+			ioex.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public InputStream generateInventorySummaryByStatus(ServletContext servletContext,
+			String dateFrom, String dateTo, String subModule,String searchByStatus,Session session) {
+
+		try {
+			List list = new ArrayList();
+			
+			list= inventoryDao.listInventoryItemsByStatus(subModule,searchByStatus,session);
+			
+			HSSFWorkbook wb = new HSSFWorkbook();
+			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			wb.write(baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		} catch (IOException ioex) {
+			logger.debug("generateInventorySummaryByStatus" + ioex.toString());
+			ioex.printStackTrace();
+		}catch (NullPointerException npe) {
+			logger.debug("generateInventorySummaryByStatus" + npe.toString());
+			npe.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	private List setReturnSlipsForEachObj(List list,Session session) {
+		InventoryManager invManager = new InventoryManager();
+		List revisedList= new ArrayList();
+		Object obj = (Object)list.get(0);
+		if(obj instanceof ReceivingReport){
+			List<ReceivingReport> tempList= list;
+			for(ReceivingReport rr: tempList) {
+				rr.setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						rr.getReceivingReportNo(), session));
+				revisedList.add(rr);
+			}
+		}else if(obj instanceof DeliveryReceipt){
+			List<DeliveryReceipt> tempList= list;
+			for(DeliveryReceipt dr: tempList) {
+				dr.setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						dr.getDeliveryReceiptNo(), session));
+				revisedList.add(dr);
+			}
+		}else if(obj instanceof FPTS){
+			List<FPTS> tempList= list;
+			for(FPTS fpts: tempList) {
+				fpts.setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						fpts.getFptsNo(), session));
+				revisedList.add(fpts);
+			}
+		}else if(obj instanceof RequisitionForm){
+			List<RequisitionForm> tempList= list;
+			for(RequisitionForm rf: tempList) {
+				rf.setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						rf.getRequisitionNo(), session));
+				revisedList.add(rf);
+			}
+		}else if(obj instanceof SupplierInvoice){
+			List<SupplierInvoice> tempList= list;
+			for(SupplierInvoice si: tempList) {
+				si.getReceivingReport().setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						si.getReceivingReport().getReceivingReportNo(), session));
+				revisedList.add(si);
+			}
+		}else if(obj instanceof CustomerSalesInvoice){
+			List<CustomerSalesInvoice> tempList= list;
+			for(CustomerSalesInvoice ci: tempList) {
+				ci.getDeliveryReceipt().setReturnSlipList(invManager.listInventoryByParameter(
+						ReturnSlip.class, "returnSlipReferenceOrderNo",
+						ci.getDeliveryReceipt().getDeliveryReceiptNo(), session));
+				revisedList.add(ci);
+			}
+		}
+		return revisedList;
+
+	} 
+	private List getDataList(String dateFrom, String dateTo, String subModule,Session session) {
+		
+		List list = new ArrayList();
+		
+		if (subModule.equalsIgnoreCase("Supplier")) {
+			list = dao.listSummaryByLocation(Supplier.class,"supplierName","supplierId",session);
+		}else if(subModule.equalsIgnoreCase("Customer")) {
+			list = dao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
+		}else if(subModule.equalsIgnoreCase("RawMaterials")) {
+			list = dao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("TradedItems")) {
+			list = dao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("Utensils")) {
+			list = dao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("OfficeSupplies")) {
+			list = dao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
+		}else if(subModule.equalsIgnoreCase("FinishedGoods")) {
+			list = dao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
+		}else if(subModule.equalsIgnoreCase("AccountEntryProfile")) {
+			list = dao.listAlphabeticalAscByParameter(AccountEntryProfile.class,"accountCode",session);
+		}else {
+			list=getDataListByDateRange(dateFrom,dateTo,subModule,session);
+			
+		}
+		return list;
+	}
+
+	private List getDataListByDateRange(String dateFrom, String dateTo,
+			String subModule, Session session) {
+		
+		List list = new ArrayList();
+		
+		DateFormatHelper dfh = new DateFormatHelper();
+		Date startDate = dfh.parseStringToTime(dateFrom);
+		Date endDate = dfh.parseStringToTime(dateTo);
+		if(dateTo!=null && !dateTo.equalsIgnoreCase(""))
+			poiHelper.setMaxDate(endDate.toString());
+		if(dateFrom!=null && !dateFrom.equalsIgnoreCase(""))
+			poiHelper.setMinDate(startDate.toString());
+		
+		if(subModule.equalsIgnoreCase("SupplierPurchaseOrder")) {
+			list = dao.getBetweenDates(startDate, endDate, SupplierPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
+		}else if(subModule.equalsIgnoreCase("ReceivingReport")) {
+			list = dao.getBetweenDates(startDate, endDate, ReceivingReport.class.getName(), "receivingReportDate",session,"receivingReportDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("SupplierInvoice")) {
+			list = dao.getBetweenDates(startDate, endDate, SupplierInvoice.class.getName(), "supplierInvoiceDate",session,"supplierInvoiceDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("CustomerPurchaseOrder")) {
+			list = dao.getBetweenDates(startDate, endDate, CustomerPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
+		}else if(subModule.equalsIgnoreCase("DeliveryReceipt")) {
+			list = dao.getBetweenDates(startDate, endDate, DeliveryReceipt.class.getName(), "deliveryReceiptDate",session,"deliveryReceiptDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("CustomerSalesInvoice")) {
+			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"customerInvoiceDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("StatementOfAccount")) {
+			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
+		}else if(subModule.equalsIgnoreCase("PettyCash")) {
+			list = dao.getBetweenDates(startDate, endDate, PettyCash.class.getName(), "pcVoucherDate",session,"pcVoucherDate");
+		}else if(subModule.equalsIgnoreCase("CashPayment")) {
+			list = dao.getBetweenDates(startDate, endDate, CashPayment.class.getName(), "cashVoucherDate",session,"cashVoucherDate");
+		}else if(subModule.equalsIgnoreCase("CheckPayment")) {
+			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
+		}else if(subModule.equalsIgnoreCase("InvoiceCheckVoucher")) {
+			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
+		}else if(subModule.equalsIgnoreCase("CashReceipts")) {
+			list = dao.getBetweenDates(startDate, endDate, CashCheckReceipts.class.getName(), "cashReceiptDate",session,"cashReceiptDate");
+		}else if(subModule.equalsIgnoreCase("ORSales")) {
+			list = dao.getBetweenDates(startDate, endDate, ORSales.class.getName(), "orDate",session,"orDate");
+		}else if(subModule.equalsIgnoreCase("OROthers")) {
+			list = dao.getBetweenDates(startDate, endDate, OROthers.class.getName(), "orDate",session,"orDate");
+		}else if(subModule.equalsIgnoreCase("FinishedProductTransferSlip")) {
+			list = dao.getBetweenDates(startDate, endDate, FPTS.class.getName(), "transactionDate",session,"transactionDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("OrderRequisition")) {
+			list = dao.getBetweenDates(startDate, endDate, RequisitionForm.class.getName(), "requisitionDate",session,"requisitionDate");
+			list = setReturnSlipsForEachObj(list, session);
+		}else if(subModule.equalsIgnoreCase("ReturnSlip")) {
+			list = dao.getBetweenDates(startDate, endDate, ReturnSlip.class.getName(), "returnDate",session,"returnDate");
+		}
+		
+		return list;
 	}
 	
 	private List filterByParameterList(List resultList, List parameterList) {
@@ -414,314 +688,34 @@ public class ReportAndSummaryManager {
 		
 		return summarizedSPO;
 	}
-	
-	
-private Set convertMapToPODetails(Map<String, PurchaseOrderDetails> map){
-	Set podetailsSet = new HashSet();
-	for(Map.Entry<String, PurchaseOrderDetails> entry : map.entrySet()){
-		  String key = entry.getKey();
-		  PurchaseOrderDetails podetails= (PurchaseOrderDetails)entry.getValue();
-		  podetailsSet.add(podetails);  
-	}
-	return podetailsSet;
-}
 
-private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(Set set){
-	Iterator itr = set.iterator();
-	Map<String, PurchaseOrderDetails> tempMap = new HashMap();
-	try{
-		while(itr.hasNext()){
-			PurchaseOrderDetails podetails = (PurchaseOrderDetails) itr.next();
-			tempMap.put(podetails.getItemCode(), podetails);
+	private Set convertMapToPODetails(Map<String, PurchaseOrderDetails> map) {
+		Set podetailsSet = new HashSet();
+		for (Map.Entry<String, PurchaseOrderDetails> entry : map.entrySet()) {
+			String key = entry.getKey();
+			PurchaseOrderDetails podetails = (PurchaseOrderDetails) entry
+					.getValue();
+			podetailsSet.add(podetails);
 		}
-		
-	}catch(Exception e){
-		e.printStackTrace();		
+		return podetailsSet;
 	}
 
-	return tempMap;
-	
-}
-	
-	
-	public InputStream generateSummary(ServletContext servletContext,
-			String dateFrom, String dateTo, String subModule,String referenceParameter,Session session) {
-		
+	private Map<String, PurchaseOrderDetails> convertPurchaseOrderDetailsToMap(
+			Set set) {
+		Iterator itr = set.iterator();
+		Map<String, PurchaseOrderDetails> tempMap = new HashMap();
 		try {
-			List list = dao.listByParameterLike(PettyCash.class,"referenceNo",referenceParameter,session);
-			((PettyCash)(list.get(0))).setByRef(true);
-			HSSFWorkbook wb = new HSSFWorkbook();
-			if(dateTo!=null && !dateTo.equalsIgnoreCase("")){
-				Date endDate = dfh.parseStringToTime(dateTo);
-				poiHelper.setMaxDate(endDate.toString());
-				
+			while (itr.hasNext()) {
+				PurchaseOrderDetails podetails = (PurchaseOrderDetails) itr
+						.next();
+				tempMap.put(podetails.getItemCode(), podetails);
 			}
-			if(dateFrom!=null && !dateFrom.equalsIgnoreCase("")){
-				Date startDate = dfh.parseStringToTime(dateFrom);
-				poiHelper.setMinDate(startDate.toString());
-				
-			}
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("generateSummary" + ioex.toString());
-			ioex.printStackTrace();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		return null;
-		
-	}
-	
-	
-	public InputStream generateSummary(ServletContext servletContext,
-			String dateFrom, String dateTo, String subModule,Session session) {
+		return tempMap;
 
-		try {
-			List list = getDataList(dateFrom, dateTo, subModule,session);
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("generateSummary" + ioex.toString());
-			ioex.printStackTrace();
-		}
-
-		return null;
-	}
-	
-	public InputStream generateInventorySummaryByStatus(ServletContext servletContext,
-			String dateFrom, String dateTo, String subModule,String searchByStatus,Session session) {
-
-		try {
-			List list = new ArrayList();
-			InventoryDaoImpl dao = new InventoryDaoImpl();
-			
-			list= dao.listInventoryItemsByStatus(subModule,searchByStatus,session);
-			
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("generateInventorySummaryByStatus" + ioex.toString());
-			ioex.printStackTrace();
-		}catch (NullPointerException npe) {
-			logger.debug("generateInventorySummaryByStatus" + npe.toString());
-			npe.printStackTrace();
-		}
-
-		return null;
-	}
-	
-	private List setReturnSlipsForEachObj(List list,Session session) {
-		InventoryManager invManager = new InventoryManager();
-		List revisedList= new ArrayList();
-		Object obj = (Object)list.get(0);
-		if(obj instanceof ReceivingReport){
-			List<ReceivingReport> tempList= list;
-			for(ReceivingReport rr: tempList) {
-				rr.setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						rr.getReceivingReportNo(), session));
-				revisedList.add(rr);
-			}
-		}else if(obj instanceof DeliveryReceipt){
-			List<DeliveryReceipt> tempList= list;
-			for(DeliveryReceipt dr: tempList) {
-				dr.setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						dr.getDeliveryReceiptNo(), session));
-				revisedList.add(dr);
-			}
-		}else if(obj instanceof FPTS){
-			List<FPTS> tempList= list;
-			for(FPTS fpts: tempList) {
-				fpts.setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						fpts.getFptsNo(), session));
-				revisedList.add(fpts);
-			}
-		}else if(obj instanceof RequisitionForm){
-			List<RequisitionForm> tempList= list;
-			for(RequisitionForm rf: tempList) {
-				rf.setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						rf.getRequisitionNo(), session));
-				revisedList.add(rf);
-			}
-		}else if(obj instanceof SupplierInvoice){
-			List<SupplierInvoice> tempList= list;
-			for(SupplierInvoice si: tempList) {
-				si.getReceivingReport().setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						si.getReceivingReport().getReceivingReportNo(), session));
-				revisedList.add(si);
-			}
-		}else if(obj instanceof CustomerSalesInvoice){
-			List<CustomerSalesInvoice> tempList= list;
-			for(CustomerSalesInvoice ci: tempList) {
-				ci.getDeliveryReceipt().setReturnSlipList(invManager.listInventoryByParameter(
-						ReturnSlip.class, "returnSlipReferenceOrderNo",
-						ci.getDeliveryReceipt().getDeliveryReceiptNo(), session));
-				revisedList.add(ci);
-			}
-		}
-		return revisedList;
-
-	} 
-	private List getDataList(String dateFrom, String dateTo, String subModule,Session session) {
-		
-		List list = new ArrayList();
-		
-		if (subModule.equalsIgnoreCase("Supplier")) {
-			list = dao.listAndOrderByParameter(Supplier.class,"supplierName","supplierName",user.getLocation()+"-",session);
-		}else if(subModule.equalsIgnoreCase("Customer")) {
-			list = dao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
-		}else if(subModule.equalsIgnoreCase("RawMaterials")) {
-			list = dao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
-		}else if(subModule.equalsIgnoreCase("TradedItems")) {
-			list = dao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
-		}else if(subModule.equalsIgnoreCase("Utensils")) {
-			list = dao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
-		}else if(subModule.equalsIgnoreCase("OfficeSupplies")) {
-			list = dao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
-		}else if(subModule.equalsIgnoreCase("FinishedGoods")) {
-			list = dao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
-		}else if(subModule.equalsIgnoreCase("AccountEntryProfile")) {
-			list = dao.listAlphabeticalAscByParameter(AccountEntryProfile.class,"accountCode",session);
-		}else {
-			list=getDataListByDateRange(dateFrom,dateTo,subModule,session);
-			
-		}
-		return list;
-	}
-
-	private List getDataListByDateRange(String dateFrom, String dateTo,
-			String subModule, Session session) {
-		
-		List list = new ArrayList();
-		
-		DateFormatHelper dfh = new DateFormatHelper();
-		Date startDate = dfh.parseStringToTime(dateFrom);
-		Date endDate = dfh.parseStringToTime(dateTo);
-		if(dateTo!=null && !dateTo.equalsIgnoreCase(""))
-			poiHelper.setMaxDate(endDate.toString());
-		if(dateFrom!=null && !dateFrom.equalsIgnoreCase(""))
-			poiHelper.setMinDate(startDate.toString());
-		
-		if(subModule.equalsIgnoreCase("SupplierPurchaseOrder")) {
-			list = dao.getBetweenDates(startDate, endDate, SupplierPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
-		}else if(subModule.equalsIgnoreCase("ReceivingReport")) {
-			list = dao.getBetweenDates(startDate, endDate, ReceivingReport.class.getName(), "receivingReportDate",session,"receivingReportDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("SupplierInvoice")) {
-			list = dao.getBetweenDates(startDate, endDate, SupplierInvoice.class.getName(), "supplierInvoiceDate",session,"supplierInvoiceDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("CustomerPurchaseOrder")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");
-		}else if(subModule.equalsIgnoreCase("DeliveryReceipt")) {
-			list = dao.getBetweenDates(startDate, endDate, DeliveryReceipt.class.getName(), "deliveryReceiptDate",session,"deliveryReceiptDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("CustomerSalesInvoice")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"customerInvoiceDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("StatementOfAccount")) {
-			list = dao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
-		}else if(subModule.equalsIgnoreCase("PettyCash")) {
-			list = dao.getBetweenDates(startDate, endDate, PettyCash.class.getName(), "pcVoucherDate",session,"pcVoucherDate");
-		}else if(subModule.equalsIgnoreCase("CashPayment")) {
-			list = dao.getBetweenDates(startDate, endDate, CashPayment.class.getName(), "cashVoucherDate",session,"cashVoucherDate");
-		}else if(subModule.equalsIgnoreCase("CheckPayment")) {
-			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
-		}else if(subModule.equalsIgnoreCase("InvoiceCheckVoucher")) {
-			list = dao.getBetweenDates(startDate, endDate, CheckPayments.class.getName(), "checkVoucherDate",session,"checkVoucherDate");
-		}else if(subModule.equalsIgnoreCase("CashReceipts")) {
-			list = dao.getBetweenDates(startDate, endDate, CashCheckReceipts.class.getName(), "cashReceiptDate",session,"cashReceiptDate");
-		}else if(subModule.equalsIgnoreCase("ORSales")) {
-			list = dao.getBetweenDates(startDate, endDate, ORSales.class.getName(), "orDate",session,"orDate");
-		}else if(subModule.equalsIgnoreCase("OROthers")) {
-			list = dao.getBetweenDates(startDate, endDate, OROthers.class.getName(), "orDate",session,"orDate");
-		}else if(subModule.equalsIgnoreCase("FinishedProductTransferSlip")) {
-			list = dao.getBetweenDates(startDate, endDate, FPTS.class.getName(), "transactionDate",session,"transactionDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("OrderRequisition")) {
-			list = dao.getBetweenDates(startDate, endDate, RequisitionForm.class.getName(), "requisitionDate",session,"requisitionDate");
-			list = setReturnSlipsForEachObj(list, session);
-		}else if(subModule.equalsIgnoreCase("ReturnSlip")) {
-			list = dao.getBetweenDates(startDate, endDate, ReturnSlip.class.getName(), "returnDate",session,"returnDate");
-		}
-		
-		return list;
-	}
-	public InputStream printReceipt(Map receiptMap, String subModule,ServletContext servletContext ) {
-		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printReceipts(subModule, receiptMap,servletContext);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("generateSummary" + ioex.toString());
-			ioex.printStackTrace();
-		}
-
-		return null;
-	}
-	
-	public InputStream printCheckPayments(CheckPayments chp, String subModule,ServletContext servletContext ) {
-		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printCheckPayments(subModule, chp,servletContext);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("print check payments" + ioex.toString());
-			ioex.printStackTrace();
-		}
-
-		return null;
-	}
-	
-	
-	public InputStream printCustomerInvoice(CustomerSalesInvoice csi, String subModule,ServletContext servletContext ) {
-		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printCustomerInvoice(subModule, csi,servletContext);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("print customer invoice" + ioex.toString());
-			ioex.printStackTrace();
-		}
-
-		return null;
-	}
-	
-	public InputStream printSupplierPurchaseOrder(SupplierPurchaseOrder spo, String subModule,ServletContext servletContext ) {
-		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printSupplierPurchaseOrderInExcel(subModule, spo,servletContext);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			wb.write(baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-		} catch (IOException ioex) {
-			logger.debug("print supplier purchase order" + ioex.toString());
-			ioex.printStackTrace();
-		}
-
-		return null;
-	}
-	public UserAccount getUser() {
-		return user;
-	}
-	public void setUser(UserAccount user) {
-		this.user = user;
 	}
 }

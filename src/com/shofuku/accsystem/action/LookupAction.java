@@ -1,15 +1,21 @@
 package com.shofuku.accsystem.action;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
  
 public class LookupAction extends ActionSupport {
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
     private String data;
     

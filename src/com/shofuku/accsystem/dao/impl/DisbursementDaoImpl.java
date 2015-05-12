@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
+import com.shofuku.accsystem.domain.security.UserAccount;
 
 
 public class DisbursementDaoImpl extends BaseHibernateDaoImpl {
