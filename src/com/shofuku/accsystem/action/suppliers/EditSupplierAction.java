@@ -32,7 +32,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class EditSupplierAction extends ActionSupport{
 
-	SupplierManager manager = new SupplierManager();
 	Supplier supplier;
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(EditSupplierAction.class);
@@ -68,10 +67,12 @@ public class EditSupplierAction extends ActionSupport{
 	CheckPayments chp;
 	SupplierPurchaseOrder po;
 	
-	DisbursementManager disbursementManager = new DisbursementManager();
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-	AccountEntryManager accountEntryManager = new AccountEntryManager();
-	TransactionManager transactionMananger = new TransactionManager();
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("transactionMananger");
+	
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	
@@ -86,13 +87,13 @@ public class EditSupplierAction extends ActionSupport{
 			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);
 			if (getSupplierModule().equalsIgnoreCase("profile")){
 				Supplier supplier = new Supplier();
-				supplier = (Supplier) manager.listSuppliersByParameter(supplier.getClass(), "supplierId", this.getSupplier().getSupplierId(),session).get(0);
+				supplier = (Supplier) supplierManager.listSuppliersByParameter(supplier.getClass(), "supplierId", this.getSupplier().getSupplierId(),session).get(0);
 				this.setSupplier(supplier);
 				return "profile";
 			}else if (getSupplierModule().equalsIgnoreCase("purchaseOrder")){
-				supplierNoList = manager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
+				supplierNoList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
 				SupplierPurchaseOrder po = new SupplierPurchaseOrder();
-				po = (SupplierPurchaseOrder) manager.listSuppliersByParameter(po.getClass(), "supplierPurchaseOrderId", this.getPo().getSupplierPurchaseOrderId(),session).get(0);
+				po = (SupplierPurchaseOrder) supplierManager.listSuppliersByParameter(po.getClass(), "supplierPurchaseOrderId", this.getPo().getSupplierPurchaseOrderId(),session).get(0);
 				poDetailsHelper.generatePODetailsListFromSet(po.getPurchaseOrderDetails());
 				poDetailsHelper.generateCommaDelimitedValues();
 				this.setSupplier(po.getSupplier());
@@ -101,8 +102,8 @@ public class EditSupplierAction extends ActionSupport{
 				return "purchaseOrder";
 			}else if (getSupplierModule().equalsIgnoreCase("receivingReport")){
 				ReceivingReport rr = new ReceivingReport();
-				purchaseOrderNoList = manager.listAlphabeticalAscByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId", session);
-				rr = (ReceivingReport) manager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", this.getRr().getReceivingReportNo(),session).get(0);
+				purchaseOrderNoList = supplierManager.listAlphabeticalAscByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId", session);
+				rr = (ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", this.getRr().getReceivingReportNo(),session).get(0);
 				
 				//START Phase 3 - Azhee
 				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rr.getReceivingReportNo(), session);
@@ -160,7 +161,7 @@ public class EditSupplierAction extends ActionSupport{
 				return "receivingReport";
 			}else  {
 				SupplierInvoice supInv = new SupplierInvoice();
-				receivingReportNoList = manager.listAlphabeticalAscByParameter(ReceivingReport.class, "receivingReportNo", session);
+				receivingReportNoList = supplierManager.listAlphabeticalAscByParameter(ReceivingReport.class, "receivingReportNo", session);
 				checkVoucherList= disbursementManager.listDisbursementsByParameter(CheckPayments.class, "invoice.supplierInvoiceNo", this.getInvoice().getSupplierInvoiceNo(), session);
 				
 				Iterator itr = checkVoucherList.iterator();
@@ -170,7 +171,7 @@ public class EditSupplierAction extends ActionSupport{
 					tempTotal = tempTotal + chpFromList.getAmountToPay();
 				}
 				
-				supInv = (SupplierInvoice) manager.listSuppliersByParameter(supInv.getClass(), "supplierInvoiceNo", this.getInvoice().getSupplierInvoiceNo(),session).get(0);
+				supInv = (SupplierInvoice) supplierManager.listSuppliersByParameter(supInv.getClass(), "supplierInvoiceNo", this.getInvoice().getSupplierInvoiceNo(),session).get(0);
 				//START Phase 3 - Azhee
 				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
 				//START Phase 3 - Project 1 - Mark

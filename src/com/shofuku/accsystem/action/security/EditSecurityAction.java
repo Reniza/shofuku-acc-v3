@@ -26,16 +26,19 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class EditSecurityAction extends ActionSupport{
 	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private String securityModule;
 	private String forWhat;
 	private String forWhatDisplay;
 
 	private String moduleParameter;
-	UserAccount user;
+	
 	Role role;
 	
 	List roleList;
-	SecurityManager securityManager = new SecurityManager();
+	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

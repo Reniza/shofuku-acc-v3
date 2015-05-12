@@ -7,9 +7,6 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
-import com.shofuku.accsystem.domain.disbursements.CashPayment;
-import com.shofuku.accsystem.domain.disbursements.CheckPayments;
-import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
@@ -19,7 +16,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class DeleteReceiptAction extends ActionSupport{
 
-	ReceiptsManager manager = new ReceiptsManager();
 	
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
@@ -33,6 +29,9 @@ public class DeleteReceiptAction extends ActionSupport{
 	private String crNo;
 	private String subModule;
 	
+	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+	
+	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
@@ -43,7 +42,7 @@ public class DeleteReceiptAction extends ActionSupport{
 			boolean deleteResult;
 
 			if (getSubModule().equalsIgnoreCase("orSales")) {
-				deleteResult = manager.deleteReceiptsByParameter(getOrSNo(), ORSales.class,session);
+				deleteResult = receiptsManager.deleteReceiptsByParameter(getOrSNo(), ORSales.class,session);
 				if (deleteResult == true) {
 					orSales = new ORSales();
 					addActionMessage(SASConstants.DELETED);
@@ -52,7 +51,7 @@ public class DeleteReceiptAction extends ActionSupport{
 				}
 				return "orSalesDeleted";
 			} else if (getSubModule().equalsIgnoreCase("orOthers")) {
-				deleteResult = manager.deleteReceiptsByParameter(getOrONo(),
+				deleteResult = receiptsManager.deleteReceiptsByParameter(getOrONo(),
 						OROthers.class,session);
 				if (deleteResult == true) {
 					orOthers = new OROthers();
@@ -62,7 +61,7 @@ public class DeleteReceiptAction extends ActionSupport{
 				}
 				return "orOthersDeleted";
 			} else  {
-				deleteResult = manager.deleteReceiptsByParameter(getCrNo(), CashCheckReceipts.class,session);
+				deleteResult = receiptsManager.deleteReceiptsByParameter(getCrNo(), CashCheckReceipts.class,session);
 				if (deleteResult == true) {
 					ccReceipts = new CashCheckReceipts();
 					addActionMessage(SASConstants.DELETED);

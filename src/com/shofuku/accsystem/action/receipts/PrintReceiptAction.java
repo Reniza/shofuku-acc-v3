@@ -42,7 +42,9 @@ private static final long serialVersionUID = 1L;
 	ORSales orSales;
 	OROthers orOthers;
 	CashCheckReceipts ccReceipts;
-	ReceiptsManager manager = new ReceiptsManager();
+	
+	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -54,19 +56,19 @@ private static final long serialVersionUID = 1L;
 			ServletContext servletContext = ServletActionContext
 					.getServletContext();
 			Map receiptMap = new HashMap();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+		
 			if (getSubModule().equalsIgnoreCase("orSales")){
 				ORSales orSales = new ORSales();
-				orSales = (ORSales) manager.listReceiptsByParameter(ORSales.class, "orNumber",getOrSNo(),session).get(0);
+				orSales = (ORSales) receiptsManager.listReceiptsByParameter(ORSales.class, "orNumber",getOrSNo(),session).get(0);
 				receiptMap =createReceiptMap(orSales);
 			}
 			else if (getSubModule().equalsIgnoreCase("orOthers")){
 				OROthers orOthers= new OROthers();
-				orOthers = (OROthers) manager.listReceiptsByParameter(OROthers.class, "orNumber",getOrONo(),session).get(0);
+				orOthers = (OROthers) receiptsManager.listReceiptsByParameter(OROthers.class, "orNumber",getOrONo(),session).get(0);
 				receiptMap =createReceiptMap(orOthers);
 			}
 
-			excelStream = reportSummaryMgr.printReceipt(receiptMap,subModule,servletContext);
+			excelStream = reportAndSummaryManager.printReceipt(receiptMap,subModule,servletContext);
 			forWhat="print";
 			contentDisposition = "filename=\"receipt.xls\"";
 
@@ -94,7 +96,7 @@ private static final long serialVersionUID = 1L;
 			if (getSubModule().equalsIgnoreCase("orSales")){
 				
 				ORSales orSales = new ORSales();
-				orSales = (ORSales) manager.listReceiptsByParameter(
+				orSales = (ORSales) receiptsManager.listReceiptsByParameter(
 						ORSales.class, "orNumber",
 						getOrSNo(),session).get(0);
 				this.setOrSales(orSales);
@@ -102,7 +104,7 @@ private static final long serialVersionUID = 1L;
 					return "orSales";
 			}else if (getSubModule().equalsIgnoreCase("orOthers")){
 				OROthers orOthers= new OROthers();
-				orOthers = (OROthers) manager.listReceiptsByParameter(
+				orOthers = (OROthers) receiptsManager.listReceiptsByParameter(
 						OROthers.class, "orNumber",
 						this.getOrONo(),session).get(0);
 				setOrOthers(orOthers);
@@ -110,7 +112,7 @@ private static final long serialVersionUID = 1L;
 				return "orOthers";
 			}else {
 				CashCheckReceipts cashCheckReceipts = new CashCheckReceipts();
-				cashCheckReceipts = (CashCheckReceipts) manager.listReceiptsByParameter(
+				cashCheckReceipts = (CashCheckReceipts) receiptsManager.listReceiptsByParameter(
 						CashCheckReceipts.class, "cashReceiptNo",
 						this.getCrNo(),session).get(0);
 				this.setCcReceipts(cashCheckReceipts);

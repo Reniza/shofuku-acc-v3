@@ -28,7 +28,7 @@ UserAccount user = (UserAccount) actionSession.get("user");
 	AccountEntryProfile aep;
 	JournalEntryProfile jep;
 	
-	AccountEntryManager manager = new AccountEntryManager();
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	
 	
 	private Session getSession() {
@@ -39,11 +39,11 @@ UserAccount user = (UserAccount) actionSession.get("user");
 	
 	try {
 		if (subModule.equals("accountEntryProfile")){
-			this.setAep(manager.loadAccountEntryProfile(getAep().getAccountCode()));
+			this.setAep(accountEntryManager.loadAccountEntryProfile(getAep().getAccountCode()));
 			forWhat= "true";
 		return "accountEntryProfile";
 		}else {
-			jep = (JournalEntryProfile) manager.listByParameter(JournalEntryProfile.class, "entryNo", this.jep.getEntryNo(), session).get(0);
+			jep = (JournalEntryProfile) accountEntryManager.listByParameter(JournalEntryProfile.class, "entryNo", this.jep.getEntryNo(), session).get(0);
 			this.setJep(jep);
 			forWhat= "print";
 			return "journalEntryProfile";

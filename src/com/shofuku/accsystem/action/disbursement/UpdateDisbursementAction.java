@@ -20,7 +20,6 @@ import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
-import com.shofuku.accsystem.dao.impl.DisbursementDaoImpl;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
 import com.shofuku.accsystem.domain.disbursements.CheckPayments;
 import com.shofuku.accsystem.domain.disbursements.PettyCash;
@@ -32,10 +31,7 @@ import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentTerms;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
-import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
-import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -71,15 +67,15 @@ public class UpdateDisbursementAction extends ActionSupport {
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
 		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		FinancialsManager financialsManager = new FinancialsManager();
-		//END 2013 - PHASE 3 : PROJECT 1: AZ  
+	//END 2013 - PHASE 3 : PROJECT 1: AZ  
 		
-		
-	LookupManager lookUpManager = new LookupManager();
-	SupplierManager supplierManager = new SupplierManager();
-	DisbursementManager manager = new DisbursementManager();
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	
 	DateFormatHelper df = new DateFormatHelper();
 	
 	PettyCash pc;
@@ -103,10 +99,10 @@ public class UpdateDisbursementAction extends ActionSupport {
 			pc.setDebitTitle(pc.getDescription());
 			pc.setDebitAmount(pc.getAmount());
 			pc.setCreditAmount(pc.getAmount());
-			classifList = lookUpManager.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
+			classifList = lookupManager.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
 			
 			//START - 2013 - PHASE 3 : PROJECT 1: MARK
-			transactionMananger.discontinuePreviousTransactions(pc.getPcVoucherNumber(),session);
+			transactionManager.discontinuePreviousTransactions(pc.getPcVoucherNumber(),session);
 			//transactionList = new ArrayList();
 			transactionList = getTransactionList();
 			AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
@@ -124,7 +120,7 @@ public class UpdateDisbursementAction extends ActionSupport {
 			//END: 2013 - PHASE 3 : PROJECT 4: AZ
 			if (validatePettyCash()) {
 			}else {
-				updateResult = manager.updateDisbursement(pc,session);
+				updateResult = disbursementManager.updateDisbursement(pc,session);
 				if (updateResult== true) {
 					addActionMessage(SASConstants.UPDATED);
 					forWhat="true";
@@ -139,10 +135,10 @@ public class UpdateDisbursementAction extends ActionSupport {
 			cp.setDebitTitle(cp.getDescription());
 			cp.setDebitAmount(cp.getAmount());
 			cp.setCreditAmount(cp.getAmount());
-			classifList = lookUpManager.getLookupElements(PaymentClassification.class, "CASHPAYMENT",session);
+			classifList = lookupManager.getLookupElements(PaymentClassification.class, "CASHPAYMENT",session);
 			
 			//START - 2013 - PHASE 3 : PROJECT 1: MARK
-			transactionMananger.discontinuePreviousTransactions(cp.getCashVoucherNumber(),session);
+			transactionManager.discontinuePreviousTransactions(cp.getCashVoucherNumber(),session);
 			transactionList = getTransactionList();
 			updateAccountingEntries(cp.getCashVoucherNumber(),session,SASConstants.CASHPAYMENT);
 			this.setTransactionList(transactions);
@@ -158,7 +154,7 @@ public class UpdateDisbursementAction extends ActionSupport {
 			//END: 2013 - PHASE 3 : PROJECT 4: AZ
 			if (validateCashPayment()) {
 			}else {
-				updateResult = manager.updateDisbursement(cp,session);
+				updateResult = disbursementManager.updateDisbursement(cp,session);
 				if (updateResult== true) {
 					addActionMessage(SASConstants.UPDATED);
 					forWhat="true";
@@ -185,9 +181,9 @@ public class UpdateDisbursementAction extends ActionSupport {
 			}
 				chp.setCreditAmount(chp.getAmount());*/
 			
-			classifList = lookUpManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
+			classifList = lookupManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
 			//START - 2013 - PHASE 3 : PROJECT 1: MARK
-			transactionMananger.discontinuePreviousTransactions(chp.getCheckVoucherNumber(),session);
+			transactionManager.discontinuePreviousTransactions(chp.getCheckVoucherNumber(),session);
 			transactionList = getTransactionList();
 			updateAccountingEntries(chp.getCheckVoucherNumber(),session,SASConstants.CHECKPAYMENT);
 			this.setTransactionList(transactionList);
@@ -203,7 +199,7 @@ public class UpdateDisbursementAction extends ActionSupport {
 			//END: 2013 - PHASE 3 : PROJECT 4: AZ
 			if (validateCheckPayment()) {
 			}else {
-				updateResult = manager.updateDisbursement(chp,session);
+				updateResult = disbursementManager.updateDisbursement(chp,session);
 				if (updateResult== true) {
 					addActionMessage(SASConstants.UPDATED);
 					forWhat="true";
@@ -250,7 +246,7 @@ private void updateAccountingEntries(String referenceNo, Session session, String
 				transaction.setIsInUse(SASConstants.TRANSACTION_IN_USE);
 				transactions.add(transaction);
 			}
-			transactionMananger.addTransactionsList(transactions,session);
+			transactionManager.addTransactionsList(transactions,session);
 		}
 		//END - 2013 - PHASE 3 : PROJECT 1: MARK
 		//return transactions;
@@ -258,7 +254,7 @@ private void updateAccountingEntries(String referenceNo, Session session, String
 private String updateSupplierCheckVoucher(Session session, boolean updateResult) throws Exception {
 
 	List supInv = null;
-	invoiceNoList = manager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo", session);
+	invoiceNoList = disbursementManager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo", session);
 	
 	supInv = supplierManager.listSuppliersByParameter(SupplierInvoice.class, "supplierInvoiceNo", invId,session);
 		SupplierInvoice invoice = new SupplierInvoice();
@@ -276,7 +272,7 @@ private String updateSupplierCheckVoucher(Session session, boolean updateResult)
 	chp.setCheckVoucherNumber(chpNo);
 	chp.setInvoice(invoice);
 	//START - 2013 - PHASE 3 : PROJECT 1: MARK
-	transactionMananger.discontinuePreviousTransactions(chp.getCheckVoucherNumber(),session);
+	transactionManager.discontinuePreviousTransactions(chp.getCheckVoucherNumber(),session);
 	transactionList = getTransactionList();
 	updateAccountingEntries(chp.getCheckVoucherNumber(),session,SASConstants.CHECK_VOUCHER);
 	this.setTransactionList(transactions);
@@ -297,7 +293,7 @@ private String updateSupplierCheckVoucher(Session session, boolean updateResult)
 		}else {
 			//update invoice's remaining balance with the value placed on the amount to pay field
 			updateInvoiceRemainingBalance(invoice);
-			updateResult = manager.updateDisbursement(chp,session);
+			updateResult = disbursementManager.updateDisbursement(chp,session);
 			if (updateResult== true) {
 				addActionMessage(SASConstants.UPDATED);
 				forWhat="true";
@@ -316,7 +312,7 @@ private void updateInvoiceRemainingBalance(SupplierInvoice invoice) {
 	supplierManager.updateSupplier(invoice, session);
 }
 private double getRemainingBalanceFromAllChecksAssociated(Session session,SupplierInvoice invoice) {
-	List disbursementList = manager.listDisbursementsByParameter(CheckPayments.class,
+	List disbursementList = disbursementManager.listDisbursementsByParameter(CheckPayments.class,
 			"invoice.supplierInvoiceNo", invoice.getSupplierInvoiceNo(),session);
 	
 	Iterator checkVoucherIterator = disbursementList.iterator();

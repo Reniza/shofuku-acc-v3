@@ -21,12 +21,9 @@ import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
-import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
-import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -56,7 +53,7 @@ public class UpdateCustomerAction extends ActionSupport {
 	CustomerPurchaseOrder custpo;
 	DeliveryReceipt dr;
 	CustomerSalesInvoice invoice;
-	CustomerManager manager = new CustomerManager();
+	
 	
 	List customerNoList;
 	List purchaseOrderNoList;
@@ -70,11 +67,12 @@ public class UpdateCustomerAction extends ActionSupport {
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 		
 	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-	InventoryManager inventoryManager = new InventoryManager();
-	AccountEntryManager accountEntryManager = new AccountEntryManager();
-	TransactionManager transactionMananger = new TransactionManager();
-	FinancialsManager financialsManager = new FinancialsManager();
 	
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	
 	InventoryUtil invUtil = new InventoryUtil();
 
@@ -98,7 +96,7 @@ public class UpdateCustomerAction extends ActionSupport {
 				if (validateCustomer()) {
 					
 				}else {
-					updateResult = manager.updateCustomer(customer,session);
+					updateResult = customerManager.updateCustomer(customer,session);
 					if (updateResult == true) {
 						addActionMessage(SASConstants.UPDATED);
 						forWhat = "true";
@@ -109,9 +107,9 @@ public class UpdateCustomerAction extends ActionSupport {
 				return "profileUpdated";
 			} else if (getSubModule().equalsIgnoreCase("purchaseOrder")) {
 				List cusPo = null;
-				customerNoList = manager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
+				customerNoList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
 				
-				cusPo = manager.listByParameter(Customer.class, "customerNo",
+				cusPo = customerManager.listByParameter(Customer.class, "customerNo",
 						getCustpo().getCustomer().getCustomerNo(),session);
 				if (cusPo.isEmpty()) {
 					addActionMessage("Customer No: " + SASConstants.NON_EXISTS);
@@ -140,7 +138,7 @@ public class UpdateCustomerAction extends ActionSupport {
 						if (custpo.getPurchaseOrderDetails().size()==0) {
 							addActionError(SASConstants.EMPTY_ORDER_DETAILS);
 						}else {
-							updateResult = manager.updateCustomer(custpo,session);
+							updateResult = customerManager.updateCustomer(custpo,session);
 							poDetailsHelper.flushUnRelatedOrders(session);
 							
 							if (updateResult == true) {
@@ -156,9 +154,9 @@ public class UpdateCustomerAction extends ActionSupport {
 				return "poUpdated";
 			} else if (getSubModule().equalsIgnoreCase("deliveryReceipt")) {
 				List cusDr = null;
-				purchaseOrderNoList = manager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId", session);
+				purchaseOrderNoList = customerManager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId", session);
 				
-				cusDr = manager.listByParameter(CustomerPurchaseOrder.class,
+				cusDr = customerManager.listByParameter(CustomerPurchaseOrder.class,
 						"customerPurchaseOrderId", getDr()
 								.getCustomerPurchaseOrder()
 								.getCustomerPurchaseOrderId(),session);
@@ -176,9 +174,9 @@ public class UpdateCustomerAction extends ActionSupport {
 					 * Checking and fetching existing return slips
 					 */
 					
-					InventoryManager invManager= new InventoryManager();
+					
 					Session drSession = getSession();
-					List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", dr.getDeliveryReceiptNo(), drSession);
+					List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", dr.getDeliveryReceiptNo(), drSession);
 					
 					if(returnSlipList.size()>0) {
 						dr.setReturnSlipList(returnSlipList);
@@ -214,7 +212,7 @@ public class UpdateCustomerAction extends ActionSupport {
 						 *  2nd - incoming order
 						 *  3rd - order type to determine if there is an addition or deduction to inventory
 						*/
-						DeliveryReceipt oldCustDr = (DeliveryReceipt) manager.listByParameter(
+						DeliveryReceipt oldCustDr = (DeliveryReceipt) customerManager.listByParameter(
 								DeliveryReceipt.class, "deliveryReceiptNo",drId,session).get(0);
 						PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
 						helperOld.generatePODetailsListFromSet(oldCustDr.getPurchaseOrderDetails());
@@ -247,7 +245,7 @@ public class UpdateCustomerAction extends ActionSupport {
 								dr.setTransactions(transactions);
 								//END
 								
-								updateResult = manager.updateCustomer(dr,session);
+								updateResult = customerManager.updateCustomer(dr,session);
 							}else {
 								updateResult = false;
 							}
@@ -266,9 +264,9 @@ public class UpdateCustomerAction extends ActionSupport {
 				return "deliveryReceiptUpdated";
 			} else {
 				List cusInv = null;
-				deliveryReceiptNoList = manager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo", session);
+				deliveryReceiptNoList = customerManager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo", session);
 				
-				cusInv = manager.listByParameter(DeliveryReceipt.class,
+				cusInv = customerManager.listByParameter(DeliveryReceipt.class,
 						"deliveryReceiptNo", getInvoice().getDeliveryReceipt()
 								.getDeliveryReceiptNo(),session);
 				if (cusInv.isEmpty()) {
@@ -322,7 +320,7 @@ public class UpdateCustomerAction extends ActionSupport {
 						if (invoice.getPurchaseOrderDetails().size()==0) {
 							addActionError(SASConstants.EMPTY_ORDER_DETAILS);
 						}else {
-							updateResult = manager.updateCustomer(invoice,session);
+							updateResult = customerManager.updateCustomer(invoice,session);
 							poDetailsHelper.flushUnRelatedOrders(session);
 							if (updateResult == true) {
 								addActionMessage(SASConstants.UPDATED);

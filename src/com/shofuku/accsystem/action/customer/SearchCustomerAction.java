@@ -10,21 +10,17 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
-import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
 public class SearchCustomerAction extends ActionSupport {
 
-	CustomerManager manager = new CustomerManager();
 	
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
@@ -43,6 +39,7 @@ public class SearchCustomerAction extends ActionSupport {
 	private String clicked;
 	private String customerModule;
 	
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -56,15 +53,15 @@ public class SearchCustomerAction extends ActionSupport {
 						&& getCustomerModule().equalsIgnoreCase("profile")) {
 					Customer cust = new Customer();
 					if (moduleParameter.equals("customerName")) {
-						customerList = manager.listByParameterLike(
+						customerList = customerManager.listByParameterLike(
 								Customer.class, "customerName",
 								moduleParameterValue,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						customerList = manager.listAlphabeticalAscByParameter(Customer.class, "customerNo",session);
+						customerList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo",session);
 						moduleParameterValue="all";
 						
 					}  else {
-						customerList = manager.listByParameter(Customer.class,
+						customerList = customerManager.listByParameter(Customer.class,
 								moduleParameter, moduleParameterValue,session);
 					}
 					if (customerList == null || 0 == customerList.size()) {
@@ -77,21 +74,21 @@ public class SearchCustomerAction extends ActionSupport {
 					CustomerPurchaseOrder custPO = new CustomerPurchaseOrder();
 
 					if (moduleParameter.equals("customerName")) {
-						customerList = manager.listByName(CustomerPurchaseOrder.class,
+						customerList = customerManager.listByName(CustomerPurchaseOrder.class,
 								"customer.customerName", moduleParameterValue,session);
 					} else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						customerList = manager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId",session);
+						customerList = customerManager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId",session);
 						moduleParameterValue="all";
 						
 					} else if (moduleParameter.endsWith("Date")) {
-						customerList = manager
+						customerList = customerManager
 								.getCustomerElementsByDate(
 										new DateFormatHelper()
 												.parseStringToTime(moduleParameterValue),
 												CustomerPurchaseOrder.class.getName(),
 										moduleParameter,session);
 					} else {
-						customerList = manager.listByParameter(
+						customerList = customerManager.listByParameter(
 								CustomerPurchaseOrder.class, moduleParameter,
 								moduleParameterValue,session);
 					}
@@ -104,26 +101,26 @@ public class SearchCustomerAction extends ActionSupport {
 						&& getCustomerModule().equalsIgnoreCase("deliveryReceipt")) {
 					DeliveryReceipt custDR = new DeliveryReceipt();
 					if ("customerPurchaseOrderId".equals(moduleParameter)) {
-						customerList = manager
+						customerList = customerManager
 								.listByParameter(
 										DeliveryReceipt.class,
 										"customerPurchaseOrder.customerPurchaseOrderId",
 										moduleParameterValue,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						customerList = manager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo",session);
+						customerList = customerManager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo",session);
 						moduleParameterValue="all";
 					}else if (null != getModuleParameter() && moduleParameter.equalsIgnoreCase("customerName")) {
-						customerList = manager.searchCustomerDeliveryReceiptByCustomerName(DeliveryReceipt.class,
+						customerList = customerManager.searchCustomerDeliveryReceiptByCustomerName(DeliveryReceipt.class,
 								"customer.customerName", moduleParameterValue,session);	
 					}  else if (moduleParameter.endsWith("Date")) {
-						customerList = manager
+						customerList = customerManager
 								.getCustomerElementsByDate(
 										new DateFormatHelper()
 												.parseStringToTime(moduleParameterValue),
 												DeliveryReceipt.class.getName(),
 										moduleParameter,session);
 					} else {
-						customerList = manager.listByParameter(
+						customerList = customerManager.listByParameter(
 								DeliveryReceipt.class, moduleParameter,
 								moduleParameterValue,session);
 					}
@@ -136,27 +133,27 @@ public class SearchCustomerAction extends ActionSupport {
 						&& getCustomerModule().equalsIgnoreCase("invoice")) {
 					CustomerSalesInvoice custInv = new CustomerSalesInvoice();
 					if ("deliveryReceiptNo".equals(moduleParameter)) {
-						customerList = manager.listByParameter(
+						customerList = customerManager.listByParameter(
 								CustomerSalesInvoice.class,
 								"deliveryReceipt.deliveryReceiptNo",
 								moduleParameterValue,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						customerList = manager.listAlphabeticalAscByParameter(CustomerSalesInvoice.class, "customerInvoiceNo",session);
+						customerList = customerManager.listAlphabeticalAscByParameter(CustomerSalesInvoice.class, "customerInvoiceNo",session);
 						moduleParameterValue="all";
 						
 					} else if (null != getModuleParameter() && moduleParameter.equalsIgnoreCase("customerName")) {
-						customerList = manager.searchCustomerInvoiceByCustomerName(CustomerSalesInvoice.class,
+						customerList = customerManager.searchCustomerInvoiceByCustomerName(CustomerSalesInvoice.class,
 								"customer.customerName", moduleParameterValue,session);	
 					}
 					else if (moduleParameter.endsWith("Date")) {
-						customerList = manager
+						customerList = customerManager
 								.getCustomerElementsByDate(
 										new DateFormatHelper()
 												.parseStringToTime(moduleParameterValue),
 												CustomerSalesInvoice.class.getName(),
 										moduleParameter,session);
 					} else {
-						customerList = manager.listByParameter(
+						customerList = customerManager.listByParameter(
 								CustomerSalesInvoice.class, moduleParameter,
 								moduleParameterValue,session);
 					}

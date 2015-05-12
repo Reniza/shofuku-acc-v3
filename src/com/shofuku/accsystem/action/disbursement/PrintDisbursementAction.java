@@ -45,7 +45,8 @@ UserAccount user = (UserAccount) actionSession.get("user");
 	private String amount;
 	private String amountInWords;
 	List<PurchaseOrderDetails> orderDetails;
-	DisbursementManager manager = new DisbursementManager();
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
 	
 	PettyCash pc;
 	CashPayment cp;
@@ -66,7 +67,7 @@ UserAccount user = (UserAccount) actionSession.get("user");
 		if (getSubModule().equals("pettyCash")){
 			
 			PettyCash pc = new PettyCash();
-			pc = (PettyCash) manager.listDisbursementsByParameter(
+			pc = (PettyCash) disbursementManager.listDisbursementsByParameter(
 					PettyCash.class, "pcVoucherNumber",
 					this.getPcNo(),session).get(0);
 			setPc(pc);
@@ -74,7 +75,7 @@ UserAccount user = (UserAccount) actionSession.get("user");
 			return "pettyCash";
 		}else if (getSubModule().equals("cashPayment")){
 			CashPayment cp = new CashPayment();
-			cp = (CashPayment) manager.listDisbursementsByParameter(
+			cp = (CashPayment) disbursementManager.listDisbursementsByParameter(
 					CashPayment.class, "cashVoucherNumber",
 					this.getCpNo(),session).get(0);
 			this.setCp(cp);
@@ -82,7 +83,7 @@ UserAccount user = (UserAccount) actionSession.get("user");
 			return "cashPayment";
 		}else if (getSubModule().equals("checkPayment")){
 			CheckPayments chp = new CheckPayments();
-			chp = (CheckPayments) manager.listDisbursementsByParameter(
+			chp = (CheckPayments) disbursementManager.listDisbursementsByParameter(
 					CheckPayments.class, "checkVoucherNumber",
 					this.getChpNo(),session).get(0);
 			this.setChp(chp);
@@ -90,7 +91,7 @@ UserAccount user = (UserAccount) actionSession.get("user");
 			return "checkPayment";
 		}else {
 			CheckPayments chp = new CheckPayments();
-			chp = (CheckPayments) manager.listDisbursementsByParameter(
+			chp = (CheckPayments) disbursementManager.listDisbursementsByParameter(
 					CheckPayments.class, "checkVoucherNumber",
 					this.getChpNo(),session).get(0);
 			orderDetails = new ArrayList<PurchaseOrderDetails>();
@@ -130,14 +131,14 @@ UserAccount user = (UserAccount) actionSession.get("user");
 		try {
 			ServletContext servletContext = ServletActionContext
 					.getServletContext();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+			
 			
 				CheckPayments chp = new CheckPayments();
-				chp = (CheckPayments) manager.listDisbursementsByParameter(
+				chp = (CheckPayments) disbursementManager.listDisbursementsByParameter(
 						CheckPayments.class, "checkVoucherNumber",
 						this.getChpNo(),session).get(0);
 
-			excelStream = reportSummaryMgr.printCheckPayments(chp,subModule,servletContext);
+			excelStream = reportAndSummaryManager.printCheckPayments(chp,subModule,servletContext);
 			forWhat="print";
 			contentDisposition = "filename=\"checkpayments.xls\"";
 			return SUCCESS;

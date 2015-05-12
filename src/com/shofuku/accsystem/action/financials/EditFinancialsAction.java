@@ -11,9 +11,6 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
-import com.shofuku.accsystem.controllers.FinancialsManager;
-import com.shofuku.accsystem.controllers.LookupManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
@@ -41,8 +38,7 @@ public class EditFinancialsAction extends ActionSupport{
 	//Display amount
 	Transaction transaction;
 	
-	AccountEntryManager manager = new AccountEntryManager();
-
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -52,11 +48,11 @@ public class EditFinancialsAction extends ActionSupport{
 		Session session = getSession();
 		try {
 			forWhatDisplay = "edit";
-			accountCodeList = manager.listAlphabeticalAccountEntryProfileAscByParameter(AccountEntryProfile.class, "accountCode", session);
+			accountCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileAscByParameter(AccountEntryProfile.class, "accountCode", session);
 			if (getFinancialModule().equalsIgnoreCase("accountEntryProfile")) {
 				
 			List<Transaction> transactionPerAccountList = new ArrayList<>();
-				transactionPerAccountList = manager.listByParameter(Transaction.class, "accountEntry.accountCode", aep.getAccountCode(), session);
+				transactionPerAccountList = accountEntryManager.listByParameter(Transaction.class, "accountEntry.accountCode", aep.getAccountCode(), session);
 				double totalAmount = 0;
 			
 				//// total amount per account
@@ -72,12 +68,12 @@ public class EditFinancialsAction extends ActionSupport{
 				///
 				
 				AccountEntryProfile aep = new AccountEntryProfile();
-				aep = (AccountEntryProfile) manager.loadAccountEntryProfile(this.aep.getAccountCode());
+				aep = (AccountEntryProfile) accountEntryManager.loadAccountEntryProfile(this.aep.getAccountCode());
 				setAep(aep);
 				return "accountEntryProfile";
 			} else {
 				JournalEntryProfile jep = new JournalEntryProfile();
-				jep = (JournalEntryProfile) manager.listByParameter(JournalEntryProfile.class, "entryNo", this.jep.getEntryNo(), session).get(0);
+				jep = (JournalEntryProfile) accountEntryManager.listByParameter(JournalEntryProfile.class, "entryNo", this.jep.getEntryNo(), session).get(0);
 				setJep(jep);
 				
 				return "journalEntryProfile";

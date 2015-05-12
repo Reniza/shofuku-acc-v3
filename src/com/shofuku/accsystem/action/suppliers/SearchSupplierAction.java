@@ -24,7 +24,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class SearchSupplierAction extends ActionSupport {
 
-	SupplierManager manager = new SupplierManager();
 	
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
@@ -35,7 +34,8 @@ public class SearchSupplierAction extends ActionSupport {
 	List supplierList;
 	private String clicked;
 
-
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	
 	private String supplierModule;
 	private String moduleParameter;
 	private String moduleParameterValue;
@@ -72,16 +72,16 @@ public class SearchSupplierAction extends ActionSupport {
 				if (getSupplierModule().equalsIgnoreCase("profile")) {
 				
 					if (moduleParameter.equalsIgnoreCase("ALL")) {
-						supplierList = manager.listAlphabeticalAscByParameter(Supplier.class, "supplierName",session);
+						supplierList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierName",session);
 						moduleParameterValue="all";
 					}else if (null != getModuleParameter() && moduleParameter.equalsIgnoreCase("supplierId")) {
 						Supplier sup = new Supplier();
-						supplierList = manager.listSuppliersByParameter(sup.getClass(),
+						supplierList = supplierManager.listSuppliersByParameter(sup.getClass(),
 							moduleParameter, moduleParameterValue,session);
 					}else{
 						if (null != getModuleParameter()) {
 						Supplier sup = new Supplier();
-						supplierList = manager.listSupplierByParameterLike(sup.getClass(),
+						supplierList = supplierManager.listSupplierByParameterLike(sup.getClass(),
 							moduleParameter, moduleParameterValue,session);
 						}
 					}
@@ -94,19 +94,19 @@ public class SearchSupplierAction extends ActionSupport {
 						&& getSupplierModule().equalsIgnoreCase("purchaseOrder")) {
 					SupplierPurchaseOrder supPO = new SupplierPurchaseOrder();
 					if (moduleParameter.equals("supplierName")) {
-						supplierList = manager.listByName(supPO.getClass(),
+						supplierList = supplierManager.listByName(supPO.getClass(),
 								"supplier.supplierName", moduleParameterValue,session);
 					}else if (moduleParameter.endsWith("Date")) {
-						supplierList = manager.getSupplierElementsByDate(
+						supplierList = supplierManager.getSupplierElementsByDate(
 								new DateFormatHelper()
 										.parseStringToTime(moduleParameterValue),
 								supPO.getClass().getName(), moduleParameter,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-							supplierList = manager.listAlphabeticalAscByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId",session);
+							supplierList = supplierManager.listAlphabeticalAscByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId",session);
 							moduleParameterValue="all";
 					}
 					 else {
-						supplierList = manager.listSuppliersByParameter(
+						supplierList = supplierManager.listSuppliersByParameter(
 								supPO.getClass(), moduleParameter,
 								moduleParameterValue,session);
 					}
@@ -126,26 +126,26 @@ public class SearchSupplierAction extends ActionSupport {
 						&& getSupplierModule().equalsIgnoreCase("invoice")) {
 					SupplierInvoice supInv = new SupplierInvoice();
 					if ("receivingReportNo".equals(moduleParameter)) {
-						supplierList = manager.listSuppliersByParameter(
+						supplierList = supplierManager.listSuppliersByParameter(
 								supInv.getClass(),
 								"receivingReport.receivingReportNo",
 								moduleParameterValue,session);
 					} else if (moduleParameter.endsWith("Date")) {
-						supplierList = manager.getSupplierElementsByDate(
+						supplierList = supplierManager.getSupplierElementsByDate(
 								new DateFormatHelper()
 										.parseStringToTime(moduleParameterValue),
 								supInv.getClass().getName(), moduleParameter,session);
 					
 					} else if (null != getModuleParameter() && moduleParameter.equalsIgnoreCase("supplierName")) {
-						supplierList = manager.searchSupplierInvoiceBySupplierName(SupplierInvoice.class,
+						supplierList = supplierManager.searchSupplierInvoiceBySupplierName(SupplierInvoice.class,
 							"supplier.supplierName", moduleParameterValue,session);
 					
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						supplierList = manager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo",session);
+						supplierList = supplierManager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo",session);
 						moduleParameterValue="all";
 					
 					}else {
-						supplierList = manager.listSuppliersByParameter(
+						supplierList = supplierManager.listSuppliersByParameter(
 								supInv.getClass(), moduleParameter,
 								moduleParameterValue,session);
 					}
@@ -181,24 +181,24 @@ public class SearchSupplierAction extends ActionSupport {
 
 	private void searchRecevingReport(ReceivingReport supRR,Session session ) {
 		if ("supplierPurchaseOrderId".equals(moduleParameter)) {
-			supplierList = manager.listSuppliersByParameter(
+			supplierList = supplierManager.listSuppliersByParameter(
 					supRR.getClass(),
 					"supplierPurchaseOrder.supplierPurchaseOrderId",
 					moduleParameterValue,session);
 		} else if (moduleParameter.endsWith("Date")) {
-			supplierList = manager.getSupplierElementsByDate(
+			supplierList = supplierManager.getSupplierElementsByDate(
 					new DateFormatHelper()
 							.parseStringToTime(moduleParameterValue),
 					supRR.getClass().getName(), moduleParameter,session);
 		}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-			supplierList = manager.listAlphabeticalAscByParameter(ReceivingReport.class, "receivingReportNo",session);
+			supplierList = supplierManager.listAlphabeticalAscByParameter(ReceivingReport.class, "receivingReportNo",session);
 			moduleParameterValue="all";
 		}else if (null != getModuleParameter() && moduleParameter.equalsIgnoreCase("supplierName")) {
-			supplierList = manager.searchSupplierReceivingReportBySupplierName(ReceivingReport.class,
+			supplierList = supplierManager.searchSupplierReceivingReportBySupplierName(ReceivingReport.class,
 					"supplier.supplierName", moduleParameterValue,session);
 			
 		}else {
-			supplierList = manager.listSuppliersByParameter(
+			supplierList = supplierManager.listSuppliersByParameter(
 					supRR.getClass(), moduleParameter,
 					moduleParameterValue,session);
 		}

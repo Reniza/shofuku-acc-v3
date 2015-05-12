@@ -58,7 +58,6 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	FPTS fpts;
 	RequisitionForm rf;
 	ReturnSlip rs;
-	InventoryManager manager=new InventoryManager();
 	List<Ingredient> ingredients;
 	List itemCodeList;
 	
@@ -67,11 +66,15 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			List<Transaction> transactionList;
 			List<Transaction> transactions;
 			Iterator itr;
-			AccountEntryManager accountEntryManager = new AccountEntryManager();
-			TransactionManager transactionMananger = new TransactionManager();
 			
 			//END 2013 - PHASE 3 : PROJECT 1: MARK 
 
+	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	
+	
 	String itemCode;
 	String isGeneralSearch;
 	public String getItemCode() {
@@ -97,7 +100,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	PurchaseOrderDetailHelper poDetailsHelperDraft;
 	private String parentPage;
 	
-	LookupManager lookupManager = new LookupManager();
+	
 	
 	public List getUOMList() {
 		return UOMList;
@@ -119,7 +122,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 		
 		try{
 		UOMList = generateUOMStrings(lookupManager.getLookupElements(UnitOfMeasurements.class, "GENERAL",session));
-		itemCodeList = manager.loadItemListFromRawAndFin(session);
+		itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 		accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);
 		
 		}catch(Exception e){
@@ -215,7 +218,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				
 			if (getSubModule().equalsIgnoreCase("rawMat")) {
 				RawMaterial rawMat = new RawMaterial();
-				rawMat = (RawMaterial) manager.listInventoryByParameter(RawMaterial.class, "itemCode",
+				rawMat = (RawMaterial) inventoryManager.listInventoryByParameter(RawMaterial.class, "itemCode",
 						this.getRm().getItemCode(),session).get(0);
 				
 				this.setRm(rawMat);
@@ -227,7 +230,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
 				TradedItem ti = new TradedItem();
-				ti = (TradedItem) manager.listInventoryByParameter(TradedItem.class, "itemCode",
+				ti = (TradedItem) inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode",
 						this.getTi().getItemCode(),session).get(0);
 				
 				this.setTi(ti);
@@ -236,7 +239,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
 				Utensils u = new Utensils();
-				u = (Utensils) manager.listInventoryByParameter(Utensils.class, "itemCode",
+				u = (Utensils) inventoryManager.listInventoryByParameter(Utensils.class, "itemCode",
 						this.getU().getItemCode(),session).get(0);
 				
 				this.setU(u);
@@ -245,7 +248,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "utensils";
 			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
 				OfficeSupplies os = new OfficeSupplies();
-				os = (OfficeSupplies) manager.listInventoryByParameter(OfficeSupplies.class, "itemCode",
+				os = (OfficeSupplies) inventoryManager.listInventoryByParameter(OfficeSupplies.class, "itemCode",
 						this.getOs().getItemCode(),session).get(0);
 				
 				this.setOs(os);
@@ -254,7 +257,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
 				UnlistedItem unl = new UnlistedItem();
-				unl = (UnlistedItem) manager.listInventoryByParameterLike(UnlistedItem.class, "description",
+				unl = (UnlistedItem) inventoryManager.listInventoryByParameterLike(UnlistedItem.class, "description",
 						this.getUnl().getDescription(),session).get(0);
 				
 				this.setUnl(unl);
@@ -264,11 +267,11 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				
 				FPTS fpts = new FPTS();
-				fpts = (FPTS) manager.listInventoryByParameter(FPTS.class,"fptsNo", this.getFpts().getFptsNo(), session).get(0);
+				fpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo", this.getFpts().getFptsNo(), session).get(0);
 				
-				InventoryManager invManager= new InventoryManager();
+				
 				Session fptsSession = getSession();
-				List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", fpts.getFptsNo(), fptsSession);
+				List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", fpts.getFptsNo(), fptsSession);
 				
 				if(returnSlipList.size()>0) {
 					fpts.setReturnSlipList(returnSlipList);
@@ -314,15 +317,14 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
 				
 				RequisitionForm rf = new RequisitionForm();
-				rf = (RequisitionForm) manager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", this.getRf().getRequisitionNo(), session).get(0);
+				rf = (RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", this.getRf().getRequisitionNo(), session).get(0);
 				
 				/*
 				 * Checking and fetching existing return slips
 				 */
 				
-				InventoryManager invManager= new InventoryManager();
 				Session rfSession = getSession();
-				List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rf.getRequisitionNo(), rfSession);
+				List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rf.getRequisitionNo(), rfSession);
 				
 				if(returnSlipList.size()>0) {
 					rf.setReturnSlipList(returnSlipList);
@@ -367,7 +369,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 				ReturnSlip rs = new ReturnSlip();
-				rs = (ReturnSlip) manager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
+				rs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 						this.getRs().getReturnSlipNo(),session).get(0);
 				
 				poDetailsHelperDraft = new PurchaseOrderDetailHelper();
@@ -421,7 +423,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			
 			}else {
 				FinishedGood finGood = new FinishedGood();
-				finGood = (FinishedGood) manager.listInventoryByParameter(FinishedGood.class, "productCode",
+				finGood = (FinishedGood) inventoryManager.listInventoryByParameter(FinishedGood.class, "productCode",
 						this.getFg().getProductCode(),session).get(0);
 				ingredients = new ArrayList<Ingredient>();
 				Set<Ingredient>	ingSet = finGood.getIngredients();
@@ -430,7 +432,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					Ingredient ingredient = itr.next();
 					ingredients.add(ingredient);
 				}
-				itemCodeList = manager.loadItemListFromRawAndFin(session);
+				itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 				this.setFg(finGood);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						fg.getClassification(), session);

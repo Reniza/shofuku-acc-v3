@@ -43,8 +43,11 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 			.getLogger(ExportSearchResultsHelper.class);
 	
 	//Controllers
-	FinancialsManager financialsMgr = new FinancialsManager();
-	AccountEntryManager aepMgr = new AccountEntryManager();
+	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 
 	//General Variables
 	InputStream excelStream;
@@ -85,7 +88,7 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 		DateFormatHelper dfh= new DateFormatHelper();
 		ServletContext servletContext = ServletActionContext
 				.getServletContext();
-		ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+		
 		try {
 			
 			
@@ -154,7 +157,7 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 				//TODO: remove hardocded "accountProfileEntry" put it in constants
 				filename= SASConstants.CHART_OF_ACCOUNT_FILENAME + dfh.getDateToday();
 				String subModule = "AccountEntryProfile";
-				excelStream = reportSummaryMgr.generateSummary(servletContext,
+				excelStream = reportAndSummaryManager.generateSummary(servletContext,
 						dateFrom, dateTo, subModule,session);
 			}else {
 				 preloadLists(session);
@@ -180,11 +183,9 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 	
 	private void preloadLists(Session session) {
 		// Pre-load all lists needed 
-		SupplierManager supMgr = new SupplierManager();
-		supplierList = supMgr.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
 		
-		CustomerManager cusMgr = new CustomerManager();
-		customerList = cusMgr.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
+		supplierList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
+		customerList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
 	}
 	
 

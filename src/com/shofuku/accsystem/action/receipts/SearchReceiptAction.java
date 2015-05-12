@@ -7,17 +7,11 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
-import com.shofuku.accsystem.domain.disbursements.CashPayment;
-import com.shofuku.accsystem.domain.disbursements.CheckPayments;
-import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -37,8 +31,7 @@ public class SearchReceiptAction extends ActionSupport{
 	private String clicked;
 	List receiptList;
 
-	ReceiptsManager manager = new ReceiptsManager();
-	SupplierManager supManager = new SupplierManager();
+	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -52,13 +45,13 @@ public class SearchReceiptAction extends ActionSupport{
 				if (null != getModuleParameter()&& getReceiptModule().equalsIgnoreCase("orSales")) {
 				
 					if (getModuleParameter().endsWith("Date")) {
-						receiptList = manager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), ORSales.class.getName(), moduleParameter,session);
+						receiptList = receiptsManager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), ORSales.class.getName(), moduleParameter,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						receiptList = supManager.listAlphabeticalAscByParameter(ORSales.class, "orNumber",session);
+						receiptList = receiptsManager.listAlphabeticalAscByParameter(ORSales.class, "orNumber",session);
 						moduleParameterValue="all";
 					}
 					else {
-						receiptList = manager.listReceiptsByParameter(ORSales.class,
+						receiptList = receiptsManager.listReceiptsByParameter(ORSales.class,
 										moduleParameter, moduleParameterValue,session);
 					}
 						if (receiptList == null || 0 == receiptList.size()) {
@@ -69,13 +62,13 @@ public class SearchReceiptAction extends ActionSupport{
 				} else if (null != getModuleParameter()&& getReceiptModule().equalsIgnoreCase("orOthers")) {
 					
 					if (getModuleParameter().endsWith("Date")) {
-						receiptList = manager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), OROthers.class.getName(), moduleParameter,session);
+						receiptList = receiptsManager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), OROthers.class.getName(), moduleParameter,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						receiptList = supManager.listAlphabeticalAscByParameter(OROthers.class, "orNumber",session);
+						receiptList = receiptsManager.listAlphabeticalAscByParameter(OROthers.class, "orNumber",session);
 						moduleParameterValue="all";
 					}
 					else {
-						receiptList = manager.listReceiptsByParameter(OROthers.class,
+						receiptList = receiptsManager.listReceiptsByParameter(OROthers.class,
 										moduleParameter, moduleParameterValue,session);
 					}
 					if (receiptList == null || 0 == receiptList.size()) {
@@ -85,14 +78,14 @@ public class SearchReceiptAction extends ActionSupport{
 				} else if (null != getModuleParameter()&& getReceiptModule().equalsIgnoreCase("ccReceipts")) {
 				
 					if (getModuleParameter().endsWith("Date")) {
-						receiptList = manager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), CashCheckReceipts.class.getName(), moduleParameter,session);
+						receiptList = receiptsManager.getReceiptElementsByDate((new DateFormatHelper().parseStringToTime(moduleParameterValue)), CashCheckReceipts.class.getName(), moduleParameter,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						receiptList = supManager.listAlphabeticalAscByParameter(CashCheckReceipts.class, "cashReceiptNo",session);
+						receiptList = receiptsManager.listAlphabeticalAscByParameter(CashCheckReceipts.class, "cashReceiptNo",session);
 						moduleParameterValue="all";
 						
 					}
 					else {
-						receiptList = manager.listReceiptsByParameter(CashCheckReceipts.class,
+						receiptList = receiptsManager.listReceiptsByParameter(CashCheckReceipts.class,
 										moduleParameter, moduleParameterValue,session);
 					}
 					if (receiptList == null || 0 == receiptList.size()) {

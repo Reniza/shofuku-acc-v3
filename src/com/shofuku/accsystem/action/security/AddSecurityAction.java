@@ -9,13 +9,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.SecurityManager;
-import com.shofuku.accsystem.domain.financials.AccountingRules;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
-import com.shofuku.accsystem.domain.security.Module;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.security.Role;
 import com.shofuku.accsystem.helpers.UserRoleHelper;
@@ -25,6 +24,9 @@ public class AddSecurityAction extends ActionSupport{
 	/**
 	 * 
 	 */
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private static final long serialVersionUID = 4912683471398088090L;
 
 	private static final Logger logger = Logger
@@ -32,7 +34,7 @@ public class AddSecurityAction extends ActionSupport{
 
 	private static final Logger logger2 = logger.getRootLogger();
 
-	SecurityManager securityManager = new SecurityManager();
+	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 	RecordCountHelper rch = new RecordCountHelper();
 	UserRoleHelper roleHelper = new UserRoleHelper();
 	
@@ -42,7 +44,7 @@ public class AddSecurityAction extends ActionSupport{
 	
 	// beans
 		String subModule;
-		UserAccount user;
+		
 		Role role;
 		private String forWhat;
 		private String forWhatDisplay;

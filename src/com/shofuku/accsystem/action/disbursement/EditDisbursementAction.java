@@ -48,18 +48,19 @@ public class EditDisbursementAction extends ActionSupport {
 	List classifList;
 	List orderDetails;
 	List invoiceNoList;
-	LookupManager lookUpManager = new LookupManager();
-	SupplierManager supplierManager = new SupplierManager();
-
+	
 	private String moduleParameter;
 	PettyCash pc;
 	CashPayment cp;
 	CheckPayments chp;
-	DisbursementManager manager = new DisbursementManager();
+	
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
@@ -78,7 +79,7 @@ public class EditDisbursementAction extends ActionSupport {
 			
 			if (getSubModule().equalsIgnoreCase("AA")) {
 				PettyCash pc = new PettyCash();
-				pc = (PettyCash) manager.listDisbursementsByParameter(
+				pc = (PettyCash) disbursementManager.listDisbursementsByParameter(
 						pc.getClass(), "pcVoucherNumber",
 						this.getPc().getPcVoucherNumber(),session).get(0);
 				
@@ -102,12 +103,12 @@ public class EditDisbursementAction extends ActionSupport {
 				this.pc.setTransactions(transactionList);
 				//END Phase 3 - Azhee
 				setPc(pc);
-				classifList = lookUpManager.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
+				classifList = lookupManager.getLookupElements(ExpenseClassification.class, "PETTYCASH",session);
 				
 				return "pettyCash";
 			} else if (getSubModule().equalsIgnoreCase("BB")) {
 				CashPayment cp = new CashPayment();
-				cp = (CashPayment) manager.listDisbursementsByParameter(
+				cp = (CashPayment) disbursementManager.listDisbursementsByParameter(
 						cp.getClass(), "cashVoucherNumber",
 						this.getCp().getCashVoucherNumber(),session).get(0);
 				//START Phase 3 - Azhee
@@ -130,12 +131,12 @@ public class EditDisbursementAction extends ActionSupport {
 				this.cp.setTransactions(transactionList);
 				//END Phase 3 - Azhee
 				this.setCp(cp);
-				classifList = lookUpManager.getLookupElements(PaymentClassification.class, "CASHPAYMENT",session);
+				classifList = lookupManager.getLookupElements(PaymentClassification.class, "CASHPAYMENT",session);
 				
 				return "cashPayment";
 			} else if (getSubModule().equalsIgnoreCase("CC"))  {
 				CheckPayments chp = new CheckPayments();
-				chp = (CheckPayments) manager.listDisbursementsByParameter(
+				chp = (CheckPayments) disbursementManager.listDisbursementsByParameter(
 						chp.getClass(), "checkVoucherNumber",
 						this.getChp().getCheckVoucherNumber(),session).get(0);
 				//START Phase 3 - Azhee
@@ -158,13 +159,13 @@ public class EditDisbursementAction extends ActionSupport {
 				this.chp.setTransactions(transactionList);
 				//END Phase 3 - Azhee
 				this.setChp(chp);
-				classifList = lookUpManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
+				classifList = lookupManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
 				return "checkPayment";
 			} else {
 				CheckPayments chp = new CheckPayments();
-				invoiceNoList = manager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo", session);
+				invoiceNoList = disbursementManager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo", session);
 				
-				chp = (CheckPayments) manager.listDisbursementsByParameter(
+				chp = (CheckPayments) disbursementManager.listDisbursementsByParameter(
 						chp.getClass(), "checkVoucherNumber",
 						this.getChp().getCheckVoucherNumber(),session).get(0);
 				
@@ -203,7 +204,7 @@ public class EditDisbursementAction extends ActionSupport {
 					sortListsAlphabetically();
 				chp.setInvoice(invoice);
 				this.setChp(chp);
-				classifList = lookUpManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
+				classifList = lookupManager.getLookupElements(PaymentTerms.class, "CHECKPAYMENT",session);
 				return "checkVoucher";
 			}
 		} catch (RuntimeException re) {
