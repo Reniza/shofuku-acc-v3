@@ -1,5 +1,5 @@
 package com.shofuku.accsystem.controllers;
 
-public class SearchResultsManager {
+public class SearchResultsManager extends BaseController {
 
 }

@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import com.shofuku.accsystem.dao.impl.FinancialsDaoImpl;
 import com.shofuku.accsystem.domain.financials.Vat;
 
-public class FinancialsManager {
+public class FinancialsManager extends BaseController {
 
 	//START: 2013 - PHASE 3 : PROJECT 4: MARK
 	FinancialsDaoImpl dao = new FinancialsDaoImpl();

@@ -3,12 +3,15 @@ package com.shofuku.accsystem.action.inventory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
 
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
+
+import com.opensymphony.xwork2.ActionContext;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
@@ -21,13 +24,18 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
-
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 
 public class PrintInventoryAction {
-	InventoryManager manager = new InventoryManager();
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
+	InventoryManager manager = new InventoryManager();
+	
 	RawMaterial rm;
 	FinishedGood fg;
 	TradedItem ti;

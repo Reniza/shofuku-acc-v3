@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
@@ -19,6 +21,7 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -30,6 +33,9 @@ public class SearchInventoryAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = 1121251364643576096L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	private String subModule;
 	private String moduleParameter;

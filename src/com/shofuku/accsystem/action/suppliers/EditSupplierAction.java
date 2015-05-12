@@ -3,10 +3,12 @@ package com.shofuku.accsystem.action.suppliers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
@@ -18,6 +20,7 @@ import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -33,6 +36,9 @@ public class EditSupplierAction extends ActionSupport{
 	Supplier supplier;
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(EditSupplierAction.class);
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	private String supplierModule;
 	private String moduleParameter;

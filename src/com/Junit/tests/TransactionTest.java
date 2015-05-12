@@ -1,20 +1,23 @@
 package com.Junit.tests;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.junit.Test;
 
 
+
+import com.opensymphony.xwork2.ActionContext;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.financials.AccountingRules;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
 @SuppressWarnings("rawtypes")
@@ -22,6 +25,9 @@ public class TransactionTest {
 	
 	AccountEntryManager aepMgr = new AccountEntryManager();
 	TransactionManager trnsMgr = new TransactionManager();
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 //	@Test
 //	public void insertTransaction() {

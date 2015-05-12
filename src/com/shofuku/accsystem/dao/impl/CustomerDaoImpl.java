@@ -16,6 +16,8 @@ import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 @SuppressWarnings("rawtypes")
 public class CustomerDaoImpl extends BaseHibernateDaoImpl {
 
+	
+	
 	//add specific HQL / criteria calls here if any
 	public List listByName(Class clazz, String propertyName, String value,Session session) {
 

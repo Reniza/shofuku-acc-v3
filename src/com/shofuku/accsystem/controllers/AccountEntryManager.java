@@ -10,7 +10,7 @@ import com.shofuku.accsystem.domain.financials.AccountingRules;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.financials.Vat;
 
-public class AccountEntryManager {
+public class AccountEntryManager extends BaseController{
 	
 	AccountEntryDaoImpl accountEntryDao = new AccountEntryDaoImpl();
 	

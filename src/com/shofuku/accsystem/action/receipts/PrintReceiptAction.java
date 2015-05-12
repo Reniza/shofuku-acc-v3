@@ -12,17 +12,22 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
 public class PrintReceiptAction extends ActionSupport{
 private static final long serialVersionUID = 1L;
+
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	InputStream excelStream;
 	String contentDisposition;

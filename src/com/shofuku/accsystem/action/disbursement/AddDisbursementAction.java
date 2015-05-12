@@ -4,11 +4,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.annotations.Check;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
@@ -28,6 +30,7 @@ import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentTerms;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -40,6 +43,11 @@ public class AddDisbursementAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = -5808746491946120539L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
+	
 	DisbursementManager manager = new DisbursementManager();
 	
 	// search parameters

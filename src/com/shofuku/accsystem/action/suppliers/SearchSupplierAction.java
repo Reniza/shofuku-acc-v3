@@ -4,12 +4,15 @@ import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -22,6 +25,9 @@ import com.shofuku.accsystem.utils.SASConstants;
 public class SearchSupplierAction extends ActionSupport {
 
 	SupplierManager manager = new SupplierManager();
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger

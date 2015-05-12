@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -13,14 +14,15 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
-
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.financials.Transaction;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -36,6 +38,10 @@ public class PrintSupplierAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private String subModule;
 	Supplier supplier;
 	SupplierPurchaseOrder po;

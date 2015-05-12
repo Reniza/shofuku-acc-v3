@@ -2,9 +2,11 @@ package com.shofuku.accsystem.action.disbursement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
@@ -13,6 +15,7 @@ import com.shofuku.accsystem.domain.disbursements.CheckPayments;
 import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
@@ -25,6 +28,9 @@ public class SearchDisbursementAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	private String subModule;
 	private String moduleParameter;

@@ -2,14 +2,20 @@ package com.shofuku.accsystem.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.ImportOfflineOrdersUtil;
 
 public class ImportOfflineOrdersAction extends ActionSupport {
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	private String fileUpload;
 	List errorStringList;

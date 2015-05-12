@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -29,6 +30,10 @@ public class ManageStockLevelAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private String fileUpload;
 	Customer customer;
 	String result;

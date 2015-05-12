@@ -8,7 +8,7 @@ import com.shofuku.accsystem.dao.impl.LookupDaoImpl;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class LookupManager {
+public class LookupManager extends BaseController {
 	
 	LookupDaoImpl lookupDao = new LookupDaoImpl();
 	

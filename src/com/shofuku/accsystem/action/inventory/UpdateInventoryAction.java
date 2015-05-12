@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
@@ -30,6 +32,7 @@ import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.DateFormatHelper;
@@ -44,6 +47,9 @@ public class UpdateInventoryAction extends ActionSupport{
 
 	private static final long serialVersionUID = 1L;
 
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private String forWhat;
 	private String forWhatDisplay;
 	private String productNo;

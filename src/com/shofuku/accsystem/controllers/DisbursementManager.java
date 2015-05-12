@@ -12,7 +12,7 @@ import com.shofuku.accsystem.utils.SASConstants;
 /*
  * add business side logic in this class
  */
-public class DisbursementManager {
+public class DisbursementManager extends BaseController{
 	
 	DisbursementDaoImpl dao = new DisbursementDaoImpl();
 	DoubleConverter dc = new DoubleConverter();

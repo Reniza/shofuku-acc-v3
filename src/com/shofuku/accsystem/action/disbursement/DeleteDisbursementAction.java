@@ -1,13 +1,17 @@
 package com.shofuku.accsystem.action.disbursement;
 
+import java.util.Map;
+
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.dao.impl.DisbursementDaoImpl;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
 import com.shofuku.accsystem.domain.disbursements.CheckPayments;
 import com.shofuku.accsystem.domain.disbursements.PettyCash;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
@@ -17,6 +21,10 @@ public class DeleteDisbursementAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	DisbursementManager manager = new DisbursementManager();
 	

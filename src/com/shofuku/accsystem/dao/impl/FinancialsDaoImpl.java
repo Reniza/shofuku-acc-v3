@@ -15,6 +15,7 @@ import org.hibernate.type.StringType;
 
 import com.shofuku.accsystem.dao.BaseHibernateDao;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 

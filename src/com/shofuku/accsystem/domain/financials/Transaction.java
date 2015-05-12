@@ -2,8 +2,11 @@ package com.shofuku.accsystem.domain.financials;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Map;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
+import com.shofuku.accsystem.domain.security.UserAccount;
 
 public class Transaction implements Serializable {
 
@@ -12,6 +15,9 @@ public class Transaction implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	private int id;
 	private String transactionReferenceNumber;

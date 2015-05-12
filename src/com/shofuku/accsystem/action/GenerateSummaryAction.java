@@ -2,12 +2,14 @@ package com.shofuku.accsystem.action;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
@@ -23,13 +25,17 @@ import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
 public class GenerateSummaryAction extends ActionSupport {
 
 	private static final long serialVersionUID = 5247219508332414659L;
-
+	
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	InputStream excelStream;
 	String contentDisposition;
 	String isFormatReport;
@@ -72,6 +78,9 @@ public class GenerateSummaryAction extends ActionSupport {
 	boolean isInventorySummaryReport=false;
 
 	LookupManager lookUpManager = new LookupManager();
+	ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+	
+	
 
 	private void getModuleAndSubmodule() {
 
@@ -190,8 +199,9 @@ public class GenerateSummaryAction extends ActionSupport {
 					.getServletContext();
 
 			getModuleAndSubmodule();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
 
+			reportSummaryMgr.setUser(user);
+			
 			if (byRef) {
 				excelStream = reportSummaryMgr.generateSummary(servletContext,
 						dateFrom, dateTo, subModule, referenceNo,session);
@@ -230,10 +240,12 @@ public class GenerateSummaryAction extends ActionSupport {
 								excelStream = reportSummaryMgr.generateSummary(servletContext,
 										dateFrom, dateTo,subModule, cashList,isFormatReport,session);
 							}else {
+							
 							excelStream = reportSummaryMgr.generateSummary(servletContext,
 									dateFrom, dateTo,subModule, checkList,isFormatReport,session);
 							}
 						}else {
+							
 							excelStream = reportSummaryMgr.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
 						}

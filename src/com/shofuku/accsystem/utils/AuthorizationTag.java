@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
@@ -25,6 +26,7 @@ public class AuthorizationTag extends BodyTagSupport  {
 	UserRoleHelper roleHelper = new UserRoleHelper();
 	
 	private String role;
+	
 	
 	public int  doStartTag() throws JspException {
 		    
@@ -54,4 +56,5 @@ public class AuthorizationTag extends BodyTagSupport  {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
 }

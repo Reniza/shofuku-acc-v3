@@ -41,6 +41,9 @@ public class AddSupplierAction extends ActionSupport {
 			.getLogger(AddSupplierAction.class);
 
 	private static final Logger logger2 = logger.getRootLogger();
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	SupplierManager manager = new SupplierManager();
 	InventoryManager inventoryManager = new InventoryManager();

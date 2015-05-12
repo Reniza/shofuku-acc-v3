@@ -12,7 +12,7 @@ import com.shofuku.accsystem.dao.impl.TransactionsDaoImpl;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class TransactionManager {
+public class TransactionManager extends BaseController {
 	
 	TransactionsDaoImpl transactionsDao = new TransactionsDaoImpl();
 	

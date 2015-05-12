@@ -1,14 +1,17 @@
 package com.shofuku.accsystem.action;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentTerms;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
 public class LoadLookUpAction extends ActionSupport {
@@ -18,6 +21,9 @@ public class LoadLookUpAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String whatLookUp;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	List classifList;
 	LookupManager manager = new LookupManager();

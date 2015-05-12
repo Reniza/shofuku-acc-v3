@@ -1,9 +1,11 @@
 package com.shofuku.accsystem.action.receipts;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
@@ -14,6 +16,7 @@ import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
@@ -21,6 +24,9 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class SearchReceiptAction extends ActionSupport{
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	private String receiptModule;
 	private String moduleParameter;

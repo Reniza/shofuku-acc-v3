@@ -21,6 +21,7 @@ import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.ExportSearchResultsHelper;
@@ -34,6 +35,9 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = -5015769544134286832L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	private static final Logger logger = Logger
 			.getLogger(ExportSearchResultsHelper.class);

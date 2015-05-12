@@ -1,5 +1,5 @@
 package com.shofuku.accsystem.controllers;
 
-public class IncomeStatementManager {
+public class IncomeStatementManager extends BaseController {
 
 }

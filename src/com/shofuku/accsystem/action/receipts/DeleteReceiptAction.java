@@ -1,7 +1,10 @@
 package com.shofuku.accsystem.action.receipts;
 
+import java.util.Map;
+
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
@@ -10,12 +13,17 @@ import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
 public class DeleteReceiptAction extends ActionSupport{
 
 	ReceiptsManager manager = new ReceiptsManager();
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private static final long serialVersionUID = 1L;
 	ORSales orSales;
 	OROthers orOthers;

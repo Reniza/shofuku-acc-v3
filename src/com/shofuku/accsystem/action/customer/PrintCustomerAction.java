@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -14,6 +15,7 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
@@ -24,6 +26,7 @@ import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.disbursements.CheckPayments;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -31,6 +34,10 @@ import com.shofuku.accsystem.utils.SASConstants;
 public class PrintCustomerAction extends ActionSupport{
 	
 	private static final long serialVersionUID = 1L;
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
+	
 	private String subModule;
 	private String cusId;
 	private String custpoid;
@@ -43,7 +50,10 @@ public class PrintCustomerAction extends ActionSupport{
 	CustomerPurchaseOrder custpo;
 	DeliveryReceipt dr;
 	CustomerSalesInvoice invoice;
+	
 	CustomerManager manager = new CustomerManager();
+	ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
+	
 	List<PurchaseOrderDetails> poDetailList;
 	
 	PurchaseOrderDetailHelper poDetailsHelper;
@@ -217,7 +227,6 @@ public class PrintCustomerAction extends ActionSupport{
 		try {
 			ServletContext servletContext = ServletActionContext
 					.getServletContext();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
 			
 			CustomerSalesInvoice custInv = new CustomerSalesInvoice();
 			custInv = (CustomerSalesInvoice) manager.listByParameter(

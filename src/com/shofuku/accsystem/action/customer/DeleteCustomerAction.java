@@ -1,9 +1,11 @@
 package com.shofuku.accsystem.action.customer;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
@@ -12,6 +14,7 @@ import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
@@ -25,6 +28,10 @@ import com.shofuku.accsystem.utils.SASConstants;
 public class DeleteCustomerAction extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
+	
+	
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 
 	CustomerManager manager = new CustomerManager();
 	InventoryManager inventoryManager = new InventoryManager();

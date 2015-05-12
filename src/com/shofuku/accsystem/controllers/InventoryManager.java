@@ -37,7 +37,7 @@ import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
  * add business side logic in this class
  */
 @SuppressWarnings("rawtypes")
-public class InventoryManager extends HibernateUtil {
+public class InventoryManager extends BaseController{
 
 	InventoryDaoImpl dao = new InventoryDaoImpl();
 	
