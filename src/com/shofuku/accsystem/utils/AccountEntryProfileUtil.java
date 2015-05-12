@@ -15,6 +15,7 @@ import com.shofuku.accsystem.domain.financials.Transaction;
 
 public class AccountEntryProfileUtil{
 
+	BaseHibernateDao baseHibernateDao = new BaseHibernateDaoImpl();
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
@@ -46,12 +47,7 @@ public class AccountEntryProfileUtil{
 	public AccountEntryProfile createAccountEntryProfileByCode(String accountEntryProfileCode) {
 		AccountEntryProfile accountEntryProfile = new AccountEntryProfile();
 		
-		
-		
-		
 		return accountEntryProfile;
-		
-		
 	}
 	
 	
@@ -59,9 +55,9 @@ public class AccountEntryProfileUtil{
 		
 			Session session = getSession();
 			try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
+			
 			char firstLetter = 'a';
-			String lastSupplier = dao.getLastSupplierByInitialLetter(firstLetter ,session);
+			String lastSupplier = baseHibernateDao.getLastSupplierByInitialLetter(firstLetter ,session);
 			int maxCount=0;
 			try{
 			maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
