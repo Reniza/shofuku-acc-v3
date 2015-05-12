@@ -20,10 +20,12 @@ public class UpdateSecurityAction extends ActionSupport{
 	/**
 	 * 
 	 */
+	Map actionSession = ActionContext.getContext().getSession();
+	UserAccount user = (UserAccount) actionSession.get("user");
 	private static final long serialVersionUID = 934004434406221113L;
 	
 	String subModule;
-	UserAccount user;
+	
 	Role role;
 	private String forWhat;
 	private String forWhatDisplay;
@@ -33,7 +35,7 @@ public class UpdateSecurityAction extends ActionSupport{
 	List roleList = null;
 	String tempPassword;
 	
-	SecurityManager securityManager = new SecurityManager();
+	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 	
 
 	//roles

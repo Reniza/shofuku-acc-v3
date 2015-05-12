@@ -13,10 +13,8 @@ import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
-import com.shofuku.accsystem.domain.disbursements.PettyCash;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.Vat;
-import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
@@ -44,14 +42,14 @@ public class AddReceiptsAction extends ActionSupport {
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		FinancialsManager financialsManager = new FinancialsManager();
-		DisbursementManager disbursementManager = new DisbursementManager();
-		//END 2013 - PHASE 3 : PROJECT 1: MARK 
+	//END 2013 - PHASE 3 : PROJECT 1: MARK 
 
-	ReceiptsManager manager = new ReceiptsManager();
+	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	
 	RecordCountHelper rch = new RecordCountHelper();
 
 	public String newReceiptEntry() {
@@ -76,7 +74,7 @@ public class AddReceiptsAction extends ActionSupport {
 				if (validateORSales()) {
 				} else {
 					List orsList = null;
-					orsList = manager.listReceiptsByParameter(ORSales.class,
+					orsList = receiptsManager.listReceiptsByParameter(ORSales.class,
 							"orNumber", getOrSales().getOrNumber(),session);
 					if (!(orsList.isEmpty())) {
 						addActionMessage(SASConstants.EXISTS);
@@ -102,7 +100,7 @@ public class AddReceiptsAction extends ActionSupport {
 						financialsManager.insertVatDetails(vatDetails, session);							
 						//END: 2013 - PHASE 3 : PROJECT 4: AZ
 						
-						addResult = manager.addReceiptsObject(orSales,session);
+						addResult = receiptsManager.addReceiptsObject(orSales,session);
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
 							forWhat = "true";
@@ -118,7 +116,7 @@ public class AddReceiptsAction extends ActionSupport {
 				if (validateOROther()) {
 				} else {
 					List oroList = null;
-					oroList = manager.listReceiptsByParameter(OROthers.class,
+					oroList = receiptsManager.listReceiptsByParameter(OROthers.class,
 							"orNumber", getOrOthers().getOrNumber(),session);
 					if (!(oroList.isEmpty())) {
 						addActionMessage(SASConstants.EXISTS);
@@ -141,7 +139,7 @@ public class AddReceiptsAction extends ActionSupport {
 						orOthers.setVatDetails(vatDetails);
 						financialsManager.insertVatDetails(vatDetails, session);							
 						//END: 2013 - PHASE 3 : PROJECT 4: AZ
-						addResult = manager.addReceiptsObject(getOrOthers(),session);
+						addResult = receiptsManager.addReceiptsObject(getOrOthers(),session);
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
 							forWhat = "true";
@@ -157,7 +155,7 @@ public class AddReceiptsAction extends ActionSupport {
 				if (validateCashCheckReceipt()) {
 				} else {
 					List crList = null;
-					crList = manager.listReceiptsByParameter(
+					crList = receiptsManager.listReceiptsByParameter(
 							CashCheckReceipts.class, "cashReceiptNo",
 							getCcReceipts().getCashReceiptNo(),session);
 					if (!(crList.isEmpty())) {
@@ -181,7 +179,7 @@ public class AddReceiptsAction extends ActionSupport {
 						ccReceipts.setVatDetails(vatDetails);
 						financialsManager.insertVatDetails(vatDetails, session);							
 						//END: 2013 - PHASE 3 : PROJECT 4: AZ
-						addResult = manager.addReceiptsObject(getCcReceipts(),session);
+						addResult = receiptsManager.addReceiptsObject(getCcReceipts(),session);
 						if (addResult == true) {
 							rch.updateCount(SASConstants.CASHCHECKRECEIPTS,
 									"add");

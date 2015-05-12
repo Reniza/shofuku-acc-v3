@@ -61,8 +61,10 @@ public class PrintSupplierAction extends ActionSupport{
 		//END 2013 - PHASE 3 : PROJECT 1: MARK  
 		
 		//START 2013 - PHASE 3 : PROJECT 1: MARK
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
+		SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
 		//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	InputStream excelStream;
@@ -75,17 +77,16 @@ public class PrintSupplierAction extends ActionSupport{
 		Session session = getSession();
 		try {
 			
-			
 			if (getSubModule().equalsIgnoreCase("supplierProfile")){
 				
 				Supplier supplier = new Supplier();
-				supplier = (Supplier) manager.listSuppliersByParameter(Supplier.class, "supplierId", this.getSupId(),session).get(0);
+				supplier = (Supplier) supplierManager.listSuppliersByParameter(Supplier.class, "supplierId", this.getSupId(),session).get(0);
 				this.setSupplier(supplier);
 				forWhat ="print";
 				return "profile";
 			}else if (getSubModule().equalsIgnoreCase("purchaseOrder")){
 				SupplierPurchaseOrder po = new SupplierPurchaseOrder();
-				po = (SupplierPurchaseOrder) manager.listSuppliersByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId", this.getPoId(),session).get(0);
+				po = (SupplierPurchaseOrder) supplierManager.listSuppliersByParameter(SupplierPurchaseOrder.class, "supplierPurchaseOrderId", this.getPoId(),session).get(0);
 				poDetailsHelper.generatePODetailsListFromSet(po.getPurchaseOrderDetails());
 				poDetailsHelper.generateCommaDelimitedValues();
 				this.setSupplier(po.getSupplier());
@@ -96,7 +97,7 @@ public class PrintSupplierAction extends ActionSupport{
 				
 			}else if (getSubModule().equalsIgnoreCase("receivingReport")){
 				ReceivingReport rr = new ReceivingReport();
-				rr = (ReceivingReport) manager.listSuppliersByParameter(ReceivingReport.class, "receivingReportNo", this.getRrId(),session).get(0);
+				rr = (ReceivingReport) supplierManager.listSuppliersByParameter(ReceivingReport.class, "receivingReportNo", this.getRrId(),session).get(0);
 				if(null==poDetailsHelperToCompare) {
 					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
 				}
@@ -115,9 +116,9 @@ public class PrintSupplierAction extends ActionSupport{
 				return "receivingReport";
 			}else {
 				SupplierInvoice supInv = new SupplierInvoice();
-				supInv = (SupplierInvoice) manager.listSuppliersByParameter(SupplierInvoice.class, "supplierInvoiceNo", this.getInvId(),session).get(0);
+				supInv = (SupplierInvoice) supplierManager.listSuppliersByParameter(SupplierInvoice.class, "supplierInvoiceNo", this.getInvId(),session).get(0);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", supInv.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", supInv.getSupplierInvoiceNo(), session);
 				itr = tempList.iterator();
 				transactionList = new ArrayList<Transaction>(); 
 				while(itr.hasNext()) {
@@ -183,14 +184,13 @@ public class PrintSupplierAction extends ActionSupport{
 		try {
 			ServletContext servletContext = ServletActionContext
 					.getServletContext();
-			ReportAndSummaryManager reportSummaryMgr = new ReportAndSummaryManager();
 			
 			SupplierPurchaseOrder spo = new SupplierPurchaseOrder();
-			spo = (SupplierPurchaseOrder) manager.listByParameter(
+			spo = (SupplierPurchaseOrder) supplierManager.listByParameter(
 					SupplierPurchaseOrder.class, "supplierPurchaseOrderId",
 					this.getPoId(),session).get(0);
 
-			excelStream = reportSummaryMgr.printSupplierPurchaseOrder(spo,subModule,servletContext);
+			excelStream = reportAndSummaryManager.printSupplierPurchaseOrder(spo,subModule,servletContext);
 			forWhat="print";
 			contentDisposition = "filename=\"supplierPurchaseOrder.xls\"";
 			return SUCCESS;
@@ -242,7 +242,7 @@ public class PrintSupplierAction extends ActionSupport{
 		this.invoice = invoice;
 	}
 
-	SupplierManager manager = new SupplierManager();
+	
 	private String supId;
 	private String poId;
 	private String rrId;

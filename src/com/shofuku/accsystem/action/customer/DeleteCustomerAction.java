@@ -9,16 +9,11 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
-import com.shofuku.accsystem.domain.suppliers.Supplier;
-import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
-import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
@@ -33,15 +28,13 @@ public class DeleteCustomerAction extends ActionSupport {
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
 
-	CustomerManager manager = new CustomerManager();
-	InventoryManager inventoryManager = new InventoryManager();
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 
 	RecordCountHelper rch = new RecordCountHelper();
 
 	private String subModule;
-
 	private String custpoid;
-
 	private String invId;
 	private String cusId;
 	private String drId;
@@ -59,7 +52,7 @@ public class DeleteCustomerAction extends ActionSupport {
 		boolean deleteResult;
 		try {
 			if (getSubModule().equalsIgnoreCase("profile")) {
-				deleteResult = manager.deleteCustomerByParameter(getCusId(),
+				deleteResult = customerManager.deleteCustomerByParameter(getCusId(),
 						Customer.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMER, "delete");
@@ -70,7 +63,7 @@ public class DeleteCustomerAction extends ActionSupport {
 				}
 				return "profileDeleted";
 			} else if (getSubModule().equalsIgnoreCase("purchaseOrder")) {
-				deleteResult = manager.deleteCustomerByParameter(getCustpoid(),
+				deleteResult = customerManager.deleteCustomerByParameter(getCustpoid(),
 						CustomerPurchaseOrder.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMERPO, "delete");
@@ -96,7 +89,7 @@ public class DeleteCustomerAction extends ActionSupport {
 				*/
 				InventoryUtil invUtil = new InventoryUtil();
 				
-				DeliveryReceipt orderToDelete = (DeliveryReceipt) manager.listByParameter(
+				DeliveryReceipt orderToDelete = (DeliveryReceipt) customerManager.listByParameter(
 						DeliveryReceipt.class, "deliveryReceiptNo",drId,session).get(0);
 				
 				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper();
@@ -111,7 +104,7 @@ public class DeleteCustomerAction extends ActionSupport {
 					addActionError("FAILED TO UPDATE INVENTORY AFTER DELETE");
 				}
 				
-				deleteResult = manager.deleteCustomerByParameter(getDrId(),
+				deleteResult = customerManager.deleteCustomerByParameter(getDrId(),
 						DeliveryReceipt.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.DELIVERYREPORT, "delete");
@@ -122,7 +115,7 @@ public class DeleteCustomerAction extends ActionSupport {
 				}
 				return "drDeleted";
 			} else {
-				deleteResult = manager.deleteCustomerByParameter(getInvId(),
+				deleteResult = customerManager.deleteCustomerByParameter(getInvId(),
 						CustomerSalesInvoice.class,session);
 				if (deleteResult == true) {
 //					rch.updateCount(SASConstants.CUSTOMERINVOICE, "delete");

@@ -78,8 +78,11 @@ public class AddInventoryAction extends ActionSupport {
 	private String productNo;
 	private String itemNo;
 	
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
-	InventoryManager manager = new InventoryManager();
 	InventoryUtil invUtil = new InventoryUtil();
 
 	Ingredient sangkap;
@@ -111,9 +114,6 @@ public class AddInventoryAction extends ActionSupport {
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		
 		//END 2013 - PHASE 3 : PROJECT 1: MARK 
 
 	private Session getSession() {
@@ -125,7 +125,7 @@ public class AddInventoryAction extends ActionSupport {
 		Session session = getSession();
 		try {
 		if (getSubModule().equalsIgnoreCase("fpts")) {
-			rfNoList = manager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
+			rfNoList = inventoryManager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
 		/*	fpts = new FPTS();
 			fpts.setFptsNo(rch.getPrefix(
 					SASConstants.INVENTORY_FPTS, SASConstants.INVENTORY_FPTS_PREFIX)); */
@@ -192,7 +192,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						processItemPricing(session, rm);
-						addResult = manager.addInventoryObject(rm, session);
+						addResult = inventoryManager.addInventoryObject(rm, session);
 
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -224,7 +224,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						processItemPricing(session, ti);
-						addResult = manager.addInventoryObject(ti, session);
+						addResult = inventoryManager.addInventoryObject(ti, session);
 
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -253,7 +253,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						processItemPricing(session, u);
-						addResult = manager.addInventoryObject(u, session);
+						addResult = inventoryManager.addInventoryObject(u, session);
 
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -282,7 +282,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						//processItemPricing(session, u);
-						addResult = manager.addInventoryObject(unl, session);
+						addResult = inventoryManager.addInventoryObject(unl, session);
 
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -311,7 +311,7 @@ public class AddInventoryAction extends ActionSupport {
 					setIngredientListFromArray(false);
 				} else {
 					List<FinishedGood> finGoodList = null;
-					finGoodList = manager.listInventoryByParameter(
+					finGoodList = inventoryManager.listInventoryByParameter(
 							FinishedGood.class, "productCode", getFg()
 									.getProductCode(), session);
 					if (isExistingInAllItems(getFg()
@@ -330,7 +330,7 @@ public class AddInventoryAction extends ActionSupport {
 						processItemPricing(session, fg);
 
 						listToSet();
-						fg.setIngredients(manager.persistsIngredients(
+						fg.setIngredients(inventoryManager.persistsIngredients(
 								finalIngredients, session));
 						if (otherUOMSelected) {
 							if (lookupManager.addNewUOM(new UnitOfMeasurements(
@@ -340,7 +340,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						}
-						addResult = manager.addInventoryObject(fg, session);
+						addResult = inventoryManager.addInventoryObject(fg, session);
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);
 							forWhat = "true";
@@ -400,11 +400,11 @@ public class AddInventoryAction extends ActionSupport {
 	private ArrayList<Item> getAllItemList(Session session) {
 		Iterator iterator = null;
 		
-		List<RawMaterial> rawMatList =manager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
-		List<TradedItem> tradedItemList =manager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
-		List<Utensils> utensilsList =manager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<OfficeSupplies> ofcSupList =manager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
-		List<FinishedGood> finList = manager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
+		List<RawMaterial> rawMatList =inventoryManager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
+		List<TradedItem> tradedItemList =inventoryManager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =inventoryManager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =inventoryManager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<FinishedGood> finList = inventoryManager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();
 		
@@ -475,7 +475,7 @@ public class AddInventoryAction extends ActionSupport {
 						loadLookLists();
 					}
 				processItemPricing(session, os);
-				addResult = manager.addInventoryObject(os, session);
+				addResult = inventoryManager.addInventoryObject(os, session);
 
 				if (addResult == true) {
 					addActionMessage(SASConstants.ADD_SUCCESS);
@@ -502,7 +502,7 @@ public class AddInventoryAction extends ActionSupport {
 			//END - 2013 - PHASE 3 : PROJECT 1: AZ
 			rf.setRequisitionNo(rch.getPrefix(
 					SASConstants.INVENTORY_REQUISITION_FORM, SASConstants.INVENTORY_RF_PREFIX));
-			addResult = manager.addInventoryObject(rf,session);
+			addResult = inventoryManager.addInventoryObject(rf,session);
 						if (addResult == true) {
 							rch.updateCount(SASConstants.RF, "add");
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -550,11 +550,11 @@ public class AddInventoryAction extends ActionSupport {
 	private String addFPTS() {
 		Session session = getSession();
 		boolean addResult = false;
-		rfNoList = manager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
+		rfNoList = inventoryManager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
 		if (validateFPTS()) {
 		} else {
 			List rfList = null;
-			rfList = manager.listInventoryByParameter(RequisitionForm.class, "requisitionNo", getFpts().getRequisitionForm().getRequisitionNo(), session);
+			rfList = inventoryManager.listInventoryByParameter(RequisitionForm.class, "requisitionNo", getFpts().getRequisitionForm().getRequisitionNo(), session);
 			fpts.setRequisitionForm((RequisitionForm) rfList.get(0));
 			fpts.setPurchaseOrderDetailsReceived(fpts.getRequisitionForm().getPurchaseOrderDetailsOrdered());
 			if (null == poDetailsHelperToCompare) {
@@ -573,7 +573,7 @@ public class AddInventoryAction extends ActionSupport {
 			//END - 2013 - PHASE 3 : PROJECT 1: AZ
 			fpts.setFptsNo(rch.getPrefix(
 					SASConstants.INVENTORY_FPTS, SASConstants.INVENTORY_FPTS_PREFIX));
-			addResult = manager.addInventoryObject(fpts,session);
+			addResult = inventoryManager.addInventoryObject(fpts,session);
 						if (addResult == true) {
 							rch.updateCount(SASConstants.FPTS, "add");
 							addActionMessage(SASConstants.ADD_SUCCESS);
@@ -599,7 +599,7 @@ public class AddInventoryAction extends ActionSupport {
 			poDetailsHelperDraft.setOrderDate(rs.getReturnDate());
 			rs.setPurchaseOrderDetails(poDetailsHelperDraft.persistNewSetElements(session));
 			poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
-			manager.persistMemo(rs.getMemo(),session);
+			inventoryManager.persistMemo(rs.getMemo(),session);
 			//update inventory record count
 			updateInventory(rs.getPurchaseOrderDetails());
 			
@@ -610,7 +610,7 @@ public class AddInventoryAction extends ActionSupport {
 			//END - 2013 - PHASE 3 : PROJECT 1: AZ
 			rs.setReturnSlipNo(rch.getPrefix(
 					SASConstants.INVENTORY_RETURN_SLIP_FORM, SASConstants.INVENTORY_RETURN_SLIP_PREFIX));
-			addResult = manager.addInventoryObject(rs,session);
+			addResult = inventoryManager.addInventoryObject(rs,session);
 			if (addResult == true) {
 				rch.updateCount(SASConstants.RETURNSLIP,"add");
 				addActionMessage(SASConstants.ADD_SUCCESS);
@@ -672,11 +672,11 @@ public class AddInventoryAction extends ActionSupport {
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) {
 			if(rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_CUSTOMER_TO_WAREHOUSE) || rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_PRODUCTION_TO_WAREHOUSE)){
-					manager.addInventoryItem(manager.determineItemTypeFromPoDetails(poDetails),session);
-					manager.commitChanges(session);
+					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.commitChanges(session);
 			}else if(rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_WAREHOUSE_TO_SUPPLIER)||rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_WAREHOUSE_TO_PRODUCTION)) {
-					manager.deductInventoryItem(manager.determineItemTypeFromPoDetails(poDetails),session);
-					manager.commitChanges(session);
+					inventoryManager.deductInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.commitChanges(session);
 			}else {
 			}
 			
@@ -760,7 +760,7 @@ public class AddInventoryAction extends ActionSupport {
 			
 			itemPricing.setItemCode(itemCode);
 			itemPricing.setItemType(itemType);
-			manager.addPersistingInventoryObject(itemPricing, session);
+			inventoryManager.addPersistingInventoryObject(itemPricing, session);
 			//itemPricing = invUtil.getItemPricing(session, itemCode);
 		// }
 		/*
@@ -859,7 +859,7 @@ public class AddInventoryAction extends ActionSupport {
 				in.setDescription(((String) descItrTk.nextElement()).trim());
 				in.setUnitOfMeasurement(((String) uomItrTk.nextElement())
 						.trim());
-				in = manager.loadIngredientPrices(in, session);
+				in = inventoryManager.loadIngredientPrices(in, session);
 				ingredients.add(in);
 			}
 			if(forFinGood) {
@@ -903,7 +903,7 @@ public class AddInventoryAction extends ActionSupport {
 				in.setDescription(((String) descItrTk.nextElement()).trim());
 				in.setUnitOfMeasurement(((String) uomItrTk.nextElement())
 						.trim());
-				in = manager.loadIngredientPrices(in, session);
+				in = inventoryManager.loadIngredientPrices(in, session);
 				returnSlipItems.add(in);
 			}
 				if (includeNewItem) {
@@ -939,8 +939,6 @@ public class AddInventoryAction extends ActionSupport {
 	List UOMList;
 	
 	List supplierAndCustomerList;
-
-	LookupManager lookupManager = new LookupManager();
 
 	private List generateUOMStrings(List uomList) {
 		List uomStringsList = new ArrayList();
@@ -1014,7 +1012,7 @@ public class AddInventoryAction extends ActionSupport {
 			if(requestingModule.equalsIgnoreCase("returnSlip")) {
 				
 			}else {
-				itemCodeList = manager.loadItemListFromRawAndFin(session);
+				itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 			}
 			
 		} catch (Exception e) {
@@ -1204,7 +1202,7 @@ public class AddInventoryAction extends ActionSupport {
 		try {
 			//fg.setProductCode(productNo);
 			try {
-			RawMaterial item = (RawMaterial) (manager.listInventoryByParameter(
+			RawMaterial item = (RawMaterial) (inventoryManager.listInventoryByParameter(
 					RawMaterial.class, "itemCode", sangkap.getProductCode(),
 					session).get(0));
 			sangkap = new Ingredient(item.getItemCode(), item.getDescription(),
@@ -1215,7 +1213,7 @@ public class AddInventoryAction extends ActionSupport {
 							.getItemPricing()
 							.getCompanyOwnedTransferPricePerUnit());
 			}catch(IndexOutOfBoundsException exception) {
-				TradedItem item = (TradedItem) (manager.listInventoryByParameter(
+				TradedItem item = (TradedItem) (inventoryManager.listInventoryByParameter(
 						TradedItem.class, "itemCode", sangkap.getProductCode(),
 						session).get(0)); 
 				sangkap = new Ingredient(item.getItemCode(), item.getDescription(),
@@ -1227,7 +1225,7 @@ public class AddInventoryAction extends ActionSupport {
 								.getCompanyOwnedTransferPricePerUnit());
 			}
 		} catch (IndexOutOfBoundsException iobe) {
-			FinishedGood itemFinGood = (FinishedGood) (manager
+			FinishedGood itemFinGood = (FinishedGood) (inventoryManager
 					.listInventoryByParameter(FinishedGood.class,
 							"productCode", sangkap.getProductCode(), session)
 					.get(0));
@@ -1318,7 +1316,7 @@ public class AddInventoryAction extends ActionSupport {
 				in.setDescription(((String) descItrTk.nextElement()).trim());
 				in.setUnitOfMeasurement(((String) uomItrTk.nextElement())
 						.trim());
-				in = manager.loadIngredientPrices(in, session);
+				in = inventoryManager.loadIngredientPrices(in, session);
 
 				if (productCode.equalsIgnoreCase(toEval)) {
 
@@ -1667,7 +1665,7 @@ public class AddInventoryAction extends ActionSupport {
 		rs.setReturnSlipTo(returnSlipToValue);
 		
 		try {
-			RawMaterial item = (RawMaterial) (manager.listInventoryByParameter(
+			RawMaterial item = (RawMaterial) (inventoryManager.listInventoryByParameter(
 					RawMaterial.class, "itemCode", returnSlipSearchItem.getProductCode(),
 					session).get(0));
 			returnSlipSearchItem = new Ingredient(item.getItemCode(), item.getDescription(),
@@ -1679,7 +1677,7 @@ public class AddInventoryAction extends ActionSupport {
 							.getCompanyOwnedTransferPricePerUnit());
 		} catch (IndexOutOfBoundsException iobe) {
 			try{
-				FinishedGood itemFinGood = (FinishedGood) (manager
+				FinishedGood itemFinGood = (FinishedGood) (inventoryManager
 					.listInventoryByParameter(FinishedGood.class,
 							"productCode", returnSlipSearchItem.getProductCode(), session)
 					.get(0));
@@ -1694,7 +1692,7 @@ public class AddInventoryAction extends ActionSupport {
 							.getCompanyOwnedTransferPricePerUnit());
 			} catch (IndexOutOfBoundsException iobe2) {
 				try{
-					TradedItem tradedItem = (TradedItem) manager.listInventoryByParameter(TradedItem.class, "itemCode",
+					TradedItem tradedItem = (TradedItem) inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode",
 							returnSlipSearchItem.getProductCode(),session).get(0);
 					
 					returnSlipSearchItem = new Ingredient(tradedItem.getItemCode(), tradedItem.getDescription(),

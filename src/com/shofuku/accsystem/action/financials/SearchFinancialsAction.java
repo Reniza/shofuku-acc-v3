@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
-import com.shofuku.accsystem.domain.disbursements.CashPayment;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -30,7 +29,7 @@ public class SearchFinancialsAction extends ActionSupport{
 	private String clicked;
 	List financialsList;
 
-	AccountEntryManager manager = new AccountEntryManager();
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -43,15 +42,15 @@ public class SearchFinancialsAction extends ActionSupport{
 				if (null != getModuleParameter()&& getFinancialModule().equalsIgnoreCase("accountEntryProfile")) {
 					
 					if (getModuleParameter().equalsIgnoreCase("name")) {
-						financialsList = manager.listAccountEntryProfileByParameterLike(
+						financialsList = accountEntryManager.listAccountEntryProfileByParameterLike(
 										AccountEntryProfile.class, moduleParameter,
 										moduleParameterValue,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						financialsList = manager.listAlphabeticalAccountEntryProfileAscByParameter(AccountEntryProfile.class, "name",session);
+						financialsList = accountEntryManager.listAlphabeticalAccountEntryProfileAscByParameter(AccountEntryProfile.class, "name",session);
 						moduleParameterValue="all";
 						
 					} else {
-						AccountEntryProfile aep = manager.loadAccountEntryProfile(moduleParameterValue);
+						AccountEntryProfile aep = accountEntryManager.loadAccountEntryProfile(moduleParameterValue);
 						financialsList = new ArrayList<>();
 						financialsList.add(aep);
 					}
@@ -63,15 +62,15 @@ public class SearchFinancialsAction extends ActionSupport{
 				} else if (null != getModuleParameter()&& getFinancialModule().equalsIgnoreCase("journalEntryProfile")) {
 					
 					if (getModuleParameter().equalsIgnoreCase("entryName")) {
-						financialsList = manager.listAccountEntryProfileByParameterLike(
+						financialsList = accountEntryManager.listAccountEntryProfileByParameterLike(
 										JournalEntryProfile.class, moduleParameter,
 										moduleParameterValue,session);
 					}else if (moduleParameter.equalsIgnoreCase("ALL")) {
-						financialsList = manager.listAlphabeticalAccountEntryProfileAscByParameter(JournalEntryProfile.class,"entryNo",session);
+						financialsList = accountEntryManager.listAlphabeticalAccountEntryProfileAscByParameter(JournalEntryProfile.class,"entryNo",session);
 						moduleParameterValue="all";
 						
 					} else {
-						JournalEntryProfile jep = (JournalEntryProfile) manager.listByParameter(JournalEntryProfile.class, moduleParameter, moduleParameterValue, session).get(0);
+						JournalEntryProfile jep = (JournalEntryProfile) accountEntryManager.listByParameter(JournalEntryProfile.class, moduleParameter, moduleParameterValue, session).get(0);
 						financialsList = new ArrayList<>();
 						financialsList.add(jep);
 					}

@@ -24,7 +24,7 @@ public class DeleteFinancialsAction extends ActionSupport{
 	AccountEntryProfile aep;
 	JournalEntryProfile jep;
 	
-	AccountEntryManager manager = new AccountEntryManager();
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -36,7 +36,7 @@ public class DeleteFinancialsAction extends ActionSupport{
 			boolean deleteResult;
 
 			if (getSubModule().equalsIgnoreCase("accountEntryProfile")) {
-				deleteResult = manager.deleteAccountEntryProfile(this.aep.getAccountCode(), AccountEntryProfile.class, session);
+				deleteResult = accountEntryManager.deleteAccountEntryProfile(this.aep.getAccountCode(), AccountEntryProfile.class, session);
 				if (deleteResult == true) {
 					aep = new AccountEntryProfile();
 					addActionMessage(SASConstants.DELETED);
@@ -45,7 +45,7 @@ public class DeleteFinancialsAction extends ActionSupport{
 				}
 				return "accountEntryProfileDeleted";
 			} else  {
-				deleteResult = manager.deleteAccountEntryProfile(this.jep.getAccountCode(), JournalEntryProfile.class, session);
+				deleteResult = accountEntryManager.deleteAccountEntryProfile(this.jep.getAccountCode(), JournalEntryProfile.class, session);
 				if (deleteResult == true) {
 					jep = new JournalEntryProfile();
 					addActionMessage(SASConstants.DELETED);

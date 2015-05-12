@@ -45,7 +45,7 @@ public class SearchSecurityAction extends ActionSupport{
 	private Map modulesGrantedMap;
 	
 
-	SecurityManager manager = new SecurityManager();
+	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 	UserRoleHelper roleHelper = new UserRoleHelper();
 
 	private Session getSession() {
@@ -59,11 +59,11 @@ public class SearchSecurityAction extends ActionSupport{
 				if (null != getModuleParameter()&& getSecurityModule().equalsIgnoreCase("userAccount")) {
 					
 					if (getModuleParameter().equalsIgnoreCase("userName") || getModuleParameter().equalsIgnoreCase("fullName")) {
-						securityList = manager.listToolsByParameterLike(
+						securityList = securityManager.listToolsByParameterLike(
 										UserAccount.class, moduleParameter,
 										moduleParameterValue,session);
 					}else {
-						securityList = manager.listAlphabeticalAscByParameter(UserAccount.class, "fullName", session);
+						securityList = securityManager.listAlphabeticalAscByParameter(UserAccount.class, "fullName", session);
 						moduleParameterValue="all";
 					} 
 						if (securityList.size()==0) {
@@ -74,11 +74,11 @@ public class SearchSecurityAction extends ActionSupport{
 				} else if (null != getModuleParameter()&& getSecurityModule().equalsIgnoreCase("userRole")) {
 					
 					if (getModuleParameter().equalsIgnoreCase("roleName")) {
-						securityList = manager.listToolsByParameterLike(
+						securityList = securityManager.listToolsByParameterLike(
 										Role.class, moduleParameter,
 										moduleParameterValue,session);
 					}else  {
-						securityList = manager.listAlphabeticalAscByParameter(Role.class, "roleName", session);
+						securityList = securityManager.listAlphabeticalAscByParameter(Role.class, "roleName", session);
 						moduleParameterValue="all";
 					} 
 						if (securityList.size()==0) {

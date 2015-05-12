@@ -55,16 +55,17 @@ public class EditCustomerAction extends ActionSupport {
 	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
 	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
 	
-	//START 2013 - PHASE 3 : PROJECT 1: MARK
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		//END 2013 - PHASE 3 : PROJECT 1: MARK
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	InventoryManager inventoryManager= (InventoryManager) actionSession.get("inventoryManager");
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
+		
 @Deprecated
 	public String loadCustomerPO() {
 	Session session = getSession();
 	try{
 		CustomerPurchaseOrder custPO = new CustomerPurchaseOrder();
-		custPO = (CustomerPurchaseOrder) manager.listByParameter(
+		custPO = (CustomerPurchaseOrder) customerManager.listByParameter(
 				custPO.getClass(), "customerPurchaseOrderId",
 				this.getDr().getCustomerPurchaseOrder().getCustomerPurchaseOrderId(),session).get(0);
 		
@@ -93,7 +94,7 @@ public class EditCustomerAction extends ActionSupport {
 	Session session = getSession();
 	try{	
 	DeliveryReceipt custDr = new DeliveryReceipt();
-		custDr = (DeliveryReceipt) manager.listByParameter(
+		custDr = (DeliveryReceipt) customerManager.listByParameter(
 				custDr.getClass(), "deliveryReceiptNo",
 				this.getInvoice().getDeliveryReceipt().getDeliveryReceiptNo(),session).get(0);
 		
@@ -122,16 +123,16 @@ public String execute() throws Exception{
 			if (getCustomerModule().equals("profile")) {
 				
 				Customer profile = new Customer();
-				profile = (Customer) manager.listByParameter(
+				profile = (Customer) customerManager.listByParameter(
 						profile.getClass(), "customerNo",
 						this.getCustomer().getCustomerNo(),session).get(0);
 				this.setCustomer(profile);
 				return "profile";
 			} else if (getCustomerModule().equals("purchaseOrder")) {
 				CustomerPurchaseOrder custPO = new CustomerPurchaseOrder();
-				customerNoList = manager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
+				customerNoList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
 				
-				custPO = (CustomerPurchaseOrder) manager.listByParameter(
+				custPO = (CustomerPurchaseOrder) customerManager.listByParameter(
 						custPO.getClass(), "customerPurchaseOrderId",
 						this.getCustpo().getCustomerPurchaseOrderId(),session).get(0);
 				poDetailsHelper.generatePODetailsListFromSet(custPO.getPurchaseOrderDetails());
@@ -141,9 +142,9 @@ public String execute() throws Exception{
 				return "purchaseOrder";
 			} else if (getCustomerModule().equals("deliveryReceipt")) {
 				DeliveryReceipt custDr = new DeliveryReceipt();
-				purchaseOrderNoList = manager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId", session);
+				purchaseOrderNoList = customerManager.listAlphabeticalAscByParameter(CustomerPurchaseOrder.class, "customerPurchaseOrderId", session);
 				
-				custDr = (DeliveryReceipt) manager.listByParameter(
+				custDr = (DeliveryReceipt) customerManager.listByParameter(
 						custDr.getClass(), "deliveryReceiptNo",
 						this.getDr().getDeliveryReceiptNo(),session).get(0);
 
@@ -168,9 +169,9 @@ public String execute() throws Exception{
 				/*
 				 * Checking and fetching existing return slips
 				 */
-				InventoryManager invManager= new InventoryManager();
+				
 				Session drSession = getSession();
-				List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", dr.getDeliveryReceiptNo(), drSession);
+				List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", dr.getDeliveryReceiptNo(), drSession);
 				
 				if(returnSlipList.size()>0) {
 					custDr.setReturnSlipList(returnSlipList);
@@ -201,9 +202,9 @@ public String execute() throws Exception{
 				return "deliveryReceipt";
 			} else if (getCustomerModule().equals("invoice")) {
 				CustomerSalesInvoice custInv = new CustomerSalesInvoice();
-				deliveryReceiptNoList = manager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo", session);
+				deliveryReceiptNoList = customerManager.listAlphabeticalAscByParameter(DeliveryReceipt.class, "deliveryReceiptNo", session);
 				
-				custInv = (CustomerSalesInvoice) manager.listByParameter(
+				custInv = (CustomerSalesInvoice) customerManager.listByParameter(
 						custInv.getClass(), "customerInvoiceNo",
 						this.getInvoice().getCustomerInvoiceNo(),session).get(0);
 				//START Phase 3 - Azhee
@@ -323,7 +324,6 @@ public String execute() throws Exception{
 		this.forWhat = forWhat;
 	}
 
-	CustomerManager manager = new CustomerManager();
 
 	public String getCustomerModule() {
 		return customerModule;

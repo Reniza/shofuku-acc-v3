@@ -30,8 +30,8 @@ public class DeleteSupplierAction extends ActionSupport {
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
 	
-	SupplierManager manager = new SupplierManager();
-	InventoryManager inventoryManager = new InventoryManager();
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	RecordCountHelper rch = new RecordCountHelper();
 	
 	private String subModule;
@@ -56,7 +56,7 @@ public class DeleteSupplierAction extends ActionSupport {
 			boolean deleteResult = false;
 
 			if (getSubModule().equalsIgnoreCase("supplierProfile")) {
-				deleteResult = manager.deleteSupplierByParameter(getSupId(),
+				deleteResult = supplierManager.deleteSupplierByParameter(getSupId(),
 						Supplier.class,session);
 				if (deleteResult == true) {
 					supplier = new Supplier();
@@ -66,7 +66,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				}
 				return "profileDeleted";
 			} else if (getSubModule().equalsIgnoreCase("purchaseOrder")) {
-				deleteResult = manager.deleteSupplierByParameter(getPoId(),
+				deleteResult = supplierManager.deleteSupplierByParameter(getPoId(),
 						SupplierPurchaseOrder.class,session);
 				if (deleteResult == true) {
 					po = new SupplierPurchaseOrder();
@@ -91,7 +91,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				*/
 				InventoryUtil invUtil = new InventoryUtil();
 				ReceivingReport orderToDelete = 
-						(ReceivingReport) manager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", 
+						(ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", 
 								rrId,getSession()).get(0);
 				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper();
 				helperItemsToDelete.generatePODetailsListFromSet(orderToDelete.getPurchaseOrderDetails());
@@ -104,7 +104,7 @@ public class DeleteSupplierAction extends ActionSupport {
 					addActionError("FAILED TO UPDATE INVENTORY AFTER DELETE");
 				}
 				
-				deleteResult = manager.deleteSupplierByParameter(getRrId(),ReceivingReport.class,session);
+				deleteResult = supplierManager.deleteSupplierByParameter(getRrId(),ReceivingReport.class,session);
 				if (deleteResult == true) {
 					rr= new ReceivingReport();
 					addActionMessage(SASConstants.DELETED);
@@ -113,7 +113,7 @@ public class DeleteSupplierAction extends ActionSupport {
 				}
 				return "rrDeleted";
 			} else {
-				deleteResult = manager.deleteSupplierByParameter(getInvId(),
+				deleteResult = supplierManager.deleteSupplierByParameter(getInvId(),
 						SupplierInvoice.class,session);
 				if (deleteResult == true) {
 					invoice = new SupplierInvoice();

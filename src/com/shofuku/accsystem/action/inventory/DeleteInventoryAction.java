@@ -27,8 +27,6 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class DeleteInventoryAction extends ActionSupport{
 
-	InventoryManager manager = new InventoryManager();
-	
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
 	
@@ -49,6 +47,8 @@ public class DeleteInventoryAction extends ActionSupport{
 	private String rfNo;
 	private String rsIdNo;
 	
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
 	public String getRsIdNo() {
 		return rsIdNo;
@@ -67,7 +67,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			boolean deleteResult;
 
 			if (getSubModule().equalsIgnoreCase("rawMat")) {
-				deleteResult = manager.deleteInventoryByParameter(getItemNo(), RawMaterial.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getItemNo(), RawMaterial.class,session);
 				if (deleteResult == true) {
 					rm = new RawMaterial();
 					addActionMessage(SASConstants.DELETED);
@@ -76,7 +76,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				}
 				return "rawMat";
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")) {
-				deleteResult = manager.deleteInventoryByParameter(getItemNo(), TradedItem.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getItemNo(), TradedItem.class,session);
 				if (deleteResult == true) {
 					ti = new TradedItem();
 					addActionMessage(SASConstants.DELETED);
@@ -85,7 +85,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				}
 				return "tradedItems";
 			}else if (getSubModule().equalsIgnoreCase("utensils")) {
-				deleteResult = manager.deleteInventoryByParameter(getItemNo(), Utensils.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getItemNo(), Utensils.class,session);
 				if (deleteResult == true) {
 					u = new Utensils();
 					addActionMessage(SASConstants.DELETED);
@@ -94,7 +94,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				}
 				return "utensils";
 			}else if (getSubModule().equalsIgnoreCase("ofcSup")) {
-				deleteResult = manager.deleteInventoryByParameter(getItemNo(), OfficeSupplies.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getItemNo(), OfficeSupplies.class,session);
 				if (deleteResult == true) {
 					os = new OfficeSupplies();
 					addActionMessage(SASConstants.DELETED);
@@ -103,8 +103,8 @@ public class DeleteInventoryAction extends ActionSupport{
 				}
 				return "ofcSup";
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")) {
-				UnlistedItem unlistedItem = (UnlistedItem)manager.listByParameter(UnlistedItem.class, "description", unl.getDescription(), session).get(0);
-				deleteResult = manager.deletePersistingInventoryItem(unlistedItem,session);
+				UnlistedItem unlistedItem = (UnlistedItem)inventoryManager.listByParameter(UnlistedItem.class, "description", unl.getDescription(), session).get(0);
+				deleteResult = inventoryManager.deletePersistingInventoryItem(unlistedItem,session);
 				if (deleteResult == true) {
 					unl = new UnlistedItem();
 					addActionMessage(SASConstants.DELETED);
@@ -115,7 +115,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("fpts")) {
 				updateInventoryCountForDelete(getSubModule(),getFptsNo(),session);
 				session = getSession();
-				deleteResult = manager.deleteInventoryByParameter(getFptsNo(), FPTS.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getFptsNo(), FPTS.class,session);
 				if (deleteResult == true) {
 					fpts= new FPTS();
 					addActionMessage(SASConstants.DELETED);
@@ -126,7 +126,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("rf")) {
 				updateInventoryCountForDelete(getSubModule(),getRfNo(),session);
 				session = getSession();
-				deleteResult = manager.deleteInventoryByParameter(getRfNo(), RequisitionForm.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getRfNo(), RequisitionForm.class,session);
 				if (deleteResult == true) {
 					rf= new RequisitionForm();
 					addActionMessage(SASConstants.DELETED);
@@ -137,7 +137,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 				updateInventoryCountForDelete(getSubModule(),getRsIdNo(),session);
 				session = getSession();
-				deleteResult = manager.deleteInventoryByParameter(getRsIdNo(), ReturnSlip.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getRsIdNo(), ReturnSlip.class,session);
 				if (deleteResult == true) {
 					rs= new ReturnSlip();
 					addActionMessage(SASConstants.DELETED);
@@ -147,7 +147,7 @@ public class DeleteInventoryAction extends ActionSupport{
 				return "returnSlip";
 			}else  {
 				
-				deleteResult = manager.deleteInventoryByParameter(getProductNo(), FinishedGood.class,session);
+				deleteResult = inventoryManager.deleteInventoryByParameter(getProductNo(), FinishedGood.class,session);
 				if (deleteResult == true) {
 					fg = new FinishedGood();
 					addActionMessage(SASConstants.DELETED);
@@ -203,22 +203,22 @@ public class DeleteInventoryAction extends ActionSupport{
 		
 		if (getSubModule().equalsIgnoreCase("fpts")) {
 			orderType = SASConstants.ORDER_TYPE_FPTS;
-			FPTS oldFpts = (FPTS) manager.listInventoryByParameter(FPTS.class,"fptsNo",id, session).get(0);
+			FPTS oldFpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo",id, session).get(0);
 			helperItemsToDelete.generatePODetailsListFromSet(oldFpts.getPurchaseOrderDetailsReceived());
 		}else if (getSubModule().equalsIgnoreCase("rf")) {
 			orderType = SASConstants.ORDER_TYPE_ORDER_REQUISITION;
-			RequisitionForm oldRR = (RequisitionForm) manager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", id, session).get(0);
+			RequisitionForm oldRR = (RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", id, session).get(0);
 			helperItemsToDelete.generatePODetailsListFromSet(oldRR.getPurchaseOrderDetailsReceived());
 		}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 			orderType = rs.getReturnSlipTo();
-			ReturnSlip oldRs = (ReturnSlip) manager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",	id,session).get(0);
+			ReturnSlip oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",	id,session).get(0);
 			helperItemsToDelete.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
 		}
 		InventoryUtil invUtil = new InventoryUtil();
 		PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.updateInventoryCountsForDeletion(helperItemsToDelete , orderType);
 		
 		try {
-			manager.updateInventoryFromOrders(inventoryUpdateRequest);
+			inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 			addActionError(e.getMessage());
@@ -229,13 +229,11 @@ public class DeleteInventoryAction extends ActionSupport{
 	List itemCodeList;
 	List UOMList;
 
-	LookupManager lookupManager = new LookupManager();
-
 	public String loadLookLists(){
 		Session session = getSession();
 		try{
 		UOMList = lookupManager.getLookupElements(UnitOfMeasurements.class, "GENERAL",session);
-		itemCodeList = manager.loadItemListFromRawAndFin(session);
+		itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 		}catch(Exception e){
 			if (getSubModule().equalsIgnoreCase("rawMat")) {
 				return "rawMat";

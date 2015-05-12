@@ -34,7 +34,7 @@ public class PrintInventoryAction {
 	Map actionSession = ActionContext.getContext().getSession();
 	UserAccount user = (UserAccount) actionSession.get("user");
 	
-	InventoryManager manager = new InventoryManager();
+	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	
 	RawMaterial rm;
 	FinishedGood fg;
@@ -73,7 +73,7 @@ public String execute() throws Exception{
 			if (getSubModule().equalsIgnoreCase("rawMat")){
 				
 				RawMaterial rm = new RawMaterial();
-				rm = (RawMaterial) manager.listInventoryByParameter(
+				rm = (RawMaterial) inventoryManager.listInventoryByParameter(
 						RawMaterial.class, "itemCode",
 						getItemNo(),session).get(0);
 				this.setRm(rm);
@@ -82,7 +82,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("tradedItems")){
 				
 				TradedItem ti = new TradedItem();
-				ti = (TradedItem) manager.listInventoryByParameter(
+				ti = (TradedItem) inventoryManager.listInventoryByParameter(
 						TradedItem.class, "itemCode",
 						getItemNo(),session).get(0);
 				this.setTi(ti);
@@ -91,7 +91,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("utensils")){
 				
 				Utensils u = new Utensils();
-				u = (Utensils) manager.listInventoryByParameter(
+				u = (Utensils) inventoryManager.listInventoryByParameter(
 						Utensils.class, "itemCode",
 						getItemNo(),session).get(0);
 				this.setU(u);
@@ -100,7 +100,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("ofcSup")){
 				
 				OfficeSupplies u = new OfficeSupplies();
-				os = (OfficeSupplies) manager.listInventoryByParameter(
+				os = (OfficeSupplies) inventoryManager.listInventoryByParameter(
 						OfficeSupplies.class, "itemCode",
 						getItemNo(),session).get(0);
 				this.setOs(os);
@@ -109,7 +109,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("unlistedItems")){
 				
 				UnlistedItem unl = new UnlistedItem();
-				unl = (UnlistedItem) manager.listInventoryByParameterLike(UnlistedItem.class, "description",
+				unl = (UnlistedItem) inventoryManager.listInventoryByParameterLike(UnlistedItem.class, "description",
 						this.unl.getDescription(),session).get(0);
 				this.setUnl(unl);
 				forWhat="print";
@@ -117,7 +117,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("fpts")){
 				
 				FPTS fpts = new FPTS();
-				fpts = (FPTS) manager.listInventoryByParameter(
+				fpts = (FPTS) inventoryManager.listInventoryByParameter(
 						FPTS.class, "fptsNo",
 						getFptsNo(),session).get(0);
 				
@@ -140,7 +140,7 @@ public String execute() throws Exception{
 			}else if (getSubModule().equalsIgnoreCase("rf")){
 				
 				RequisitionForm rf = new RequisitionForm();
-				rf = (RequisitionForm) manager.listInventoryByParameter(
+				rf = (RequisitionForm) inventoryManager.listInventoryByParameter(
 						RequisitionForm.class, "requisitionNo",
 						getRfNo(),session).get(0);
 				
@@ -161,7 +161,7 @@ public String execute() throws Exception{
 				return "rf";
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")) {
 				ReturnSlip rs = new ReturnSlip();
-				rs = (ReturnSlip) manager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
+				rs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 						this.getRs().getReturnSlipNo(),session).get(0);
 				poDetailsHelperDraft = new PurchaseOrderDetailHelper();
 				poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
@@ -179,7 +179,7 @@ public String execute() throws Exception{
 			
 			}else {
 				FinishedGood fg = new FinishedGood();
-				fg = (FinishedGood) manager.listInventoryByParameter(
+				fg = (FinishedGood) inventoryManager.listInventoryByParameter(
 						FinishedGood.class, "productCode",
 						this.getProductNo(),session).get(0);
 				

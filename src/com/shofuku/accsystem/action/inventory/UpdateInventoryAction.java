@@ -33,7 +33,6 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.DoubleConverter;
@@ -95,10 +94,13 @@ public class UpdateInventoryAction extends ActionSupport{
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
 		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
-		AccountEntryManager accountEntryManager = new AccountEntryManager();
-		TransactionManager transactionMananger = new TransactionManager();
-		//END 2013 - PHASE 3 : PROJECT 1: MARK  
-	InventoryManager manager=new InventoryManager();
+	//END 2013 - PHASE 3 : PROJECT 1: MARK  
+	
+	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
+	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	
 	InventoryUtil invUtil = new InventoryUtil();
 	DateFormatHelper df = new DateFormatHelper();
 	
@@ -127,7 +129,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,rm);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							rm.getClassification(), session);
-					updateResult = manager.updateInventory(rm,session);
+					updateResult = inventoryManager.updateInventory(rm,session);
 					
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -154,7 +156,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,ti);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							ti.getClassification(), session);
-					updateResult = manager.updateInventory(ti,session);
+					updateResult = inventoryManager.updateInventory(ti,session);
 					
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -180,7 +182,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					//processItemPricing(session,ti);
 					//itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 					//		ti.getClassification(), session);
-					updateResult = manager.updateInventory(unl,session);
+					updateResult = inventoryManager.updateInventory(unl,session);
 					
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -207,7 +209,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,u);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							u.getClassification(), session);
-					updateResult = manager.updateInventory(u,session);
+					updateResult = inventoryManager.updateInventory(u,session);
 					
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -238,7 +240,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					setIngredient(false); 
 				}
 				listToSet();
-				fg.setIngredients(manager.persistsIngredients(finalIngredients,session));
+				fg.setIngredients(inventoryManager.persistsIngredients(finalIngredients,session));
 				
 				setPrices();
 				
@@ -256,7 +258,7 @@ public class UpdateInventoryAction extends ActionSupport{
 							loadLookLists();							
 						}
 					}
-					updateResult = manager.updateInventory(fg,session);
+					updateResult = inventoryManager.updateInventory(fg,session);
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
 					}else {
@@ -311,7 +313,7 @@ public class UpdateInventoryAction extends ActionSupport{
 				processItemPricing(session,os);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						os.getClassification(), session);
-				updateResult = manager.updateInventory(os,session);
+				updateResult = inventoryManager.updateInventory(os,session);
 				
 				if (updateResult== true) {
 					addActionMessage(SASConstants.UPDATED);
@@ -342,7 +344,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			rs.setPurchaseOrderDetails(poDetailsHelperDraft.persistNewSetElements(session));
 			poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
 			
-			manager.persistMemo(rs.getMemo(),session);
+			inventoryManager.persistMemo(rs.getMemo(),session);
 			
 			poDetailsHelperToCompare.prepareSetAndList();
 			//2014 - ITEM COLORING
@@ -361,7 +363,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			 *  3rd - order type to determine if there is an addition or deduction to inventory
 			*/
 			ReturnSlip oldRs = new ReturnSlip();
-			oldRs = (ReturnSlip) manager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
+			oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 					rsIdNo,session).get(0);
 			PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
 			helperOld.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
@@ -369,7 +371,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelperDraft ,rs.getReturnSlipTo());
 			
 			try {
-				manager.updateInventoryFromOrders(inventoryUpdateRequest);
+				inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
 				inventoryUpdateSuccess = true;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -392,7 +394,7 @@ public class UpdateInventoryAction extends ActionSupport{
 				this.setTransactionList(transactions);
 				rs.setTransactions(transactions);
 				//END
-				updateResult = manager.updateInventory(rs,session);
+				updateResult = inventoryManager.updateInventory(rs,session);
 			}else {
 				updateResult=false;
 			}
@@ -421,9 +423,9 @@ public class UpdateInventoryAction extends ActionSupport{
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) throws Exception {
 			if(rs.getReturnSlipTo().equalsIgnoreCase("CTOW")){
-					manager.addInventoryItem(manager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
 				}else {
-					manager.deductInventoryItem(manager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.deductInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
 			}
 	}
 	private String updateRF() {
@@ -471,12 +473,12 @@ public class UpdateInventoryAction extends ActionSupport{
 					 *  3rd - order type to determine if there is an addition or deduction to inventory
 					*/
 					RequisitionForm oldRR = 
-							(RequisitionForm) manager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfNo, session).get(0);
+							(RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfNo, session).get(0);
 					PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
 					helperOld.generatePODetailsListFromSet(oldRR.getPurchaseOrderDetailsOrdered());
 					try {
 						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_ORDER_REQUISITION);
-						manager.updateInventoryFromOrders(inventoryUpdateRequest);
+						inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
 						inventoryUpdateSuccess = true;
 					} catch (Exception e) {
 						if(poDetailsHelper.getPurchaseOrderDetailsList()!=null) {
@@ -497,7 +499,7 @@ public class UpdateInventoryAction extends ActionSupport{
 						this.setTransactionList(transactions);
 						rf.setTransactions(transactions);
 						//END
-						updateResult = manager.updateInventory(rf,session);
+						updateResult = inventoryManager.updateInventory(rf,session);
 					}else {
 						updateResult=false;
 					}
@@ -556,12 +558,12 @@ public class UpdateInventoryAction extends ActionSupport{
 				 *  3rd - order type to determine if there is an addition or deduction to inventory
 				*/
 				
-				FPTS oldFpts = (FPTS) manager.listInventoryByParameter(FPTS.class,"fptsNo",fptsNo, session).get(0);
+				FPTS oldFpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo",fptsNo, session).get(0);
 				PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
 				helperOld.generatePODetailsListFromSet(oldFpts.getPurchaseOrderDetailsTransferred());
 				try {
 					PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_FPTS);
-					manager.updateInventoryFromOrders(inventoryUpdateRequest);
+					inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
 					inventoryUpdateSuccess = true;
 				} catch (Exception e) {
 					if(poDetailsHelper.getPurchaseOrderDetailsList()!=null) {
@@ -585,7 +587,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					this.setTransactionList(transactions);
 					fpts.setTransactions(transactions);
 					//END
-					updateResult = manager.updateInventory(fpts,session);
+					updateResult = inventoryManager.updateInventory(fpts,session);
 				}else {
 					updateResult = false;
 				}
@@ -640,7 +642,7 @@ public class UpdateInventoryAction extends ActionSupport{
 		itemPricing.setFranchiseStandardPricePerUnit(newItemPricing.getFranchiseStandardPricePerUnit());
 		itemPricing.setFranchiseTransferPricePerUnit(newItemPricing.getFranchiseTransferPricePerUnit());
 		
-		manager.updatePersistingInventoryObject(itemPricing, session);
+		inventoryManager.updatePersistingInventoryObject(itemPricing, session);
 
 		if(obj instanceof RawMaterial) {
 			rm.setItemPricing(itemPricing);
@@ -704,7 +706,7 @@ private void setIngredient(boolean includeNewItem) {
 							.nextElement()).trim())));
 			in.setDescription(((String) descItrTk.nextElement()).trim());
 			in.setUnitOfMeasurement(((String) uomItrTk.nextElement()).trim());
-			in = manager.loadIngredientPrices(in,session);
+			in = inventoryManager.loadIngredientPrices(in,session);
 			ingredients.add(in);
 	}
 	}catch(Exception e){
@@ -723,8 +725,6 @@ private void setIngredient(boolean includeNewItem) {
 List itemCodeList;
 List UOMList;
 
-LookupManager lookupManager = new LookupManager();
-		
 		private String requestingModule;
 		private List generateUOMStrings(List uomList){
 			List uomStringsList=new ArrayList();
@@ -740,7 +740,7 @@ LookupManager lookupManager = new LookupManager();
 			Session session = getSession();
 			try{
 			UOMList = generateUOMStrings(lookupManager.getLookupElements(UnitOfMeasurements.class, "GENERAL",session));
-			itemCodeList = manager.loadItemListFromRawAndFin(session);
+			itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
 			}catch(Exception e){
 				if (getSubModule().equalsIgnoreCase("rawMat")) {
 					return "rawMat";
