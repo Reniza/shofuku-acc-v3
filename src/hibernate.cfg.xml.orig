@@ -11,12 +11,17 @@
 		<property name="connection.url">
 <!-- 			jdbc:mysql://192.168.1.99/shofuku  -->
 				<!-- jdbc:mysql://localhost/shofuku -->
-				<!--192.168.254.105-->
-			jdbc:mysql://192.168.254.102:3306/shofukuv3_corp
+				<!--jdbc:mysql://localhost/shofukuv2_test -->
+<<<<<<< HEAD
+		 <!-- 	 jdbc:mysql://localhost/shofuku_dev -->
+		 jdbc:mysql://192.168.254.105:3306/shofukuv3_corp 
+=======
+		 		 jdbc:mysql://192.168.254.105:3306/shofukuv3_corp   
+>>>>>>> 9225d7f9e4f1f2d4c30f2e562ea030081a480e03
 			
-			<!--	 jdbc:mysql://192.168.1.32:3306/shofuku_dev  
-			 jdbc:mysql://192.168.0.225:3306/shofukuv3_corp_test 
-		 		jdbc:mysql://localhost/shofukuv3_corp  -->
+				<!-- jdbc:mysql://192.168.1.32:3306/shofuku_dev  
+			 jdbc:mysql://192.168.0.225:3306/shofukuv3_corp_test -->
+		<!-- 		jdbc:mysql://localhost/shofukuv3_corp -->
 			 
 		</property>
 		<property name="connection.username">root</property>
@@ -58,8 +63,6 @@
 			<mapping resource="com/shofuku/accsystem/domain/inventory/ItemPricing.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/TradedItem.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/Utensils.hbm.xml" />
-			<mapping resource="com/shofuku/accsystem/domain/inventory/OfficeSupplies.hbm.xml" />
-			<mapping resource="com/shofuku/accsystem/domain/inventory/UnlistedItem.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/FPTS.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/RequisitionForm.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/ReturnSlip.hbm.xml" />
@@ -93,8 +96,7 @@
 			
 				<!-- TOOLS -->
 			<mapping resource="com/shofuku/accsystem/domain/security/UserAccount.hbm.xml" />
-			<mapping resource="com/shofuku/accsystem/domain/security/Role.hbm.xml" />
-			<mapping resource="com/shofuku/accsystem/domain/security/Module.hbm.xml" />
+			<mapping resource="com/shofuku/accsystem/domain/security/UserRole.hbm.xml" />
 			
 			
 	</session-factory>

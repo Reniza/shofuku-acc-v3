@@ -16,7 +16,7 @@ public class RecordCountHelper {
 	
 	
 	Map<String,Object> actionSession;
-	
+	BaseController manager;
 	private void initializeController() {
 		manager = (BaseController) actionSession.get("manager");
 	}
@@ -26,7 +26,7 @@ public class RecordCountHelper {
 	}
 	
 	
-	BaseController manager;
+	
 	public String getLastCustomerByInitialLetter(char firstLetter){
 		Session session = getSession();
 		try{

@@ -192,8 +192,8 @@ public class AddSupplierAction extends ActionSupport {
 							po.setTotalAmount(poDetailsHelper.getTotalAmount());
 							po.setSupplierPurchaseOrderId(rch.getPrefix(
 									SASConstants.SUPPLIERPO, SASConstants.SUPPLIERPO_PREFIX));
-							int recordCount = Integer.parseInt(po.getSupplierPurchaseOrderId().substring(po.getSupplierPurchaseOrderId().length()-4, po.getSupplierPurchaseOrderId().length()));
-							boolean unique=false;
+						//	int recordCount = Integer.parseInt(po.getSupplierPurchaseOrderId().substring(po.getSupplierPurchaseOrderId().length()-4, po.getSupplierPurchaseOrderId().length()));
+						//	boolean unique=false;
 								
 									try {
 										addResult = supplierManager.addSupplierObject(po,session);

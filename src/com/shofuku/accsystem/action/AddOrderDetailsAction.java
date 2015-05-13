@@ -34,11 +34,13 @@ import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
+import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
+import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
@@ -418,6 +420,8 @@ public class AddOrderDetailsAction extends ActionSupport {
 		}else {
 			List list = inventoryManager.listInventoryByParameter(RawMaterial.class, "itemCode", orderDetails.getItemCode(),session);
 			List tradedItemlist = inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode", orderDetails.getItemCode(),session);
+			List utensilsList = inventoryManager.listInventoryByParameter(Utensils.class, "itemCode", orderDetails.getItemCode(),session);
+			List officeSuppliesList = inventoryManager.listInventoryByParameter(OfficeSupplies.class, "itemCode", orderDetails.getItemCode(),session);
 			
 			if(list.size()>0) {
 				RawMaterial tempItem = (RawMaterial)list.get(0);
@@ -428,10 +432,16 @@ public class AddOrderDetailsAction extends ActionSupport {
 				 if (tradedItemlist.size()>0){
 						TradedItem tempItem = (TradedItem)tradedItemlist.get(0);
 						orderDetails= new PurchaseOrderDetails(tempItem.getItemCode(), tempItem.getDescription(), 0, tempItem.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem.getItemPricing(), customerType, priceType), 0,tempItem.getIsVattable(),0,0);
+				 }else if (utensilsList.size()>0){
+					 Utensils tempItem = (Utensils)utensilsList.get(0);
+						orderDetails= new PurchaseOrderDetails(tempItem.getItemCode(), tempItem.getDescription(), 0, tempItem.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem.getItemPricing(), customerType, priceType), 0,tempItem.getIsVattable(),0,0);
+				 }else if (officeSuppliesList.size()>0){
+					 OfficeSupplies tempItem = (OfficeSupplies)officeSuppliesList.get(0);
+						orderDetails= new PurchaseOrderDetails(tempItem.getItemCode(), tempItem.getDescription(), 0, tempItem.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem.getItemPricing(), customerType, priceType), 0,tempItem.getIsVattable(),0,0);
 				 }else{
-				list = inventoryManager.listInventoryByParameter(FinishedGood.class, "productCode", orderDetails.getItemCode(),session);
-				FinishedGood tempItem2 = (FinishedGood)list.get(0);
-				orderDetails= new PurchaseOrderDetails(tempItem2.getProductCode(), tempItem2.getDescription(), 0, tempItem2.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem2.getItemPricing(), customerType, priceType), 0,tempItem2.getIsVattable(),0,0);
+					list = inventoryManager.listInventoryByParameter(FinishedGood.class, "productCode", orderDetails.getItemCode(),session);
+					FinishedGood tempItem2 = (FinishedGood)list.get(0);
+					orderDetails= new PurchaseOrderDetails(tempItem2.getProductCode(), tempItem2.getDescription(), 0, tempItem2.getUnitOfMeasurement(), inventoryUtil.getItemPricingByCustomerTypeAndParameter(tempItem2.getItemPricing(), customerType, priceType), 0,tempItem2.getIsVattable(),0,0);
 				 }
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 		}

@@ -51,6 +51,7 @@ public class EditSupplierAction extends ActionSupport{
 	List supplierNoList;
 	List receivingReportNoList;
 	List checkVoucherList;
+	List tempList;
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
@@ -70,8 +71,8 @@ public class EditSupplierAction extends ActionSupport{
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 	
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
@@ -106,14 +107,21 @@ public class EditSupplierAction extends ActionSupport{
 				rr = (ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", this.getRr().getReceivingReportNo(),session).get(0);
 				
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rr.getReceivingReportNo(), session);
+				tempList = new ArrayList<>();
+				tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rr.getReceivingReportNo(), session);
+				if(tempList.size()>0) {
 				itr = tempList.iterator();
 				transactionList = new ArrayList<Transaction>(); 
-				while(itr.hasNext()) {
-					Transaction transaction = (Transaction)itr.next();
-					if(transaction.getIsInUse().equalsIgnoreCase(SASConstants.TRANSACTION_IN_USE)) {
-						transactionList.add(transaction);
+					while(itr.hasNext()) {
+						Transaction transaction = (Transaction)itr.next();
+						if(transaction.getIsInUse().equalsIgnoreCase(SASConstants.TRANSACTION_IN_USE)) {
+							transactionList.add(transaction);
+						}
 					}
+				}else {
+					transactionList = new ArrayList();
+					Transaction transaction = new Transaction();
+					transactionList.add(transaction);
 				}
 				this.setTransactionList(transactionList);
 				//END Phase 3 - Azhee
@@ -173,9 +181,10 @@ public class EditSupplierAction extends ActionSupport{
 				
 				supInv = (SupplierInvoice) supplierManager.listSuppliersByParameter(supInv.getClass(), "supplierInvoiceNo", this.getInvoice().getSupplierInvoiceNo(),session).get(0);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
-				//START Phase 3 - Project 1 - Mark
-				if(tempList.size()>0) {
+				
+				tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
+					//START Phase 3 - Project 1 - Mark
+				if (tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
 					while(itr.hasNext()) {

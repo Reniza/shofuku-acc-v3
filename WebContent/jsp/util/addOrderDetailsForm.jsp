@@ -22,11 +22,10 @@
 			
 				<div class="order">
 					<p>   
-					
 					<table class="order">
 						<tr>
-							<th>Item Code</th>
-							<th>Description</th>
+							<th align="left">Item Code</th>
+							<th align="left">Description</th>
 							<th>Quantity In</th> 
 							<th>Quantity Out</th> 
 							<th>UOM</th>
@@ -34,12 +33,12 @@
 						</tr>
 						<tr>
 						
-						<td><sx:autocompleter headerValue="Choose One" resultsLimit="-1"
+						<td align="left"><sx:autocompleter headerValue="Choose One" resultsLimit="-1"
 							listValue="itemCode" list="itemCodeList" maxlength="20"  name="orderDetails.itemCode"></sx:autocompleter></td>
 				
 <%-- 							<td><s:textfield size="10" name="orderDetails.itemCode" --%>
 <%-- 									theme="simple"></s:textfield></td> --%>
-							<td><s:textfield readOnly="readOnly" name="orderDetails.description"
+							<td align="left"><s:textfield readOnly="readOnly" name="orderDetails.description"
 									theme="simple"></s:textfield></td>
 							<td><s:textfield size="5" name="orderDetails.quantityIn"
 									theme="simple"></s:textfield></td>
@@ -110,8 +109,8 @@
 					<td>
 					<table border="1px" class="lists">
 						<tr class="others">
-							<td>Item Code</td>
-							<td width="300px">Description</td>
+							<td align="left">Item Code</td>
+							<td align="left" width="300px">Description</td>
 							<td>Quantity</td>
 							<td>UOM</td>
 							<td>Unit Cost</td>
@@ -120,8 +119,8 @@
 						</tr>
 						<s:iterator value="poDetailsHelperDraft.purchaseOrderDetailsList" >
 							<tr>
-								<td><s:property value="itemCode" /></td>
-								<td><s:property value="description" /></td>
+								<td align="left"><s:property value="itemCode" /></td>
+								<td align="left"><s:property value="description" /></td>
 								<td><s:property value="quantity" /></td>
 								<td><s:property value="unitOfMeasurement" /></td>
 								<td><s:property value="unitCost" /></td>
