@@ -72,7 +72,7 @@ public class UpdateSupplierAction extends ActionSupport{
 	List accountProfileCodeList;
 	List<Transaction> transactionList;
 	List<Transaction> transactions;
-	AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
+	AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
 	
 	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");

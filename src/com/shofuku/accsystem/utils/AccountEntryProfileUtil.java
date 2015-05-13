@@ -1,24 +1,30 @@
 package com.shofuku.accsystem.utils;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.dao.BaseHibernateDao;
-import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
 //import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
-import com.shofuku.accsystem.domain.financials.Transaction;
 
 public class AccountEntryProfileUtil{
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
+
+	Map<String,Object> actionSession;
+	BaseController manager;
 	
+	public AccountEntryProfileUtil(Map<String,Object>  actionSession) {
+		this.actionSession = actionSession;
+	}
+
+
 	public AccountEntryProfile getAccountEntryByAccountEntryName(List<AccountEntryProfile> accountEntries, String key) {
 		Iterator<AccountEntryProfile> iterator = accountEntries.iterator();
 		while(iterator.hasNext()) {
@@ -46,11 +52,7 @@ public class AccountEntryProfileUtil{
 	public AccountEntryProfile createAccountEntryProfileByCode(String accountEntryProfileCode) {
 		AccountEntryProfile accountEntryProfile = new AccountEntryProfile();
 		
-		
-		
-		
 		return accountEntryProfile;
-		
 		
 	}
 	
@@ -58,13 +60,15 @@ public class AccountEntryProfileUtil{
 	public AccountEntryProfile getAccountEntryProfile(String accountEntryProfileCode) {
 		
 			Session session = getSession();
+			initializeController();
+			BaseHibernateDao dao = null;
 			try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
-			char firstLetter = 'a';
-			String lastSupplier = dao.getLastSupplierByInitialLetter(firstLetter ,session);
-			int maxCount=0;
-			try{
-			maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
+				dao = manager.getBaseHibernateDao();
+				char firstLetter = 'a';
+				String lastSupplier = dao.getLastSupplierByInitialLetter(firstLetter ,session);
+				int maxCount=0;
+				try{
+				maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
 			}catch(Exception e){
 				maxCount=1;
 			}
@@ -82,6 +86,11 @@ public class AccountEntryProfileUtil{
 			}
 	}
 	
+	private void initializeController() {
+		BaseController manager = (BaseController) actionSession.get("manager");		
+	}
+
+
 	// 2013 - PHASE 3 : PROJECT 1: MARK
 
 	public String getActionBasedOnType(AccountEntryProfile accountEntry,

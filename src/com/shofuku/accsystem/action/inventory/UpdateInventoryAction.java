@@ -93,7 +93,7 @@ public class UpdateInventoryAction extends ActionSupport{
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
+		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");

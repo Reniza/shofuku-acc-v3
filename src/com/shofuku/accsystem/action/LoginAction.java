@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
@@ -77,6 +78,7 @@ public class LoginAction extends ActionSupport {
 			
 			//controllers
 			
+			BaseController manager = new BaseController();
 			AccountEntryManager accountEntryManager = new AccountEntryManager();
 			CustomerManager customerManager = new CustomerManager();
 			DisbursementManager disbursementManager = new DisbursementManager();
@@ -87,6 +89,8 @@ public class LoginAction extends ActionSupport {
 			SupplierManager supplierManager = new SupplierManager ();
 			TransactionManager transactionMananger = new TransactionManager();
 			
+			
+			manager.setUser(user);
 			accountEntryManager.setUser(user);
 			customerManager.setUser(user);
 			disbursementManager.setUser(user);
@@ -97,7 +101,9 @@ public class LoginAction extends ActionSupport {
 			supplierManager.setUser(user);
 			transactionMananger.setUser(user);
 			
+			
 			//include in context session for use
+			sess.put("manager", manager);
 			sess.put("accountEntryManager", accountEntryManager);
 			sess.put("customerManager",customerManager);
 			sess.put("disbursementManager",disbursementManager);
@@ -108,6 +114,7 @@ public class LoginAction extends ActionSupport {
 			sess.put("supplierManager",supplierManager);
 			sess.put("transactionMananger",transactionMananger);
 			
+			manager.initializeDaos();
 			accountEntryManager.initializeDaos();
 			customerManager.initializeDaos();
 			disbursementManager.initializeDaos();

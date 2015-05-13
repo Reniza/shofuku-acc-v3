@@ -55,4 +55,52 @@ public class BaseController {
 	}
 	
 	
+	public AccountEntryDaoImpl getAccountEntryDao() {
+		return accountEntryDao;
+	}
+
+	public BaseHibernateDaoImpl getBaseHibernateDao() {
+		return baseHibernateDao;
+	}
+
+	public CustomerDaoImpl getCustomerDao() {
+		return customerDao;
+	}
+
+	public DisbursementDaoImpl getDisbursementDao() {
+		return disbursementDao;
+	}
+
+	public FinancialsDaoImpl getFinancialsDao() {
+		return financialsDao;
+	}
+
+	public InventoryDaoImpl getInventoryDao() {
+		return inventoryDao;
+	}
+
+	public LookupDaoImpl getLookupDao() {
+		return lookupDao;
+	}
+
+	public ReceiptsDaoImpl getReceiptsDao() {
+		return receiptsDao;
+	}
+
+	public SecurityDaoImpl getSecurityDao() {
+		return securityDao;
+	}
+
+	public SupplierDaoImpl getSupplierDao() {
+		return supplierDao;
+	}
+
+	public ToolsDaoImpl getToolsDao() {
+		return toolsDao;
+	}
+
+	public TransactionsDaoImpl getTransactionsDao() {
+		return transactionsDao;
+	}
+	
 }
