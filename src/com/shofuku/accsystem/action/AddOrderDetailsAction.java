@@ -99,10 +99,12 @@ public class AddOrderDetailsAction extends ActionSupport {
 	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
 	InventoryManager inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger 	= (TransactionManager) 	actionSession.get("transactionMananger");
+	TransactionManager transactionManager 	= (TransactionManager) 	actionSession.get("transactionManager");
 	LookupManager lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
 	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 
+	
+	
 	PurchaseOrderDetails orderDetails;
 
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;
@@ -877,7 +879,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				//20131226 - PHASE 3 : PROJECT 1: MARK
 				DecimalFormat df = new DecimalFormat("#.##");
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", invoice.getSupplierInvoiceNo(), session);
 				if (tempList.size() == 0) {
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
 					transactionList = new ArrayList();
@@ -934,7 +936,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				//COLOR CODING
 				poDetailsHelper.generateItemTypesForExistingItems(session);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", dr.getDeliveryReceiptNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", dr.getDeliveryReceiptNo(), session);
 				if (tempList.size() == 0) {
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
 					transactionList = new ArrayList();
@@ -964,7 +966,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				//poDetailsHelper.prepareSetAndList(); <--double display
 				poDetailsHelperToCompare.prepareSetAndList();
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", fpts.getFptsNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", fpts.getFptsNo(), session);
 				if (tempList.size() == 0) {
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
 					transactionList = new ArrayList();
@@ -992,7 +994,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				rf = (RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfId,session).get(0);
 				//poDetailsHelper.prepareSetAndList(); <--double display
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rf.getRequisitionNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rf.getRequisitionNo(), session);
 				if (tempList.size() == 0) {
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
 					transactionList = new ArrayList();

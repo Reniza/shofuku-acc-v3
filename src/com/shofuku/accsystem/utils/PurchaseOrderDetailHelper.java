@@ -34,7 +34,8 @@ public class PurchaseOrderDetailHelper {
 	public PurchaseOrderDetailHelper(Map<String, Object> actionSession) {
 		this.actionSession = actionSession;
 	}
-
+	public PurchaseOrderDetailHelper() {
+	}
 
 	private Timestamp orderDate;
 
