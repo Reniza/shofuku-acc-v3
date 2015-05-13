@@ -101,7 +101,7 @@ public class UpdateInventoryAction extends ActionSupport{
 	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 	
 	private Session getSession() {
@@ -365,7 +365,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			ReturnSlip oldRs = new ReturnSlip();
 			oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 					rsIdNo,session).get(0);
-			PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
+			PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 			helperOld.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
 			
 			PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelperDraft ,rs.getReturnSlipTo());
@@ -474,7 +474,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					*/
 					RequisitionForm oldRR = 
 							(RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfNo, session).get(0);
-					PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
+					PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 					helperOld.generatePODetailsListFromSet(oldRR.getPurchaseOrderDetailsOrdered());
 					try {
 						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_ORDER_REQUISITION);
@@ -503,7 +503,6 @@ public class UpdateInventoryAction extends ActionSupport{
 					}else {
 						updateResult=false;
 					}
-					poDetailsHelper.flushUnRelatedOrders(session);
 					//poDetailsHelperToCompare.flushUnRelatedOrders(session);
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -559,7 +558,7 @@ public class UpdateInventoryAction extends ActionSupport{
 				*/
 				
 				FPTS oldFpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo",fptsNo, session).get(0);
-				PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
+				PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 				helperOld.generatePODetailsListFromSet(oldFpts.getPurchaseOrderDetailsTransferred());
 				try {
 					PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_FPTS);
@@ -591,8 +590,6 @@ public class UpdateInventoryAction extends ActionSupport{
 				}else {
 					updateResult = false;
 				}
-				
-				poDetailsHelper.flushUnRelatedOrders(session);
 				//poDetailsHelperToCompare.flushUnRelatedOrders(session);
 				if (updateResult== true) {
 					addActionMessage(SASConstants.UPDATED);

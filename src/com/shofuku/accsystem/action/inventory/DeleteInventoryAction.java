@@ -199,7 +199,7 @@ public class DeleteInventoryAction extends ActionSupport{
 	 */
 	private void updateInventoryCountForDelete(String subModule,String id,Session session) {
 		String orderType = "";
-		PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper();
+		PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
 		
 		if (getSubModule().equalsIgnoreCase("fpts")) {
 			orderType = SASConstants.ORDER_TYPE_FPTS;
@@ -214,7 +214,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			ReturnSlip oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",	id,session).get(0);
 			helperItemsToDelete.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
 		}
-		InventoryUtil invUtil = new InventoryUtil();
+		InventoryUtil invUtil = new InventoryUtil(actionSession);
 		PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.updateInventoryCountsForDeletion(helperItemsToDelete , orderType);
 		
 		try {

@@ -2,10 +2,14 @@ package com.shofuku.accsystem.utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
 
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.dao.impl.InventoryDaoImpl;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
@@ -13,11 +17,18 @@ import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 
 public class InventoryUtil {
 	
-	InventoryDaoImpl inventoryDao = new InventoryDaoImpl();
-	
-	public InventoryUtil(){
-		
+	Map<String,Object> actionSession;
+	BaseController manager;
+	private void initializeController() {
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	}
+	
+	InventoryManager inventoryManager; 
+	
+	public InventoryUtil(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
+	
 	public double getItemPricingByCustomerTypeAndParameter(ItemPricing itemPricing, String customerType, String priceType) {
 		double price = 0.0;
 		System.out.println(priceType.toLowerCase());
@@ -45,14 +56,14 @@ public class InventoryUtil {
 	}
 	
 	public ItemPricing getItemPricing(Session session,String itemCode) {
-		return inventoryDao.getItemPricingByItemCodeAndParameter(session, itemCode);
+		return inventoryManager.getInventoryDao().getItemPricingByItemCodeAndParameter(session, itemCode);
 	}
 	public String generateNewItemPricingId() {
 		String itemCode = "";
 		return itemCode;
 	}
 	public boolean checkCurrentItemPricing(Session session,String itemCode) {
-		ItemPricing itemPricing = inventoryDao.getItemPricingByItemCodeAndParameter(session, itemCode);
+		ItemPricing itemPricing = inventoryManager.getInventoryDao().getItemPricingByItemCodeAndParameter(session, itemCode);
 		if(itemPricing == null) {
 			return false;
 		}else {
@@ -63,7 +74,7 @@ public class InventoryUtil {
 	//method called from delete
 		public PurchaseOrderDetailHelper updateInventoryCountsForDeletion(PurchaseOrderDetailHelper helperItemsForDeletion,String orderType) {
 			
-			PurchaseOrderDetailHelper helper = new PurchaseOrderDetailHelper();
+			PurchaseOrderDetailHelper helper = new PurchaseOrderDetailHelper(actionSession);
 			Set<PurchaseOrderDetails> podetailSet = helper.generatePODetailsSet();
 			
 			Iterator newHelperIterator = helperItemsForDeletion.getPurchaseOrderDetailsList().iterator();
@@ -97,7 +108,7 @@ public class InventoryUtil {
 	
 	public PurchaseOrderDetailHelper  getChangeInOrder(PurchaseOrderDetailHelper currentOrderHelper, PurchaseOrderDetailHelper newOrderHelper,String orderType){
 		
-		PurchaseOrderDetailHelper helper = new PurchaseOrderDetailHelper();
+		PurchaseOrderDetailHelper helper = new PurchaseOrderDetailHelper(actionSession);
 		
 		Set<PurchaseOrderDetails> podetailSet = helper.generatePODetailsSet();
 		

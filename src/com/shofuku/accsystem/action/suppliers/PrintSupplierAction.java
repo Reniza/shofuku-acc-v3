@@ -99,7 +99,7 @@ public class PrintSupplierAction extends ActionSupport{
 				ReceivingReport rr = new ReceivingReport();
 				rr = (ReceivingReport) supplierManager.listSuppliersByParameter(ReceivingReport.class, "receivingReportNo", this.getRrId(),session).get(0);
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rr.getSupplierPurchaseOrder().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -130,7 +130,7 @@ public class PrintSupplierAction extends ActionSupport{
 				this.setTransactionList(transactionList);
 				//END Phase 3 - Azhee
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(supInv.getReceivingReport().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();

@@ -85,49 +85,6 @@ public class CustomerTest {
 //	      cm.addCustomerObject(employee,  getSession());  
 	}
 	*/
-	@Test
-	public void readStockLevelForm() {
-
-		POIUtil util = new POIUtil();
-		
-		String fileName="C:\\Dev/workspaces/ShofukuAccV3/ShoFuku_v_3_0_1/WebContent/WEB-INF/reporttemplates/new ordering form.xls";
-		Session session = getSession();
-		
-
-//		 assertTrue(customerStockLevelList.size() > 0);
-		Customer customer = new Customer();
-		boolean isExisting=false;
-		
-		if(cm.listByParameter(Customer.class, "customerNo", "Customer-006Test", getSession()).size()>0) {
-			isExisting= true;
-			customer= (Customer)cm.listByParameter(Customer.class, "customerNo", "Customer-006Test", getSession()).get(0);
-		}else {
-			customer = new Customer();
-			customer.setCustomerNo("Customer-006Test");
-		}
-		
-		customer =util.readCustomerStockLevelForm(customer, fileName, session); 	
-		
-		
-		if(isExisting) {
-		cm.updateCustomer(customer, session);
-		}else {
-		cm.addCustomerObject(customer, session);
-		}
-		
-		Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
-		List tempList = new ArrayList();
-		
-		while(itr.hasNext()) {
-			
-			String key = (String)itr.next();
-			
-			CustomerStockLevel csl = (CustomerStockLevel)customer.getCustomerStockLevelMap().get(key);
-			tempList.add(csl);
-			
-		}
-		// tempList is the new list with all the stock levels
-	}
 	
 	/*
 	@Test

@@ -53,7 +53,7 @@ public class AddSupplierAction extends ActionSupport {
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	
 	
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 
 	private String forWhat;
 	private String forWhatDisplay;
@@ -76,7 +76,7 @@ public class AddSupplierAction extends ActionSupport {
 	List<Transaction> transactions;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 
 	private Session getSession() {
@@ -253,7 +253,7 @@ public class AddSupplierAction extends ActionSupport {
 							invoice.setReceivingReport((ReceivingReport) supInv2
 									.get(0));
 							if (null == poDetailsHelperToCompare) {
-								poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 							}
 							poDetailsHelperToCompare
 									.generatePODetailsListFromSet(invoice
@@ -369,7 +369,7 @@ public class AddSupplierAction extends ActionSupport {
 					rr.setSupplierPurchaseOrder((SupplierPurchaseOrder) supRr2
 							.get(0));
 					if (null == poDetailsHelperToCompare) {
-						poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+						poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 					}
 					poDetailsHelperToCompare
 							.generatePODetailsListFromSet(rr
@@ -401,7 +401,7 @@ public class AddSupplierAction extends ActionSupport {
 						 *  2nd - incoming order
 						 *  3rd - order type to determine if there is an addition or deduction to inventory
 						*/
-						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(new PurchaseOrderDetailHelper(), poDetailsHelper , SASConstants.ORDER_TYPE_RR);
+						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(new PurchaseOrderDetailHelper(actionSession), poDetailsHelper , SASConstants.ORDER_TYPE_RR);
 						
 						try {
 							inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
@@ -582,7 +582,7 @@ public class AddSupplierAction extends ActionSupport {
 		this.poDetailsHelper = poDetailsHelper;
 	}
 
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 
 	public PurchaseOrderDetailHelper getPoDetailsHelperToCompare() {
 		return poDetailsHelperToCompare;

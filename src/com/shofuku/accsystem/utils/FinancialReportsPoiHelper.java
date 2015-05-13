@@ -2,18 +2,15 @@ package com.shofuku.accsystem.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -22,29 +19,34 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.hssf.util.HSSFRegionUtil;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.hibernate.Session;
 
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.FinancialsManager;
-import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.domain.inventory.Item;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 
 public class FinancialReportsPoiHelper{
 
+	Map<String,Object> actionSession;
+	BaseController manager;
+	private void initializeController() {
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	}
 	
 	//Controllers
-	FinancialsManager financialsMgr = new FinancialsManager();
-	AccountEntryManager aepMgr = new AccountEntryManager();
+	FinancialsManager financialsManager;
+	AccountEntryManager accountEntryManager;
 	
 	//poi variables
+	
 	POIFSFileSystem fsFileSystem = null;
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	HSSFCellStyle titleStyle ;
@@ -58,7 +60,7 @@ public class FinancialReportsPoiHelper{
 	
 	InputStream excelStream;
 	String contentDisposition;
-	POIUtil poiUtil = new POIUtil();
+	POIUtil poiUtil = new POIUtil(actionSession);
 	DateFormatHelper dfh= new DateFormatHelper();
 	
 	String reportType;
@@ -66,6 +68,14 @@ public class FinancialReportsPoiHelper{
 	//for ledger of accounts
 	boolean isSupplier=false;
 	
+
+	
+	
+	public FinancialReportsPoiHelper(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
+
+
 
 	public InputStream generateExportedXls() throws Exception {
 
@@ -351,8 +361,10 @@ public class FinancialReportsPoiHelper{
 		startDate = dfh.parseStringToTime(dateFrom);
 		endDate = dfh.parseStringToTime(dateTo);
 		
+		initializeController();
+		
 		//get data
-		List vatDetailsList = financialsMgr.getVatDetailsBetweenDates(startDate, endDate, Vat.class.getName(), "orDate", session, "tinNumber");
+		List vatDetailsList = financialsManager.getVatDetailsBetweenDates(startDate, endDate, Vat.class.getName(), "orDate", session, "tinNumber");
 		
 				
 		//TODO: make query for check vouchers		
@@ -564,15 +576,17 @@ public class FinancialReportsPoiHelper{
 		startDate = dfh.parseStringToTime(dateFrom);
 		endDate = dfh.parseStringToTime(dateTo);
 		
+		initializeController();
+		
 		//get data
 		//TODO: use date
 		
 		List ledgerResultsInvoices =null;
 		if(supplierList!=null && supplierList.size() >0) {
 			isSupplier=true;
-			ledgerResultsInvoices = financialsMgr.getSupplierInvoiceFromSupplierIDList(supplierList, session);			
+			ledgerResultsInvoices = financialsManager.getSupplierInvoiceFromSupplierIDList(supplierList, session);			
 		}else if(customerList!=null && customerList.size() >0) {
-			ledgerResultsInvoices = financialsMgr.getCustomerInvoiceFromCustomerIDList(customerList, session);
+			ledgerResultsInvoices = financialsManager.getCustomerInvoiceFromCustomerIDList(customerList, session);
 		}else {
 			//selected none
 			ledgerResultsInvoices = new ArrayList<>();
@@ -1056,6 +1070,8 @@ public class FinancialReportsPoiHelper{
 			Date startDate;
 			Date endDate;
 			
+			initializeController();
+			
 			startDate = dfh.parseStringToTime(dateFrom);
 			endDate = dfh.parseStringToTime(dateTo);
 			
@@ -1064,9 +1080,9 @@ public class FinancialReportsPoiHelper{
 			//00001
 			List journalEntries = new ArrayList();
 			JournalEntryProfile jep = new JournalEntryProfile();
-			jep = (JournalEntryProfile) aepMgr.listByParameter(JournalEntryProfile.class, "entryNo", "0001", session).get(0);
+			jep = (JournalEntryProfile) accountEntryManager.listByParameter(JournalEntryProfile.class, "entryNo", "0001", session).get(0);
 			journalEntries.add(jep);
-			jep = (JournalEntryProfile) aepMgr.listByParameter(JournalEntryProfile.class, "entryNo", "00001", session).get(0);
+			jep = (JournalEntryProfile) accountEntryManager.listByParameter(JournalEntryProfile.class, "entryNo", "00001", session).get(0);
 			journalEntries.add(jep);
 			
 //			List journalEntries = generateTrialBalanceEntries(startDate,endDate,session);
@@ -1144,7 +1160,9 @@ public class FinancialReportsPoiHelper{
 	private List generateTrialBalanceEntries(Date startDate, Date endDate,
 			Session session) {
 		
-		List transactionsList = financialsMgr.getActiveTransactionsBetweenDates(startDate, endDate, Transaction.class.getName(), "transactionDate", session, "transactionReferenceNumber");
+		initializeController();
+		
+		List transactionsList = financialsManager.getActiveTransactionsBetweenDates(startDate, endDate, Transaction.class.getName(), "transactionDate", session, "transactionReferenceNumber");
 
 		//generate map for transactions
 		Map debitTransactionsMap = new HashMap<String,TrialBalanceEntry>();

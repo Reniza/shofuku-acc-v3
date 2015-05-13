@@ -50,8 +50,8 @@ public class AddCustomerAction extends ActionSupport {
 	
 
 	PurchaseOrderDetailHelper poDetailsHelper;
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
-	RecordCountHelper rch = new RecordCountHelper();
+	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	DateFormatHelper dfh = new DateFormatHelper();
 
 	List customerNoList;
@@ -70,7 +70,7 @@ public class AddCustomerAction extends ActionSupport {
 	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 
 	public String newCustomerEntry(){
 		Session session = getSession();
@@ -230,7 +230,7 @@ public class AddCustomerAction extends ActionSupport {
 							dr.setCustomerPurchaseOrder((CustomerPurchaseOrder) cusDr2.get(0));
 
 							if(null==poDetailsHelperToCompare) {
-								poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 							}
 							poDetailsHelperToCompare.generatePODetailsListFromSet(dr.getCustomerPurchaseOrder().getPurchaseOrderDetails());
 							poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -261,7 +261,7 @@ public class AddCustomerAction extends ActionSupport {
 							 *  2nd - incoming order
 							 *  3rd - order type to determine if there is an addition or deduction to inventory
 							*/
-							PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(new PurchaseOrderDetailHelper(), poDetailsHelper , SASConstants.ORDER_TYPE_DR);
+							PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(new PurchaseOrderDetailHelper(actionSession), poDetailsHelper , SASConstants.ORDER_TYPE_DR);
 							
 						
 							try {
@@ -341,7 +341,7 @@ public class AddCustomerAction extends ActionSupport {
 							invoice.setDeliveryReceipt((DeliveryReceipt) cusInv2.get(0));
 							
 							if(null==poDetailsHelperToCompare) {
-								poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 							}
 							poDetailsHelperToCompare.generatePODetailsListFromSet(invoice.getDeliveryReceipt().getPurchaseOrderDetails());
 							poDetailsHelperToCompare.generateCommaDelimitedValues();

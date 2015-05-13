@@ -105,7 +105,6 @@ public class UpdateDisbursementAction extends ActionSupport {
 			transactionManager.discontinuePreviousTransactions(pc.getPcVoucherNumber(),session);
 			//transactionList = new ArrayList();
 			transactionList = getTransactionList();
-			AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil();
 			updateAccountingEntries(pc.getPcVoucherNumber(),session,SASConstants.PETTYCASH);
 			this.setTransactionList(transactions);
 			pc.setTransactions(transactions);

@@ -82,14 +82,14 @@ public class UpdateSupplierAction extends ActionSupport{
 	Vat vatDetails;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
 	InventoryManager inventoryManager = new InventoryManager();
 	DisbursementManager disbursementManager = new DisbursementManager();
 	
 	
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 	
 	private Session getSession(){
@@ -150,8 +150,6 @@ public class UpdateSupplierAction extends ActionSupport{
 								addActionError(SASConstants.EMPTY_ORDER_DETAILS);
 							}else {
 								updateResult = supplierManager.updateSupplier(po,session);
-								
-								poDetailsHelper.flushUnRelatedOrders(session);
 								if (updateResult== true) {
 									addActionMessage(SASConstants.UPDATED);
 									forWhat="true";
@@ -193,7 +191,7 @@ public class UpdateSupplierAction extends ActionSupport{
 						}
 						
 						if(null==poDetailsHelperToCompare) {
-							poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+							poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 						}
 							poDetailsHelperToCompare.generatePODetailsListFromSet(rr.getSupplierPurchaseOrder().getPurchaseOrderDetails());
 							
@@ -221,7 +219,7 @@ public class UpdateSupplierAction extends ActionSupport{
 						ReceivingReport oldRR = 
 								(ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", 
 										rrId,getSession()).get(0);
-						PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper();
+						PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 						helperOld.generatePODetailsListFromSet(oldRR.getPurchaseOrderDetails());
 						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_RR);
 						
@@ -262,9 +260,6 @@ public class UpdateSupplierAction extends ActionSupport{
 									updateResult=false;
 								}
 								
-								poDetailsHelper.flushUnRelatedOrders(session);
-								
-								
 								if (updateResult== true) {
 									addActionMessage(SASConstants.UPDATED);
 									forWhat="true";
@@ -295,7 +290,7 @@ public class UpdateSupplierAction extends ActionSupport{
 							invoice.setReceivingReport((ReceivingReport) supInv2.get(0));
 						
 						if(null==poDetailsHelperToCompare) {
-							poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+							poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 						}
 							poDetailsHelperToCompare.generatePODetailsListFromSet(invoice.getReceivingReport().getPurchaseOrderDetails());
 						
@@ -349,7 +344,6 @@ public class UpdateSupplierAction extends ActionSupport{
 								//END: 2013 - PHASE 3 : PROJECT 4: MARK
 								
 								updateResult = supplierManager.updateSupplier(invoice,session);
-								poDetailsHelper.flushUnRelatedOrders(session);
 								
 								if (updateResult== true) {
 									addActionMessage(SASConstants.UPDATED);

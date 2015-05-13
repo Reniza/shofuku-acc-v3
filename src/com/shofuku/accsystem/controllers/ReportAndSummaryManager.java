@@ -52,11 +52,27 @@ import com.shofuku.accsystem.utils.POIUtil;
 public class ReportAndSummaryManager extends BaseController{
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-	private POIUtil poiHelper = new POIUtil();
+	Map<String,Object> actionSession;
+	
 	
 	DateFormatHelper dfh = new DateFormatHelper();
+	
+	public ReportAndSummaryManager(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
+	
+	POIUtil poiHelper;
+	
+	private POIUtil initializePoiHelper() {
+		if(poiHelper==null) {
+			poiHelper = new POIUtil(actionSession);
+			return poiHelper;
+		}else {
+			return poiHelper;
+		}
+	}
 
+	
 	public InputStream generateSoaSummary(ServletContext servletContext,
 			String dateFrom, String dateTo, String subModule,
 			List customerList, Session session) {
@@ -65,13 +81,13 @@ public class ReportAndSummaryManager extends BaseController{
 			Date startDate = dfh.parseStringToTime(dateFrom);
 			Date endDate = dfh.parseStringToTime(dateTo);
 			if(dateTo!=null && !dateTo.equalsIgnoreCase(""))
-				poiHelper.setMaxDate(endDate.toString());
+				initializePoiHelper().setMaxDate(endDate.toString());
 			if(dateFrom!=null && !dateFrom.equalsIgnoreCase(""))
-				poiHelper.setMinDate(startDate.toString());
+				initializePoiHelper().setMinDate(startDate.toString());
 			List list = baseHibernateDao.getBetweenDates(startDate, endDate, CustomerSalesInvoice.class.getName(), "customerInvoiceDate",session,"soldTo");
 			list=filterCustomerInvoiceByCustomerNumber(list,customerList);
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -95,12 +111,12 @@ public class ReportAndSummaryManager extends BaseController{
 			
 			if(dateTo!=null && !dateTo.equalsIgnoreCase("")){
 				Date endDate = dfh.parseStringToTime(dateTo);
-				poiHelper.setMaxDate(endDate.toString());
+				initializePoiHelper().setMaxDate(endDate.toString());
 				
 			}
 			if(dateFrom!=null && !dateFrom.equalsIgnoreCase("")){
 				Date startDate = dfh.parseStringToTime(dateFrom);
-				poiHelper.setMinDate(startDate.toString());
+				initializePoiHelper().setMinDate(startDate.toString());
 				
 			}
 			
@@ -109,17 +125,17 @@ public class ReportAndSummaryManager extends BaseController{
 				List list = baseHibernateDao.getCustomerSalesInvoiceByCustomers(dateFrom, dateTo,parameterList,session);
 				list = filterCustomerInvoiceByCustomerNumber(list,parameterList);
 				summarizedInvoice = summarizeItemsFromInvoice(list);
-				wb = poiHelper.generateSummary(servletContext, subModule, summarizedInvoice);
+				wb = initializePoiHelper().generateSummary(servletContext, subModule, summarizedInvoice);
 			}else if(subModule.equalsIgnoreCase("ItemPurchasedFromSupplier")) {
 				List list = baseHibernateDao.getReceivingReportBySupplier(dateFrom, dateTo,parameterList,session);
 				list = filterReceivingReportBySupplierId(list,parameterList);
 				summarizedInvoice = summarizeItemsFromReceivingReport(list);
-				wb = poiHelper.generateSummary(servletContext, subModule, summarizedInvoice);
+				wb = initializePoiHelper().generateSummary(servletContext, subModule, summarizedInvoice);
 			}else {
 				List list = getDataListByDateRange(dateFrom, dateTo, subModule, session);
 				list = filterByParameterList(list,parameterList);
 				if(isFormatReport.equalsIgnoreCase("true")) {
-					ExportSearchResultsHelper exporter = new ExportSearchResultsHelper();
+					ExportSearchResultsHelper exporter = new ExportSearchResultsHelper(actionSession);
 					exporter.setSearchResults(list);
 					exporter.setSearchType(subModule);
 					try {
@@ -129,7 +145,7 @@ public class ReportAndSummaryManager extends BaseController{
 						return null;
 					}
 				}else {
-					wb = poiHelper.generateSummary(servletContext, subModule, list);
+					wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
 				}
 				
 			}
@@ -153,7 +169,7 @@ public class ReportAndSummaryManager extends BaseController{
 	public InputStream printReceipt(Map receiptMap, String subModule,ServletContext servletContext ) {
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printReceipts(subModule, receiptMap,servletContext);
+			wb = initializePoiHelper().printReceipts(subModule, receiptMap,servletContext);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -168,7 +184,7 @@ public class ReportAndSummaryManager extends BaseController{
 	public InputStream printCheckPayments(CheckPayments chp, String subModule,ServletContext servletContext ) {
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printCheckPayments(subModule, chp,servletContext);
+			wb = initializePoiHelper().printCheckPayments(subModule, chp,servletContext);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -184,7 +200,7 @@ public class ReportAndSummaryManager extends BaseController{
 	public InputStream printCustomerInvoice(CustomerSalesInvoice csi, String subModule,ServletContext servletContext ) {
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printCustomerInvoice(subModule, csi,servletContext);
+			wb = initializePoiHelper().printCustomerInvoice(subModule, csi,servletContext);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -199,7 +215,7 @@ public class ReportAndSummaryManager extends BaseController{
 	public InputStream printSupplierPurchaseOrder(SupplierPurchaseOrder spo, String subModule,ServletContext servletContext ) {
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.printSupplierPurchaseOrderInExcel(subModule, spo,servletContext);
+			wb = initializePoiHelper().printSupplierPurchaseOrderInExcel(subModule, spo,servletContext);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -220,15 +236,15 @@ public class ReportAndSummaryManager extends BaseController{
 			HSSFWorkbook wb = new HSSFWorkbook();
 			if(dateTo!=null && !dateTo.equalsIgnoreCase("")){
 				Date endDate = dfh.parseStringToTime(dateTo);
-				poiHelper.setMaxDate(endDate.toString());
+				initializePoiHelper().setMaxDate(endDate.toString());
 				
 			}
 			if(dateFrom!=null && !dateFrom.equalsIgnoreCase("")){
 				Date startDate = dfh.parseStringToTime(dateFrom);
-				poiHelper.setMinDate(startDate.toString());
+				initializePoiHelper().setMinDate(startDate.toString());
 				
 			}
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -248,7 +264,7 @@ public class ReportAndSummaryManager extends BaseController{
 		try {
 			List list = getDataList(dateFrom, dateTo, subModule,session);
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -269,7 +285,7 @@ public class ReportAndSummaryManager extends BaseController{
 			list= inventoryDao.listInventoryItemsByStatus(subModule,searchByStatus,session);
 			
 			HSSFWorkbook wb = new HSSFWorkbook();
-			wb = poiHelper.generateSummary(servletContext, subModule, list);
+			wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
@@ -377,9 +393,9 @@ public class ReportAndSummaryManager extends BaseController{
 		Date startDate = dfh.parseStringToTime(dateFrom);
 		Date endDate = dfh.parseStringToTime(dateTo);
 		if(dateTo!=null && !dateTo.equalsIgnoreCase(""))
-			poiHelper.setMaxDate(endDate.toString());
+			initializePoiHelper().setMaxDate(endDate.toString());
 		if(dateFrom!=null && !dateFrom.equalsIgnoreCase(""))
-			poiHelper.setMinDate(startDate.toString());
+			initializePoiHelper().setMinDate(startDate.toString());
 		
 		if(subModule.equalsIgnoreCase("SupplierPurchaseOrder")) {
 			list = baseHibernateDao.getBetweenDates(startDate, endDate, SupplierPurchaseOrder.class.getName(), "purchaseOrderDate",session,"purchaseOrderDate");

@@ -36,7 +36,7 @@ public class ImportOfflineOrdersAction extends ActionSupport {
 	public String execute(){
 		
 		Session session = getSession();
-		ImportOfflineOrdersUtil util = new ImportOfflineOrdersUtil(customerManager,inventoryManager);
+		ImportOfflineOrdersUtil util = new ImportOfflineOrdersUtil(actionSession);
 		
 		errorStringList = new ArrayList<String>();
 		

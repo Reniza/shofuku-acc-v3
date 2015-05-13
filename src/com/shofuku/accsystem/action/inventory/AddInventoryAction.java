@@ -83,7 +83,7 @@ public class AddInventoryAction extends ActionSupport {
 	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 
 	Ingredient sangkap;
 	Ingredient returnSlipSearchItem;
@@ -108,7 +108,7 @@ public class AddInventoryAction extends ActionSupport {
 	PurchaseOrderDetailHelper poDetailsHelper;
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;	
 	PurchaseOrderDetailHelper poDetailsHelperDraft;
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
@@ -558,7 +558,7 @@ public class AddInventoryAction extends ActionSupport {
 			fpts.setRequisitionForm((RequisitionForm) rfList.get(0));
 			fpts.setPurchaseOrderDetailsReceived(fpts.getRequisitionForm().getPurchaseOrderDetailsOrdered());
 			if (null == poDetailsHelperToCompare) {
-				poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+				poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 			}
 			poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getRequisitionForm().getPurchaseOrderDetailsOrdered());
 			poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -1170,7 +1170,7 @@ public class AddInventoryAction extends ActionSupport {
 
 	public String newFinishedGood() throws Exception {
 		loadLookLists();
-		RecordCountHelper rch = new RecordCountHelper();
+		RecordCountHelper rch = new RecordCountHelper(actionSession);
 		if (getSubModule().equalsIgnoreCase("rawMat")) {
 			return "rawMat";
 		}else if (getSubModule().equalsIgnoreCase("tradedItems")) {

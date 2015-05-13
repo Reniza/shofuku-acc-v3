@@ -41,7 +41,7 @@ public class AddFinancialsAction extends ActionSupport {
 	private static final Logger logger2 = logger.getRootLogger();
 
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

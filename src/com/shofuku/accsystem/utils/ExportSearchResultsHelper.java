@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -19,7 +20,9 @@ import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.hibernate.Session;
 
-import com.opensymphony.xwork2.ActionSupport;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
@@ -32,9 +35,6 @@ import com.shofuku.accsystem.domain.receipts.ORSales;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
-import com.shofuku.accsystem.utils.HibernateUtil;
-import com.shofuku.accsystem.utils.POIUtil;
-import com.shofuku.accsystem.utils.SASConstants;
 
 public class ExportSearchResultsHelper{
 
@@ -43,10 +43,18 @@ public class ExportSearchResultsHelper{
 	private static final Logger logger = Logger
 			.getLogger(ExportSearchResultsHelper.class);
 	
+	Map<String,Object> actionSession;
+	BaseController manager;
+	
 	InputStream excelStream;
 	String contentDisposition;
-	POIUtil poiUtil = new POIUtil();
+	POIUtil poiUtil = new POIUtil(actionSession);
 	
+	
+	
+	public ExportSearchResultsHelper(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
 	String searchType;
 	
 	List<Object> searchResults; 

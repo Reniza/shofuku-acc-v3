@@ -31,7 +31,7 @@ public class DeleteCustomerAction extends ActionSupport {
 	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 
 	private String subModule;
 	private String custpoid;
@@ -87,12 +87,12 @@ public class DeleteCustomerAction extends ActionSupport {
 				 *  2nd - incoming order
 				 *  3rd - order type to determine if there is an addition or deduction to inventory
 				*/
-				InventoryUtil invUtil = new InventoryUtil();
+				InventoryUtil invUtil = new InventoryUtil(actionSession);
 				
 				DeliveryReceipt orderToDelete = (DeliveryReceipt) customerManager.listByParameter(
 						DeliveryReceipt.class, "deliveryReceiptNo",drId,session).get(0);
 				
-				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper();
+				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
 				helperItemsToDelete.generatePODetailsListFromSet(orderToDelete.getPurchaseOrderDetails());
 				
 				String orderType =SASConstants.ORDER_TYPE_DR; 

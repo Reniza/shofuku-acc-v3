@@ -2,7 +2,6 @@ package com.shofuku.accsystem.utils;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,27 +10,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
-import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
 import com.shofuku.accsystem.domain.inventory.Item;
-import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
-import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 
 public class PurchaseOrderDetailHelper {
 
+	Map<String,Object> actionSession;
 	
-	public PurchaseOrderDetailHelper() {
-
+	private void initializeController() {
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		
 	}
 	
+	AccountEntryManager accountEntryManager;
+	InventoryManager inventoryManager;
+	
+	public PurchaseOrderDetailHelper(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
+
+
 	private Timestamp orderDate;
 
 	public Timestamp getOrderDate() {
@@ -300,66 +304,6 @@ public class PurchaseOrderDetailHelper {
 		}
 	}
 	
-	public void flushUnRelatedOrders(Session session) {
-		BaseHibernateDaoImpl dao = new BaseHibernateDaoImpl();
-
-		// add specific HQL / criteria calls here if any
-		
-		if(session.isOpen()){
-		}else{
-			session=HibernateUtil.getSessionFactory().getCurrentSession();
-		}
-
-		Transaction tx = getCurrentTransaction(session);
-		try {
-
-			Query query = session.createQuery("from PurchaseOrder");
-			List<PurchaseOrder> list = query.list();
-
-			int x = 0;
-			Set ordersSet = new HashSet();
-			while (x < list.size()) {
-				ordersSet.add(((PurchaseOrder) list.get(x++)).getId());
-			}
-
-			query = session.createQuery("from PurchaseOrderDetails");
-			List<PurchaseOrderDetails> listDetails = query.list();
-
-			x = 0;
-			Set detailsSet = new HashSet();
-			while (x < listDetails.size()) {
-				detailsSet.add(((PurchaseOrderDetails) listDetails.get(x++))
-						.getId());
-			}
-
-			Set unusedDetailsSet = new HashSet();
-			Iterator itr = detailsSet.iterator();
-			while (itr.hasNext()) {
-				int details = (Integer) itr.next();
-				if (ordersSet.contains(details)) {
-				} else {
-					unusedDetailsSet.add(details);
-				}
-			}
-			if(unusedDetailsSet!=null && !unusedDetailsSet.isEmpty()){
-				query = session
-						.createQuery("delete PurchaseOrderDetails where id in  (:idList)");
-				query.setParameterList("idList", unusedDetailsSet);
-				int result = query.executeUpdate();
-				tx.commit();
-			}
-		} catch (RuntimeException re) {
-			tx.rollback();
-			re.printStackTrace();
-		} finally {
-			if(session.isOpen()){
-				session.close();
-				session.getSessionFactory().close();
-			}
-		}
-
-	}
-
 	private Transaction getCurrentTransaction(Session session){
 		Transaction tx = null;
 		try{
@@ -509,8 +453,7 @@ public class PurchaseOrderDetailHelper {
 	
 	
 	public void generateItemTypesForExistingItems(Session session) {
-		
-		InventoryManager inventoryManager=new InventoryManager();
+		initializeController();
 		List<Item> allItemList = new ArrayList<Item>();
 		allItemList = inventoryManager.getAllItemList(session);
 		Iterator itr  =allItemList.iterator();

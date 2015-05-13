@@ -19,6 +19,7 @@ public class AccountEntryProfileUtil{
 
 	Map<String,Object> actionSession;
 	BaseController manager;
+	BaseHibernateDao dao;
 	
 	public AccountEntryProfileUtil(Map<String,Object>  actionSession) {
 		this.actionSession = actionSession;
@@ -61,11 +62,10 @@ public class AccountEntryProfileUtil{
 		
 			Session session = getSession();
 			initializeController();
-			BaseHibernateDao dao = null;
+			
 			try{
-				dao = manager.getBaseHibernateDao();
 				char firstLetter = 'a';
-				String lastSupplier = dao.getLastSupplierByInitialLetter(firstLetter ,session);
+				String lastSupplier = manager.getBaseHibernateDao().getLastSupplierByInitialLetter(firstLetter ,session);
 				int maxCount=0;
 				try{
 				maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
@@ -87,7 +87,7 @@ public class AccountEntryProfileUtil{
 	}
 	
 	private void initializeController() {
-		BaseController manager = (BaseController) actionSession.get("manager");		
+		manager = (BaseController) actionSession.get("manager");		
 	}
 
 

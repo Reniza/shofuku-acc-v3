@@ -11,6 +11,7 @@ import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
@@ -20,6 +21,7 @@ import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.helpers.UserRoleHelper;
+import com.shofuku.accsystem.utils.FinancialReportsPoiHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
 
@@ -82,10 +84,11 @@ public class LoginAction extends ActionSupport {
 			AccountEntryManager accountEntryManager = new AccountEntryManager();
 			CustomerManager customerManager = new CustomerManager();
 			DisbursementManager disbursementManager = new DisbursementManager();
+			FinancialsManager financialsManager = new FinancialsManager();
 			InventoryManager inventoryManager 		= new InventoryManager(); 
 			LookupManager lookupManager = new LookupManager();
 			ReceiptsManager receiptsManager = new ReceiptsManager();
-			ReportAndSummaryManager reportAndSummaryManager = new ReportAndSummaryManager(); 
+			
 			SupplierManager supplierManager = new SupplierManager ();
 			TransactionManager transactionMananger = new TransactionManager();
 			
@@ -94,10 +97,10 @@ public class LoginAction extends ActionSupport {
 			accountEntryManager.setUser(user);
 			customerManager.setUser(user);
 			disbursementManager.setUser(user);
+			financialsManager.setUser(user);
 			inventoryManager.setUser(user);
 			lookupManager.setUser(user);
 			receiptsManager.setUser(user);
-			reportAndSummaryManager.setUser(user);
 			supplierManager.setUser(user);
 			transactionMananger.setUser(user);
 			
@@ -107,10 +110,10 @@ public class LoginAction extends ActionSupport {
 			sess.put("accountEntryManager", accountEntryManager);
 			sess.put("customerManager",customerManager);
 			sess.put("disbursementManager",disbursementManager);
+			sess.put("financialsManager",financialsManager);
 			sess.put("inventoryManager",inventoryManager);
 			sess.put("lookupManager", lookupManager);
 			sess.put("receiptsManager",receiptsManager);
-			sess.put("reportAndSummaryManager", reportAndSummaryManager);
 			sess.put("supplierManager",supplierManager);
 			sess.put("transactionMananger",transactionMananger);
 			
@@ -118,13 +121,19 @@ public class LoginAction extends ActionSupport {
 			accountEntryManager.initializeDaos();
 			customerManager.initializeDaos();
 			disbursementManager.initializeDaos();
+			financialsManager.initializeDaos();
 			inventoryManager.initializeDaos();
 			lookupManager.initializeDaos();
 			receiptsManager.initializeDaos();
-			reportAndSummaryManager.initializeDaos();
 			supplierManager.initializeDaos();
 			transactionMananger.initializeDaos();
+
 			
+			//special case since this controller contains POIUTIL(), always put this at the end of this method
+			ReportAndSummaryManager reportAndSummaryManager = new ReportAndSummaryManager(sess); 
+			reportAndSummaryManager.setUser(user);
+			sess.put("reportAndSummaryManager", reportAndSummaryManager);
+			reportAndSummaryManager.initializeDaos();
 			
 	}
 

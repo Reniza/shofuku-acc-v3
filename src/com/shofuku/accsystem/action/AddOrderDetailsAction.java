@@ -110,8 +110,8 @@ public class AddOrderDetailsAction extends ActionSupport {
 	PurchaseOrderDetailHelper poDetailsHelper;
 	PurchaseOrderDetailHelper poDetailsHelperDraft;
 	
-	InventoryUtil inventoryUtil = new InventoryUtil();
-	AccountEntryProfileUtil accountEntryUtil = new AccountEntryProfileUtil();
+	InventoryUtil inventoryUtil = new InventoryUtil(actionSession);
+	AccountEntryProfileUtil accountEntryUtil = new AccountEntryProfileUtil(actionSession);
 	//TransactionUtil transactionUtil = new TransactionUtil();
 
 	private String forWhat;
@@ -199,7 +199,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 					"receivingReportNo",
 					rs.getReturnSlipReferenceOrderNo(),session).get(0);
 			if(null==poDetailsHelperToCompare) {
-				poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+				poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rr.getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
@@ -213,7 +213,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 				DeliveryReceipt dr =  (DeliveryReceipt)customerManager.listByParameter(DeliveryReceipt.class, "deliveryReceiptNo", 
 						rs.getReturnSlipReferenceOrderNo(),session).get(0);
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 					poDetailsHelperToCompare.generatePODetailsListFromSet(dr.getPurchaseOrderDetails());
 					poDetailsHelperToCompare.generateCommaDelimitedValues();
 				}else {
@@ -226,7 +226,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 					RequisitionForm rf =  (RequisitionForm)
 							inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rs.getReturnSlipReferenceOrderNo(), session).get(0);
 					if(null==poDetailsHelperToCompare) {
-						poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+						poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 						poDetailsHelperToCompare.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsOrdered());
 						poDetailsHelperToCompare.generateCommaDelimitedValues();
 					}else {
@@ -240,7 +240,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 							FPTS fpts =  (FPTS)
 									inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo", rs.getReturnSlipReferenceOrderNo(), session).get(0);
 							if(null==poDetailsHelperToCompare) {
-								poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 								poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsTransferred());
 								poDetailsHelperToCompare.generateCommaDelimitedValues();
 							}else {
@@ -455,7 +455,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 	if(	parentPage.equalsIgnoreCase("InventoryFPTS")){
 		if(manageFPTSOrderDetailIdentifier.equalsIgnoreCase("T")) {
 			if (null == poDetailsHelper) {
-				poDetailsHelper = new PurchaseOrderDetailHelper();
+				poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
 			} else {
 				poDetailsHelper.prepareSetAndList();
 				addOrderDetailToList(poDetailsHelper);
@@ -507,7 +507,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 	}else if(parentPage.equalsIgnoreCase("returnSlip")) {
 		
 		if (null == poDetailsHelperDraft) {
-			poDetailsHelperDraft = new PurchaseOrderDetailHelper();
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
 		} else {
 			//to get if disabled
 			rs.setReturnSlipNo(rsIdNo);
@@ -588,6 +588,10 @@ public class AddOrderDetailsAction extends ActionSupport {
 	public String supplierPOOrderingFormImport() {
 		Session session = getSession();
 		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}
+		
 		supplierNoList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
 		
 		//2013 - PHASE 3 : PROJECT 4: MARK
@@ -603,7 +607,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 			if (null == fileUpload) {
 			} else {
 				
-				POIUtil poiUtilHelper = new POIUtil();
+				POIUtil poiUtilHelper = new POIUtil(actionSession);
 				orderUpload = poiUtilHelper.readOrderingForm("C","standard",fileUpload, "",
 						session);
 
@@ -655,6 +659,10 @@ public class AddOrderDetailsAction extends ActionSupport {
 	}
 	public String customerPOOrderingFormImport() {
 		Session session = getSession();
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}
+		
 		customerNoList = customerManager.listAllCustomerNo(session);
 		//2013 - PHASE 3 : PROJECT 4: MARK
 		
@@ -673,7 +681,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 					custpo = new CustomerPurchaseOrder();
 				}
 				if (null == custpoid) {
-					RecordCountHelper rch = new RecordCountHelper();
+					RecordCountHelper rch = new RecordCountHelper(actionSession);
 					custpo.setCustomerPurchaseOrderId(rch.getPrefix(
 							SASConstants.CUSTOMERPO,
 							SASConstants.CUSTOMERPO_PREFIX));
@@ -694,7 +702,7 @@ public class AddOrderDetailsAction extends ActionSupport {
 					}
 				}
 				
-				POIUtil poiUtilHelper = new POIUtil();
+				POIUtil poiUtilHelper = new POIUtil(actionSession);
 				if(custpo.getCustomer().getCustomerType().equalsIgnoreCase("CC")) {
 					orderUpload = poiUtilHelper.readOrderingForm(custpo.getCustomer().getCustomerType(),"standard",fileUpload, "",
 							session);

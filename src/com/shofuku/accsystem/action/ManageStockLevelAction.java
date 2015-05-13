@@ -44,7 +44,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	List stockLevelList;
 	String cusId;
 	
-	POIUtil poiUtil = new POIUtil();
+	POIUtil poiUtil = new POIUtil(actionSession);
 	private String forWhat = "false";
 	private String forWhatDisplay ="edit"; 
 	

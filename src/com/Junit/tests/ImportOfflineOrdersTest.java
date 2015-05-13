@@ -21,25 +21,25 @@ public class ImportOfflineOrdersTest {
 	}
 
 	
-	@Test
-	public void readStockLevelForm() {
-
-		POIUtil util = new POIUtil();
-		
-		String fileName="C:\\Dev/customerPurchasesImportTemplate.xls";
-		Session session = getSession();
-	
-		ImportOfflineOrdersUtil ioo = new ImportOfflineOrdersUtil();
-		ioo.setImportType("CUSTOMER");
-		ioo.readImportFile(fileName,"Customer", session);
-		
-		Iterator itr = ioo.getErrorStrings().iterator();
-		
-		while(itr.hasNext()) {
-			String errorMsg = (String)itr.next();
-			System.out.println(errorMsg);
-		}
-		
-		
-	}
+//	@Test
+//	public void readStockLevelForm() {
+//
+//		POIUtil util = new POIUtil();
+//		
+//		String fileName="C:\\Dev/customerPurchasesImportTemplate.xls";
+//		Session session = getSession();
+//	
+//		ImportOfflineOrdersUtil ioo = new ImportOfflineOrdersUtil();
+//		ioo.setImportType("CUSTOMER");
+//		ioo.readImportFile(fileName,"Customer", session);
+//		
+//		Iterator itr = ioo.getErrorStrings().iterator();
+//		
+//		while(itr.hasNext()) {
+//			String errorMsg = (String)itr.next();
+//			System.out.println(errorMsg);
+//		}
+//		
+//		
+//	}
 }

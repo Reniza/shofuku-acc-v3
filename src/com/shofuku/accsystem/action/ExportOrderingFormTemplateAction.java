@@ -56,7 +56,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	
 	InputStream excelStream;
 	String contentDisposition;
-	POIUtil poiUtil = new POIUtil();
+	POIUtil poiUtil = new POIUtil(actionSession);
 	
 	String orderingFormType;
 	

@@ -52,8 +52,8 @@ public class EditCustomerAction extends ActionSupport {
 			//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
@@ -73,7 +73,7 @@ public class EditCustomerAction extends ActionSupport {
 		poDetailsHelper.generateCommaDelimitedValues();
 		
 		if(null==poDetailsHelperToCompare) {
-			poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 		}
 		poDetailsHelperToCompare.generatePODetailsListFromSet(custPO.getPurchaseOrderDetails());
 		poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -180,7 +180,7 @@ public String execute() throws Exception{
 				}
 				
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(custDr.getCustomerPurchaseOrder().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -226,7 +226,7 @@ public String execute() throws Exception{
 				this.setTransactionList(transactionList);
 				//END Phase 3 - Azhee
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(custInv.getDeliveryReceipt().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();

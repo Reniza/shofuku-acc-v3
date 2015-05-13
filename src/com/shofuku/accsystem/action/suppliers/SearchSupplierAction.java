@@ -49,7 +49,7 @@ public class SearchSupplierAction extends ActionSupport {
 	//
 	
 	public String exportResults() throws Exception{
-		ExportSearchResultsHelper exporter = new ExportSearchResultsHelper();
+		ExportSearchResultsHelper exporter = new ExportSearchResultsHelper(actionSession);
 		Session session = getSession();
 		if (null != getModuleParameter()
 					&& getSupplierModule().equalsIgnoreCase("receivingReport")) {

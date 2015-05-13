@@ -59,8 +59,8 @@ public class EditSupplierAction extends ActionSupport{
 		Iterator itr;
 		//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
 	SupplierInvoice invoice;
 	ReceivingReport rr;
@@ -133,7 +133,7 @@ public class EditSupplierAction extends ActionSupport{
 				}
 				
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rr.getSupplierPurchaseOrder().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
@@ -194,7 +194,7 @@ public class EditSupplierAction extends ActionSupport{
 				//END Phase 3 - Azhee
 				
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(supInv.getReceivingReport().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();

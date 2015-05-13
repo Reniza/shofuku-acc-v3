@@ -50,7 +50,7 @@ public class AddReceiptsAction extends ActionSupport {
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 	
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 
 	public String newReceiptEntry() {
 

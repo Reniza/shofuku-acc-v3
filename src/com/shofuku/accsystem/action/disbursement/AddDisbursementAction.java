@@ -60,7 +60,7 @@ public class AddDisbursementAction extends ActionSupport {
 	PettyCash pc;
 	CashPayment cp;
 	CheckPayments chp;
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	private String invId;
 
 	List orderDetails;

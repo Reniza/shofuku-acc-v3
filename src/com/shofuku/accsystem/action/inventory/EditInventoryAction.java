@@ -280,13 +280,13 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				}
 				
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
 				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper();
+					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelper.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsTransferred());
 				poDetailsHelper.generateCommaDelimitedValues();
@@ -333,13 +333,13 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				}
 				
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
 				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper();
+					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelper.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsOrdered());
 				poDetailsHelper.generateCommaDelimitedValues();
@@ -372,7 +372,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				rs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 						this.getRs().getReturnSlipNo(),session).get(0);
 				
-				poDetailsHelperDraft = new PurchaseOrderDetailHelper();
+				poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
 				poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
 				poDetailsHelperDraft.generateCommaDelimitedValues();
 				
@@ -383,7 +383,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					this.itemCodeList.add(tempDetails.getItemCode());
 				}
 				
-				poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+				poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				poDetailsHelperToCompare.generatePODetailsListFromSet(loadOrdersByReferenceNo(rs));
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				//2014 - ITEM COLORING

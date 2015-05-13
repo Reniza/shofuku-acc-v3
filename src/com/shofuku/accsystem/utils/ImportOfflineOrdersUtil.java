@@ -21,31 +21,32 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.CustomerManager;
-import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
-import com.shofuku.accsystem.controllers.LookupManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
-import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
-import com.shofuku.accsystem.domain.security.UserAccount;
 
 public class ImportOfflineOrdersUtil {
 	protected final Logger logger = LoggerFactory.getLogger(ImportOfflineOrdersUtil.class);
 	
+	Map<String,Object> actionSession;
+	BaseController manager;
+	private void initializeController() {
+		customerManager = (CustomerManager) actionSession.get("customerManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	}
+	
 	CustomerManager customerManager;
 	InventoryManager inventoryManager;
 	
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	DateFormatHelper dfh = new DateFormatHelper();
-	InventoryUtil invUtil = new InventoryUtil();
+	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	
 	private List<String> errorStrings;
 	
@@ -53,18 +54,16 @@ public class ImportOfflineOrdersUtil {
 	private	String lastCellRead= "";
 	
 
-	public ImportOfflineOrdersUtil(CustomerManager customerManager,
-			InventoryManager inventoryManager) {
-		this.customerManager = customerManager;
-		this.inventoryManager = inventoryManager;
+	public ImportOfflineOrdersUtil(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
 	}
-	
-	public ImportOfflineOrdersUtil() {}
 
 	/*
 	 * import Type should be either  "Supplier" or "Customer"
 	 */
 	public void readImportFile(String fileName,String importType,Session session) {
+		
+		initializeController();
 		
 		errorStrings = new ArrayList<String>();
 		
@@ -98,7 +97,7 @@ public class ImportOfflineOrdersUtil {
 					}else if (importType.equalsIgnoreCase(SASConstants.CUSTOMER)) {
 						Customer customer = new Customer();
 						CustomerPurchaseOrder cpo = new CustomerPurchaseOrder();
-						PurchaseOrderDetailHelper poDtlHelper = new PurchaseOrderDetailHelper();
+						PurchaseOrderDetailHelper poDtlHelper = new PurchaseOrderDetailHelper(actionSession);
 						
 						
 						/*
@@ -208,7 +207,7 @@ public class ImportOfflineOrdersUtil {
 								dr.setPurchaseOrderDetails(poDtlHelper.persistNewSetElements(session));
 								dr.setTotalAmount(poDtlHelper.getTotalAmount());
 							
-								if(updateInventory(new PurchaseOrderDetailHelper(), poDtlHelper, SASConstants.ORDER_TYPE_DR)) {
+								if(updateInventory(new PurchaseOrderDetailHelper(actionSession), poDtlHelper, SASConstants.ORDER_TYPE_DR)) {
 									boolean addResult =customerManager.addCustomerObject(dr, session);	
 									if (addResult) {
 										rch.updateCount(SASConstants.DELIVERYREPORT, "add");
@@ -253,7 +252,7 @@ public class ImportOfflineOrdersUtil {
 
 	private  Set<PurchaseOrderDetails> populateOrderDetail(Map<String, Item> itemMap, String orderType,String priceType,
 			int column,HSSFSheet hssfSheet, Session session) throws Exception {
-		
+		initializeController();
 		Set<PurchaseOrderDetails> orderDetailSet = new HashSet<PurchaseOrderDetails>();
 		boolean hasItemsLeft=true;
 		int rowNum=SASConstants.IMPORT_OFFLINE_ORDER_STARTING_ROW;
@@ -352,7 +351,7 @@ public class ImportOfflineOrdersUtil {
 	}
 	
 	private boolean updateInventory( PurchaseOrderDetailHelper podtlHelperInitial, PurchaseOrderDetailHelper podtlHelperIncoming, String orderType) {
-		
+		initializeController();
 		/*
 		 * this is the part to update inventory
 		 * inventoryManager

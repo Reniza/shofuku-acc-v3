@@ -102,7 +102,7 @@ public class PrintCustomerAction extends ActionSupport{
 				DeliveryReceipt custDr = new DeliveryReceipt();
 				custDr = (DeliveryReceipt) customerManager.listByParameter(DeliveryReceipt.class, "deliveryReceiptNo",this.getDrId(),session).get(0);
 				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper();
+					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(custDr.getCustomerPurchaseOrder().getPurchaseOrderDetails());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();

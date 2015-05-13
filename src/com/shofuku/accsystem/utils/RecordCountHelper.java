@@ -1,24 +1,37 @@
 package com.shofuku.accsystem.utils;
 
+import java.util.Map;
+
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shofuku.accsystem.dao.BaseHibernateDao;
-import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 
 public class RecordCountHelper {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public RecordCountHelper(){
+	
+	
+	Map<String,Object> actionSession;
+	
+	private void initializeController() {
+		manager = (BaseController) actionSession.get("manager");
 	}
 	
+	public RecordCountHelper(Map<String,Object> actionSession){
+	this.actionSession = actionSession;
+	}
+	
+	
+	BaseController manager;
 	public String getLastCustomerByInitialLetter(char firstLetter){
 		Session session = getSession();
 		try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
 			firstLetter = String.valueOf(firstLetter).toUpperCase().charAt(0);
-			String lastSupplier = dao.getLastCustomerByInitialLetter(firstLetter,session);
+			String lastSupplier = manager.getBaseHibernateDao().getLastCustomerByInitialLetter(firstLetter,session);
 		int maxCount=0;
 		try{
 		maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
@@ -39,9 +52,8 @@ public class RecordCountHelper {
 	public String getLastSupplierByInitialLetter(char firstLetter){
 		Session session = getSession();
 		try{
-		BaseHibernateDao dao = new BaseHibernateDaoImpl();
 		firstLetter = String.valueOf(firstLetter).toUpperCase().charAt(0);
-		String lastSupplier = dao.getLastSupplierByInitialLetter(firstLetter,session);
+		String lastSupplier = manager.getBaseHibernateDao().getLastSupplierByInitialLetter(firstLetter,session);
 		int maxCount=0;
 		try{
 		maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
@@ -62,8 +74,7 @@ public class RecordCountHelper {
 	public String getPrefix(String subModule, String prefix){
 		Session session = getSession();
 		try{
-		BaseHibernateDao dao = new BaseHibernateDaoImpl();
-		String count = Integer.valueOf(dao.getRecordCount(subModule,session)+1).toString();
+		String count = Integer.valueOf(manager.getBaseHibernateDao().getRecordCount(subModule,session)+1).toString();
 		int maxDigits =6;
 		while(maxDigits>count.length()){
 			prefix = prefix + "0";
@@ -88,13 +99,12 @@ public class RecordCountHelper {
 	public void updateCount(String subModule,String action){
 		Session session = getSession();
 		try{
-		BaseHibernateDao dao = new BaseHibernateDaoImpl();
-		int count = dao.getRecordCount(subModule,session);
+		int count = manager.getBaseHibernateDao().getRecordCount(subModule,session);
 		
 		if(action.equalsIgnoreCase("add")){
 			count++;
 		}
-			dao.getUpdateCount(subModule,count,session);
+			manager.getBaseHibernateDao().getUpdateCount(subModule,count,session);
 	} catch (Exception e) {
 	} finally {
 		if(session.isOpen()){
@@ -108,8 +118,7 @@ public class RecordCountHelper {
 	public int getOrderingTemplateMaxRows() {
 		Session session = getSession();
 		try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
-			String count = Integer.valueOf(dao.getRecordCount("OrderingTemplateMaxRows",session)+1).toString();
+			String count = Integer.valueOf(manager.getBaseHibernateDao().getRecordCount("OrderingTemplateMaxRows",session)+1).toString();
 			return Integer.valueOf(count);
 			} catch (Exception e) {
 				//if exception occurs or record doesnt exist, default to 100 for now
@@ -125,8 +134,7 @@ public class RecordCountHelper {
 	public int getCustomerStockLevelTemplateMaxRows() {
 		Session session = getSession();
 		try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
-			String count = Integer.valueOf(dao.getRecordCount("CustomerStockLevelTemplateMaxRows",session)+1).toString();
+			String count = Integer.valueOf(manager.getBaseHibernateDao().getRecordCount("CustomerStockLevelTemplateMaxRows",session)+1).toString();
 			return Integer.valueOf(count);
 			} catch (Exception e) {
 				//if exception occurs or record doesnt exist, default to 100 for now
@@ -142,8 +150,7 @@ public class RecordCountHelper {
 	public int getAccountingRulesCount() {
 		Session session = getSession();
 		try{
-			BaseHibernateDao dao = new BaseHibernateDaoImpl();
-			return dao.getMaxRows("t702_accounting_rules", session);
+			return manager.getBaseHibernateDao().getMaxRows("t702_accounting_rules", session);
 			} catch (Exception e) {
 				//if exception occurs or record doesnt exist, default to 100 for now
 				return 100;

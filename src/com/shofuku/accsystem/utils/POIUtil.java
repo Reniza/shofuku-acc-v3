@@ -1,15 +1,7 @@
 package com.shofuku.accsystem.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,35 +18,27 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.apache.poi.hssf.usermodel.HSSFBorderFormatting;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
-import com.shofuku.accsystem.dao.impl.BaseHibernateDaoImpl;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
@@ -68,9 +51,7 @@ import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
-import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
-import com.shofuku.accsystem.domain.inventory.PurchaseOrder;
 import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.RequisitionForm;
@@ -91,32 +72,41 @@ import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 @SuppressWarnings({ "deprecation", "unused", "rawtypes", "unchecked" })
 public class POIUtil {
 	protected final Logger logger = LoggerFactory.getLogger(POIUtil.class);
+	
+	Map<String,Object> actionSession;
+	BaseController manager;
+	private void initializeController() {
+		transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	}
 
+	PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper(actionSession);
 	DateFormatHelper dfh = new DateFormatHelper();
+	
+	
 	HSSFCellStyle itemStyle;
 	HSSFCellStyle lastItemStyle;
 	HSSFCellStyle itemSoldTotalAmountStyle;
 	
-	//AccountEntryManager accountEntryManager = new AccountEntryManager();
-
 	String maxDate;
 	String minDate;
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-			AccountEntryManager accountEntryManager = new AccountEntryManager();
-			TransactionManager transactionMananger = new TransactionManager();
-			
-			
-		//	List<Transaction> transactionList;
-		//	List<Transaction> transactions;
-			Iterator itr;
-		//END 2013 - PHASE 3 : PROJECT 1: MARK  
+	TransactionManager transactionMananger;
+	InventoryManager inventoryManager;
+	//END 2013 - PHASE 3 : PROJECT 1: MARK  
+	
 	Session session = getSession();
 	private Session getSession() {
 				return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 		
 			
+	public POIUtil(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
+
+
 	private HSSFWorkbook getWorkbook(String fileName) throws Exception {
 		FileInputStream fileInputStream = new FileInputStream(fileName);
 		POIFSFileSystem fsFileSystem = new POIFSFileSystem(fileInputStream);
@@ -195,17 +185,17 @@ public class POIUtil {
 		return tx;
 	}
 
-	InventoryManager inventoryManager = new InventoryManager();
 
 	private void populateOrderDetail(String customerType,String priceType,
 			Set<PurchaseOrderDetails> orderDetailList, HSSFSheet hssfSheet,
 			int itemSectionIndex, int column, Session session) throws Exception {
 
+		initializeController();
 		HSSFRow hssfRow = hssfSheet.getRow(itemSectionIndex);
 		String group = "";
 		
 		//retrieve max rows as defined in record count table
-		RecordCountHelper rch = new RecordCountHelper();
+		RecordCountHelper rch = new RecordCountHelper(actionSession);
 		int maxRows = rch.getOrderingTemplateMaxRows();
 		
 		while (itemSectionIndex < maxRows) {
@@ -316,7 +306,7 @@ public class POIUtil {
 		
 		
 		//retrieve max rows as defined in record count table
-		RecordCountHelper rch = new RecordCountHelper();
+		RecordCountHelper rch = new RecordCountHelper(actionSession);
 		int maxRows = rch.getCustomerStockLevelTemplateMaxRows();
 		
 		while (itemSectionIndex < maxRows) {
@@ -1086,7 +1076,7 @@ public class POIUtil {
 
 	private void putDeliveryReceiptValues(HSSFSheet sheet, HSSFRow row,
 			DeliveryReceipt deliveryReceipt) {
-		PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper();
+		PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper(actionSession);
 		podetailHelper.generatePODetailsListFromSet(deliveryReceipt.getPurchaseOrderDetails());
 		podetailHelper.generateCommaDelimitedValues();
 		int col = SASConstants.SUMMARY_TEMPLATE_CUSTOMER_DELIVERY_COL_START;
@@ -1142,7 +1132,6 @@ public class POIUtil {
 
 	private void putCustomerSalesInvoiceValues(HSSFSheet sheet, HSSFRow row,
 			CustomerSalesInvoice customerSalesInvoice) {
-		PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper();
 		podetailHelper.generatePODetailsListFromSet(customerSalesInvoice.getPurchaseOrderDetails());
 		podetailHelper.generateCommaDelimitedValues();
 		int col = SASConstants.SUMMARY_TEMPLATE_CUSTOMER_INVOICE_COL_START;
@@ -2326,7 +2315,6 @@ public class POIUtil {
 	private void putReceivingReportValues(HSSFSheet sheet, HSSFRow row,
 			ReceivingReport receivingReport) {
 
-		PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper();
 		podetailHelper.generatePODetailsListFromSet(receivingReport.getPurchaseOrderDetails());
 		podetailHelper.generateCommaDelimitedValues();
 		int col = SASConstants.SUMMARY_TEMPLATE_SUPPLIER_RECEIVING_COL_START;
@@ -2377,7 +2365,6 @@ public class POIUtil {
 
 	private void putSupplierSalesInvoiceValues(HSSFSheet sheet, HSSFRow row,
 			SupplierInvoice supplierInvoice) {
-		PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper();
 		podetailHelper.generatePODetailsListFromSet(supplierInvoice.getPurchaseOrderDetails());
 		podetailHelper.generateCommaDelimitedValues();
 		int col = SASConstants.SUMMARY_TEMPLATE_SUPPLIER_INVOICE_COL_START;
@@ -2727,6 +2714,9 @@ public class POIUtil {
 
 	private void printCheckVoucher(HSSFWorkbook wb, CheckPayments chp,
 			String subModule) {
+		
+		initializeController();
+		
 		HSSFSheet sheet = wb.getSheetAt(1);
 		int currentRow = 0;
 
@@ -3173,14 +3163,13 @@ public class POIUtil {
 		
 		//
 		// Sorting PODetails using podetailsHelper
-		PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-		poDetailsHelper.setPurchaseOrderDetailsSet(csi
+		podetailHelper.setPurchaseOrderDetailsSet(csi
 				.getPurchaseOrderDetails());
-		sortListsAlphabetically(poDetailsHelper);
+		sortListsAlphabetically(podetailHelper);
 		// getting PODetails as sorted list
 		List sortedPurchaseOrderDetails = new ArrayList();
-		sortedPurchaseOrderDetails = poDetailsHelper
-				.generatePODetailsListFromSet(poDetailsHelper
+		sortedPurchaseOrderDetails = podetailHelper
+				.generatePODetailsListFromSet(podetailHelper
 						.getPurchaseOrderDetailsSet());
 		HSSFCellStyle style2 = wb.createCellStyle();
 		style2.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
@@ -3536,14 +3525,13 @@ public class POIUtil {
 		}
 
 		// Sorting PODetails using podetailsHelper
-		PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper();
-		poDetailsHelper.setPurchaseOrderDetailsSet(spo
+		podetailHelper.setPurchaseOrderDetailsSet(spo
 				.getPurchaseOrderDetails());
-		sortListsAlphabetically(poDetailsHelper);
+		sortListsAlphabetically(podetailHelper);
 		// getting PODetails as sorted list
 		List sortedPurchaseOrderDetails = new ArrayList();
-		sortedPurchaseOrderDetails = poDetailsHelper
-				.generatePODetailsListFromSet(poDetailsHelper
+		sortedPurchaseOrderDetails = podetailHelper
+				.generatePODetailsListFromSet(podetailHelper
 						.getPurchaseOrderDetailsSet());
 
 		Iterator itr = sortedPurchaseOrderDetails.iterator();

@@ -32,7 +32,7 @@ public class DeleteSupplierAction extends ActionSupport {
 	
 	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	RecordCountHelper rch = new RecordCountHelper();
+	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	
 	private String subModule;
 	private String supId;
@@ -89,11 +89,11 @@ public class DeleteSupplierAction extends ActionSupport {
 				 *  2nd - incoming order
 				 *  3rd - order type to determine if there is an addition or deduction to inventory
 				*/
-				InventoryUtil invUtil = new InventoryUtil();
+				InventoryUtil invUtil = new InventoryUtil(actionSession);
 				ReceivingReport orderToDelete = 
 						(ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", 
 								rrId,getSession()).get(0);
-				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper();
+				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
 				helperItemsToDelete.generatePODetailsListFromSet(orderToDelete.getPurchaseOrderDetails());
 				String orderType =SASConstants.ORDER_TYPE_RR; 
 				try {

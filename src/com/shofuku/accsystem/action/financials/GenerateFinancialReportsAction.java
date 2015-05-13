@@ -84,7 +84,7 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 	 * */
 	public String execute() throws Exception{
 		Session session = getSession();
-		FinancialReportsPoiHelper poiHelper = new FinancialReportsPoiHelper();
+		FinancialReportsPoiHelper poiHelper = new FinancialReportsPoiHelper(actionSession);
 		DateFormatHelper dfh= new DateFormatHelper();
 		ServletContext servletContext = ServletActionContext
 				.getServletContext();
