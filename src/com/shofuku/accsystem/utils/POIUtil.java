@@ -97,7 +97,7 @@ public class POIUtil {
 	HSSFCellStyle lastItemStyle;
 	HSSFCellStyle itemSoldTotalAmountStyle;
 	
-	AccountEntryManager manager = new AccountEntryManager();
+	//AccountEntryManager accountEntryManager = new AccountEntryManager();
 
 	String maxDate;
 	String minDate;

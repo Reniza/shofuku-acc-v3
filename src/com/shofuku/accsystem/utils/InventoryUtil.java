@@ -13,7 +13,7 @@ import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 
 public class InventoryUtil {
 	
-	InventoryDaoImpl dao = new InventoryDaoImpl();
+	InventoryDaoImpl inventoryDao = new InventoryDaoImpl();
 	
 	public InventoryUtil(){
 		
@@ -45,14 +45,14 @@ public class InventoryUtil {
 	}
 	
 	public ItemPricing getItemPricing(Session session,String itemCode) {
-		return dao.getItemPricingByItemCodeAndParameter(session, itemCode);
+		return inventoryDao.getItemPricingByItemCodeAndParameter(session, itemCode);
 	}
 	public String generateNewItemPricingId() {
 		String itemCode = "";
 		return itemCode;
 	}
 	public boolean checkCurrentItemPricing(Session session,String itemCode) {
-		ItemPricing itemPricing = dao.getItemPricingByItemCodeAndParameter(session, itemCode);
+		ItemPricing itemPricing = inventoryDao.getItemPricingByItemCodeAndParameter(session, itemCode);
 		if(itemPricing == null) {
 			return false;
 		}else {
