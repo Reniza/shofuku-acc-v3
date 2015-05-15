@@ -309,7 +309,7 @@ public class GenerateSummaryAction extends ActionSupport {
 
 	}
 
-	private boolean validateFields() {
+	private boolean validateFields() throws Exception{
 		boolean emptyFound = false;
 		if (getDateFrom().equalsIgnoreCase("")) {
 			addActionError("REQUIRED: Date From");
@@ -330,6 +330,7 @@ public class GenerateSummaryAction extends ActionSupport {
 			if(supplierList==null || supplierList.isEmpty()){
 				addActionError("Select at least one Supplier");
 				emptyFound = true;
+				throw new Exception();
 			}
 		}
 		

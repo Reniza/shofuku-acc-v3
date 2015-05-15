@@ -586,7 +586,7 @@ public class POIUtil {
 		}else if (subModule.equals("ItemPurchasedFromSupplier")) {
 			setSummaryHeaders(
 					wb,
-					SASConstants.SUMMARY_TEMPLATE_HEADER_ITEMS_SOLD_TO_CUSTOMERS,
+					SASConstants.SUMMARY_TEMPLATE_HEADER_ITEMS_PURCHASED_FROM_SUPPLIER,
 					SASConstants.SUMMARY_TEMPLATE_FIRST_COL);
 			populateSummaryForSupplier(wb, list, subModule);
 		}else if (subModule.equals("StatementOfAccount")) {

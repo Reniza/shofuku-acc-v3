@@ -86,6 +86,7 @@ public class ManageStockLevelAction extends ActionSupport{
 			addActionError(SASConstants.NO_LIST);
 		}else {
 			customer = poiUtil.readCustomerStockLevelForm(customer, fileUpload, session);
+			ActionContext.getContext().getSession().put(customer.getCustomerNo()+"stockLevel", customer.getCustomerStockLevelMap());
 			customerManager.updateCustomer(customer, session);
 			
 			Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();

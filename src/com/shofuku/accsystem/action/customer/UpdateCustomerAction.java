@@ -18,6 +18,7 @@ import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
+import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
@@ -96,6 +97,10 @@ public class UpdateCustomerAction extends ActionSupport {
 				if (validateCustomer()) {
 					
 				}else {
+					if(null==ActionContext.getContext().getSession().get(customer.getCustomerNo()+"stockLevel")) {
+					}else {
+						customer.setCustomerStockLevelMap((Map) ActionContext.getContext().getSession().get(customer.getCustomerNo()+"stockLevel"));
+					}
 					updateResult = customerManager.updateCustomer(customer,session);
 					if (updateResult == true) {
 						addActionMessage(SASConstants.UPDATED);
