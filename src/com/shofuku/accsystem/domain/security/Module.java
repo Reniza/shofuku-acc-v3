@@ -1,7 +1,13 @@
 package com.shofuku.accsystem.domain.security;
 
-public class Module {
+import java.io.Serializable;
 
+public class Module implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4277456766424952671L;
 	private int moduleId;
 	private String moduleName;
 	
