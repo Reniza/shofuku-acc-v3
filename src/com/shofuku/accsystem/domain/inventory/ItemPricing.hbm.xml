@@ -7,7 +7,7 @@
 		table="t305_item_pricing">
 
 
-		<id name="pricingId" 							type="double" column="id">
+		<id name="pricingId" 							type="int" column="id">
 		<generator class="native" />		
 		</id>
 		<property name="itemCode" 							type="string" column="ITEM_CODE"></property>
