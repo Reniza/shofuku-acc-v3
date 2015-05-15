@@ -93,6 +93,7 @@ public class RecordCountHelper {
 		}
 	}
 	private Session getSession() {
+		initializeController();
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 
