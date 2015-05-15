@@ -115,7 +115,7 @@ public class LoginAction extends ActionSupport {
 			sess.put("lookupManager", lookupManager);
 			sess.put("receiptsManager",receiptsManager);
 			sess.put("supplierManager",supplierManager);
-			sess.put("transactionMananger",transactionMananger);
+			sess.put("transactionManager",transactionMananger);
 			
 			manager.initializeDaos();
 			accountEntryManager.initializeDaos();
