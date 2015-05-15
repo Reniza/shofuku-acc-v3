@@ -76,10 +76,13 @@ public class POIUtil {
 	Map<String,Object> actionSession;
 	BaseController manager;
 	private void initializeController() {
-		transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
 		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	}
 
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	
 	PurchaseOrderDetailHelper podetailHelper = new PurchaseOrderDetailHelper(actionSession);
 	DateFormatHelper dfh = new DateFormatHelper();
 	
@@ -92,8 +95,7 @@ public class POIUtil {
 	String minDate;
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-	TransactionManager transactionMananger;
-	InventoryManager inventoryManager;
+	
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	Session session = getSession();
@@ -2958,7 +2960,7 @@ public class POIUtil {
 		
 		// START: replacement of values for accounting entries title	
 			//START Phase 3 - Azhee
-			List tempList = transactionMananger.listTransactionByParameterLike(com.shofuku.accsystem.domain.financials.Transaction.class,
+			List tempList = transactionManager.listTransactionByParameterLike(com.shofuku.accsystem.domain.financials.Transaction.class,
 					"transactionReferenceNumber", chp.getCheckVoucherNumber(), session);
 			Iterator itrTempList = tempList.iterator();
 			List transactionList = new ArrayList<com.shofuku.accsystem.domain.financials.Transaction>(); 

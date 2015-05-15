@@ -56,6 +56,7 @@ public class InventoryUtil {
 	}
 	
 	public ItemPricing getItemPricing(Session session,String itemCode) {
+		initializeController();
 		return inventoryManager.getInventoryDao().getItemPricingByItemCodeAndParameter(session, itemCode);
 	}
 	public String generateNewItemPricingId() {
@@ -63,6 +64,7 @@ public class InventoryUtil {
 		return itemCode;
 	}
 	public boolean checkCurrentItemPricing(Session session,String itemCode) {
+		initializeController();
 		ItemPricing itemPricing = inventoryManager.getInventoryDao().getItemPricingByItemCodeAndParameter(session, itemCode);
 		if(itemPricing == null) {
 			return false;

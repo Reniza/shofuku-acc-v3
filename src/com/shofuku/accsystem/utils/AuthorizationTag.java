@@ -17,6 +17,7 @@ public class AuthorizationTag extends BodyTagSupport  {
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = -3858218270545685201L;
 
 	UserRoleHelper roleHelper = new UserRoleHelper();

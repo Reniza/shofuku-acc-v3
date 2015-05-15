@@ -36,6 +36,7 @@ public class FinancialReportsPoiHelper{
 
 	Map<String,Object> actionSession;
 	BaseController manager;
+	
 	private void initializeController() {
 		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 		financialsManager = (FinancialsManager) actionSession.get("financialsManager");

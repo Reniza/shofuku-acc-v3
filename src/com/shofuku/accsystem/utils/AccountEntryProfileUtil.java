@@ -17,9 +17,13 @@ public class AccountEntryProfileUtil{
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
 
+	BaseHibernateDao dao;
 	Map<String,Object> actionSession;
 	BaseController manager;
-	BaseHibernateDao dao;
+	
+	private void initializeController() {
+		manager = (BaseController) actionSession.get("manager");		
+	}
 	
 	public AccountEntryProfileUtil(Map<String,Object>  actionSession) {
 		this.actionSession = actionSession;
@@ -86,9 +90,7 @@ public class AccountEntryProfileUtil{
 			}
 	}
 	
-	private void initializeController() {
-		manager = (BaseController) actionSession.get("manager");		
-	}
+	
 
 
 	// 2013 - PHASE 3 : PROJECT 1: MARK

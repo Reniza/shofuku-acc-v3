@@ -959,19 +959,13 @@
 			class="com.shofuku.accsystem.action.AddOrderDetailsAction" method="finalizeOrder">
 			<result name="supplierPO" type="tiles">showSupplierPurchaseOrderForm.tiles
 			</result>
-			<result name="supplierRR" type="tiles">showSupplierReceivingReportForm.tiles
-			</result>
-			<result name="supplierInvoice" type="tiles">showSupplierInvoiceForm.tiles
-			</result>
-
-			<result name="customerPO" type="tiles">showCustomerPurchaseOrderForm.tiles
-			</result>
-			<result name="customerDR" type="tiles">showCustomerDeliveryReceiptForm.tiles
-			</result>
-			<result name="customerInvoice" type="tiles">showCustomerInvoiceForm.tiles
-			</result>
-			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles
-			</result>
+			<result name="input">/jsp/util/addOrderDetailsForm.jsp</result>
+			<result name="supplierRR" type="tiles">showSupplierReceivingReportForm.tiles</result>
+			<result name="supplierInvoice" type="tiles">showSupplierInvoiceForm.tiles</result>
+			<result name="customerPO" type="tiles">showCustomerPurchaseOrderForm.tiles</result>
+			<result name="customerDR" type="tiles">showCustomerDeliveryReceiptForm.tiles</result>
+			<result name="customerInvoice" type="tiles">showCustomerInvoiceForm.tiles</result>
+			<result name="fpts" type="tiles">showFinishedProductTransferSlipForm.tiles</result>
 			<result name="rf" type="tiles">showOrderRequisitionForm.tiles</result>
 			
 		</action>
