@@ -1027,14 +1027,16 @@ public class AddOrderDetailsAction extends ActionSupport {
 				//END Phase 3 - Azhee
 				forWhat="false";
 				return "rf";
-			}else {
-				// add more conditions if parent is invoice + customers
-				return INPUT;
 			}
+			return "input";
+			/*else {
+				// add more conditions if parent is invoice + customers
+				
+			}*/
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-			return INPUT;
+			return "input";
 		} finally {
 			if(session.isOpen()){
 				session.close();

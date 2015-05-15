@@ -80,8 +80,10 @@ public class AddInventoryAction extends ActionSupport {
 	
 	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");;
+	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");;
 	
 	InventoryUtil invUtil = new InventoryUtil(actionSession);
 
@@ -1149,11 +1151,10 @@ public class AddInventoryAction extends ActionSupport {
 	}
 	private List generateCustomerAndSupplierList(Session session) {
 
-		SupplierManager supManager = new SupplierManager();
-		CustomerManager cusManager = new CustomerManager();
+		
 
-		List supplierNoList = supManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
-		List customerNoList = cusManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
+		List supplierNoList = supplierManager.listAlphabeticalAscByParameter(Supplier.class, "supplierId", session);
+		List customerNoList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerNo", session);
 		List masterList = new ArrayList<String>();
 		Iterator<Supplier> supItr = supplierNoList.iterator();
 		while(supItr.hasNext()) {
