@@ -2,7 +2,7 @@ package com.shofuku.accsystem.domain.inventory;
 
 public class ItemPricing {
 	
-	private int pricingId;
+	private double pricingId;
 	private String itemCode;
 	private String itemType;
 	private double franchiseStandardPricePerUnit;
@@ -12,7 +12,7 @@ public class ItemPricing {
 	private double companyOwnedActualPricePerUnit;
 	private double companyOwnedTransferPricePerUnit;
 	
-	public ItemPricing(int pricingId, String itemCode, String itemType,
+	public ItemPricing(double pricingId, String itemCode, String itemType,
 			double franchiseStandardPricePerUnit,
 			double franchiseActualPricePerUnit,
 			double franchiseTransferPricePerUnit,
@@ -34,11 +34,11 @@ public class ItemPricing {
 	public ItemPricing() {
 	}
 
-	public int getPricingId() {
+	public double getPricingId() {
 		return pricingId;
 	}
 
-	public void setPricingId(int pricingId) {
+	public void setPricingId(double pricingId) {
 		this.pricingId = pricingId;
 	}
 
@@ -110,9 +110,5 @@ public class ItemPricing {
 			double companyOwnedTransferPricePerUnit) {
 		this.companyOwnedTransferPricePerUnit = companyOwnedTransferPricePerUnit;
 	}
-	
-	
-
-	
 	
 }
