@@ -722,32 +722,24 @@ public class AddInventoryAction extends ActionSupport {
 		ItemPricing itemPricing = new ItemPricing();
 		String itemCode = "";
 		String itemType = "";
-		/*
+
 		if (obj instanceof RawMaterial) {
-			itemPricing = invUtil.getItemPricing(session, rm.getItemCode());
 			itemCode = rm.getItemCode();
 			itemType = SASConstants.RAW_MATERIAL_ABBR;
 		} else if (obj instanceof FinishedGood) {
-			itemPricing = invUtil.getItemPricing(session, fg.getProductCode());
 			itemCode = fg.getProductCode();
 			itemType = SASConstants.FINISHED_GOOD_ABBR;
 		} else if (obj instanceof TradedItem) {
-			itemPricing = invUtil.getItemPricing(session, ti.getItemCode());
 			itemCode = ti.getItemCode();
 			itemType = SASConstants.TRADED_ITEM_ABBR;
 		}else if (obj instanceof Utensils) {
-			itemPricing = invUtil.getItemPricing(session, u.getItemCode());
 			itemCode = u.getItemCode();
 			itemType = SASConstants.UTENSILS_ABBR;
 		}else if (obj instanceof OfficeSupplies) {
-			itemPricing = invUtil.getItemPricing(session, os.getItemCode());
 			itemCode = os.getItemCode();
 			itemType = SASConstants.OFFICE_SUPPLIES_ABBR;
 		}
-		// else if (obj instanceof TradedItem)
 	
-		if (itemPricing == null) {*/
-			itemPricing = new ItemPricing();
 			if (obj instanceof RawMaterial) {
 				itemPricing = rm.getItemPricing();
 			} else if (obj instanceof FinishedGood) {
@@ -763,12 +755,7 @@ public class AddInventoryAction extends ActionSupport {
 			itemPricing.setItemCode(itemCode);
 			itemPricing.setItemType(itemType);
 			inventoryManager.addPersistingInventoryObject(itemPricing, session);
-			//itemPricing = invUtil.getItemPricing(session, itemCode);
-		// }
-		/*
-		else {
-			itemPricing = invUtil.getItemPricing(session, itemCode);
-		} */
+
 		if (obj instanceof RawMaterial) {
 			rm.setItemPricing(itemPricing);
 		}else if (obj instanceof FinishedGood) {
@@ -780,7 +767,6 @@ public class AddInventoryAction extends ActionSupport {
 		}else if (obj instanceof OfficeSupplies) {
 			os.setItemPricing(itemPricing);
 		}
-		// else if (obj instanceof TradedItem)
 	}
 
 	private void setFGCompanyOwnedPrice() {
