@@ -36,7 +36,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	UserAccount user = (UserAccount) actionSession.get("user");
 	
 	// add other managers for other modules Manager()
-	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+	
 	
 	private String fileUpload;
 	Customer customer;
@@ -47,6 +47,11 @@ public class ManageStockLevelAction extends ActionSupport{
 	POIUtil poiUtil = new POIUtil(actionSession);
 	private String forWhat = "false";
 	private String forWhatDisplay ="edit"; 
+	CustomerManager customerManager;
+
+	private void initializeController() {
+		customerManager = (CustomerManager) 	actionSession.get("customerManager");	
+	}
 	
 	Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -54,6 +59,7 @@ public class ManageStockLevelAction extends ActionSupport{
 
 	public String execute() {
 		Session session = getSession();
+		initializeController();
 		
 		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
@@ -72,6 +78,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	
 	public String readStockLevelExcel() {
 		Session session = getSession();
+		initializeController();
 		//customer = this.getCustomer();
 		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		
@@ -95,6 +102,7 @@ public class ManageStockLevelAction extends ActionSupport{
 	
 	public String showCustomerProfile() {
 		Session session = getSession();
+		initializeController();
 			customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 			
 			Map sess = ActionContext.getContext().getSession();

@@ -58,7 +58,7 @@ public class EditDisbursementAction extends ActionSupport {
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
@@ -84,7 +84,7 @@ public class EditDisbursementAction extends ActionSupport {
 						this.getPc().getPcVoucherNumber(),session).get(0);
 				
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", pc.getPcVoucherNumber(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", pc.getPcVoucherNumber(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -112,7 +112,7 @@ public class EditDisbursementAction extends ActionSupport {
 						cp.getClass(), "cashVoucherNumber",
 						this.getCp().getCashVoucherNumber(),session).get(0);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", cp.getCashVoucherNumber(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", cp.getCashVoucherNumber(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -140,7 +140,7 @@ public class EditDisbursementAction extends ActionSupport {
 						chp.getClass(), "checkVoucherNumber",
 						this.getChp().getCheckVoucherNumber(),session).get(0);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", chp.getCheckVoucherNumber(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", chp.getCheckVoucherNumber(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -170,7 +170,7 @@ public class EditDisbursementAction extends ActionSupport {
 						this.getChp().getCheckVoucherNumber(),session).get(0);
 				
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", chp.getCheckVoucherNumber(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", chp.getCheckVoucherNumber(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 

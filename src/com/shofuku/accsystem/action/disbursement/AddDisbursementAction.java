@@ -75,7 +75,7 @@ public class AddDisbursementAction extends ActionSupport {
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager") ;
 	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager= (TransactionManager) actionSession.get("transactionManager");
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 
@@ -384,7 +384,7 @@ public class AddDisbursementAction extends ActionSupport {
 						vatDetails.setPayee(chp.getPayee());
 						vatDetails.setVattableAmount(invoice.getVatDetails().getVattableAmount());
 						vatDetails.setVatAmount(invoice.getVatDetails().getVatAmount());
-						vatDetails.setVatReferenceNo(chp.getCheckVoucherNumber());
+						vatDetails.setVatReferenceNo(invoice.getVatDetails().getVatReferenceNo());
 						vatDetails.setOrNo(chp.getVatDetails().getOrNo());
 						vatDetails.setOrDate(chp.getCheckVoucherDate());
 						chp.setVatDetails(vatDetails);
