@@ -65,7 +65,7 @@ public class AddCustomerAction extends ActionSupport {
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
@@ -191,15 +191,23 @@ public class AddCustomerAction extends ActionSupport {
 									addActionError(SASConstants.EMPTY_ORDER_DETAILS);
 								}else {
 									custpo.setCustomerPurchaseOrderId(rch.getPrefix(SASConstants.CUSTOMERPO,SASConstants.CUSTOMERPO_PREFIX)); 
-									addResult = customerManager.addCustomerObject(custpo,session);
-									if (addResult == true) {
+									List customerPO = null;
+									customerPO = customerManager.listByParameter(CustomerPurchaseOrder.class,
+											"customerPurchaseOrderId", custpo.getCustomerPurchaseOrderId(),session);
+									if (customerPO.size()==0){
+										addResult = customerManager.addCustomerObject(custpo,session);
+									}else{
+										addActionError("CUSTOMER PO NO.: "
+												+ SASConstants.EXISTS);
+									}
+								if (addResult == true) {
 										rch.updateCount(SASConstants.CUSTOMERPO, "add");
 										addActionMessage(SASConstants.ADD_SUCCESS);
 										forWhat="true";
 										forWhatDisplay ="edit";
-									} else {
+								} else {
 										addActionError(SASConstants.FAILED);
-									}
+										}
 								}
 							}
 						}
@@ -228,6 +236,7 @@ public class AddCustomerAction extends ActionSupport {
 							includePoDetails();
 						} else {
 							dr.setCustomerPurchaseOrder((CustomerPurchaseOrder) cusDr2.get(0));
+							dr.setDueDate(dr.getCustomerPurchaseOrder().getPaymentDate());
 
 							if(null==poDetailsHelperToCompare) {
 								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
@@ -272,7 +281,6 @@ public class AddCustomerAction extends ActionSupport {
 								addActionError(e.getMessage());
 								inventoryUpdateSuccess=false;
 							}
-							dr.setDueDate(dr.getCustomerPurchaseOrder().getPaymentDate());
 							//START - 2013 - PHASE 3 : PROJECT 1: MARK
 							transactionList = new ArrayList();
 							Transaction transaction = new Transaction();
