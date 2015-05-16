@@ -135,7 +135,7 @@
 							<td class="others">Shipping Date:</td>
 							<td><sx:datetimepicker name="dr.shippingDate" displayFormat="MMM-dd-yyyy" displayWeeks="5"></sx:datetimepicker></td>
 							
-							<td><s:textfield disabled="%{forWhat}" name="dr.dueDate" label="Due Date:"></s:textfield></td>
+							<td><s:textfield readonly="true" disabled="%{forWhat}" name="dr.dueDate" label="Due Date:"></s:textfield></td>
 						</tr>
 						<tr>	
 							<td><s:select disabled="%{forWhat}" label="Remarks:" 
@@ -370,7 +370,7 @@
 						<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','delrForm');" value="New Entry"></input></td>
 				</s:if>
 				<s:else>
-						<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" value="New Entry" name="newReceivingReport" action="addCustomerAction"></s:submit></td>
+						<td><s:submit disabled="%{forWhat}" cssClass="myButtons" type="button" value="New Entry" name="newDeliveryReceipt" action="addCustomerAction"></s:submit></td>
 						<td><input class="myButtons" name="clear" type="button" onclick="javascript:clearAll('wholeForm','delrForm');" value="Cancel"></input></td>
 				</s:else>
 				</tr>

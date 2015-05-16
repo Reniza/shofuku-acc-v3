@@ -71,7 +71,7 @@ public class UpdateCustomerAction extends ActionSupport {
 	
 	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	
@@ -85,9 +85,9 @@ public class UpdateCustomerAction extends ActionSupport {
 	}
 	public String execute() throws Exception{
 		Session session = getSession();
+		poDetailsHelper.setActionSession(actionSession);
+		poDetailsHelperToCompare.setActionSession(actionSession);
 		try {
-			
-			forWhatDisplay="edit";
 			boolean updateResult = false;
 			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);	
 			
@@ -105,6 +105,7 @@ public class UpdateCustomerAction extends ActionSupport {
 					if (updateResult == true) {
 						addActionMessage(SASConstants.UPDATED);
 						forWhat = "true";
+						forWhatDisplay = "edit";
 					} else {
 						addActionMessage(SASConstants.UPDATE_FAILED);
 					}
@@ -148,6 +149,7 @@ public class UpdateCustomerAction extends ActionSupport {
 							if (updateResult == true) {
 								addActionMessage(SASConstants.UPDATED);
 								forWhat = "true";
+								forWhatDisplay = "edit";
 							} else {
 								addActionMessage(SASConstants.UPDATE_FAILED);
 							}
@@ -173,7 +175,7 @@ public class UpdateCustomerAction extends ActionSupport {
 					dr.setDeliveryReceiptNo(drId);
 					dr.setCustomerPurchaseOrder((CustomerPurchaseOrder) cusDr
 							.get(0));
-					
+					dr.setDueDate(dr.getCustomerPurchaseOrder().getPaymentDate());
 					/*
 					 * Checking and fetching existing return slips
 					 */
@@ -232,7 +234,6 @@ public class UpdateCustomerAction extends ActionSupport {
 						}
 						
 					}
-					dr.setDueDate(dr.getCustomerPurchaseOrder().getPaymentDate());
 					dr.setTotalAmount(poDetailsHelper.getTotalAmount());
 					if (validateCustomerDR()) {
 						//includePoDetails();
@@ -242,7 +243,7 @@ public class UpdateCustomerAction extends ActionSupport {
 						}else {
 							if(inventoryUpdateSuccess) {
 								//START - 2013 - PHASE 3 : PROJECT 1: MARK
-								transactionMananger.discontinuePreviousTransactions(dr.getDeliveryReceiptNo(),session);
+								transactionManager.discontinuePreviousTransactions(dr.getDeliveryReceiptNo(),session);
 								transactionList = getTransactionList();
 								updateAccountingEntries(dr.getDeliveryReceiptNo(),session,SASConstants.DELIVERYREPORT);
 								this.setTransactionList(transactions);
@@ -257,10 +258,10 @@ public class UpdateCustomerAction extends ActionSupport {
 							if (updateResult == true) {
 								addActionMessage(SASConstants.UPDATED);
 								forWhat = "true";
+								forWhatDisplay = "edit";
 							} else {
 								addActionMessage(SASConstants.UPDATE_FAILED);
 							}
-							
 						}
 					}
 				}
@@ -298,7 +299,7 @@ public class UpdateCustomerAction extends ActionSupport {
 					invoice.setTotalSales(poDetailsHelper.getTotalAmount());
 					
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
-					transactionMananger.discontinuePreviousTransactions(invoice.getCustomerInvoiceNo(),session);
+					transactionManager.discontinuePreviousTransactions(invoice.getCustomerInvoiceNo(),session);
 					transactionList = getTransactionList();
 					updateAccountingEntries(invoice.getCustomerInvoiceNo(),session,SASConstants.CUSTOMERINVOICE);
 					this.setTransactionList(transactions);
@@ -327,6 +328,7 @@ public class UpdateCustomerAction extends ActionSupport {
 							if (updateResult == true) {
 								addActionMessage(SASConstants.UPDATED);
 								forWhat = "true";
+								forWhatDisplay = "edit";
 							} else {
 								addActionMessage(SASConstants.UPDATE_FAILED);
 							}
@@ -392,7 +394,7 @@ public class UpdateCustomerAction extends ActionSupport {
 				transaction.setIsInUse(SASConstants.TRANSACTION_IN_USE);
 				transactions.add(transaction);
 			}
-			transactionMananger.addTransactionsList(transactions, session);
+			transactionManager.addTransactionsList(transactions, session);
 		}
 		// return transactions;
 	}

@@ -119,6 +119,9 @@ public class AddCustomerAction extends ActionSupport {
 		accountEntryManager.setUser(user);
 		customerManager.setUser(user);
 		inventoryManager.setUser(user);
+		poDetailsHelper.setActionSession(actionSession);
+		poDetailsHelperToCompare.setActionSession(actionSession);
+		
 		
 		try {
 			boolean addResult = false;

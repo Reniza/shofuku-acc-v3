@@ -22,6 +22,12 @@ public class PurchaseOrderDetailHelper {
 
 	Map<String,Object> actionSession;
 	
+	public Map<String, Object> getActionSession() {
+		return actionSession;
+	}
+	public void setActionSession(Map<String, Object> actionSession) {
+		this.actionSession = actionSession;
+	}
 	private void initializeController() {
 		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");

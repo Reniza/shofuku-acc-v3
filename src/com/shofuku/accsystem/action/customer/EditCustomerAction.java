@@ -56,7 +56,7 @@ public class EditCustomerAction extends ActionSupport {
 	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	InventoryManager inventoryManager= (InventoryManager) actionSession.get("inventoryManager");
 	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 		
@@ -117,6 +117,9 @@ private Session getSession() {
 }
 public String execute() throws Exception{
 	Session session = getSession();
+	poDetailsHelper.setActionSession(actionSession);
+	poDetailsHelperToCompare.setActionSession(actionSession);
+	
 	try{
 		forWhatDisplay="edit";
 		accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);
@@ -149,7 +152,7 @@ public String execute() throws Exception{
 						this.getDr().getDeliveryReceiptNo(),session).get(0);
 
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", dr.getDeliveryReceiptNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", dr.getDeliveryReceiptNo(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -208,7 +211,7 @@ public String execute() throws Exception{
 						custInv.getClass(), "customerInvoiceNo",
 						this.getInvoice().getCustomerInvoiceNo(),session).get(0);
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber",invoice.getCustomerInvoiceNo() , session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber",invoice.getCustomerInvoiceNo() , session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
