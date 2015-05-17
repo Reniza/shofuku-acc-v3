@@ -134,8 +134,8 @@
 							
 							<td class="others">Shipping Date:</td>
 							<td><sx:datetimepicker name="dr.shippingDate" displayFormat="MMM-dd-yyyy" displayWeeks="5"></sx:datetimepicker></td>
-							
-							<td><s:textfield readonly="true" disabled="%{forWhat}" name="dr.dueDate" label="Due Date:"></s:textfield></td>
+							<td class="others">Due Date:</td>
+							<td><s:date format="MMM-dd-YYYY" name="dr.dueDate" ></s:date></td>
 						</tr>
 						<tr>	
 							<td><s:select disabled="%{forWhat}" label="Remarks:" 
