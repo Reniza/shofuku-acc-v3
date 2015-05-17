@@ -362,7 +362,7 @@
 					<table class="form">
 						<tr>
 							<td><s:textfield  label="Business Style:" value="%{invoice.busStyle}" ></s:textfield></td>
-							<td><s:textfield  label="TIN:" value="%{invoice.tin}"></s:textfield></td>
+							<td><s:textfield  label="TIN:" value="%{invoice.vatDetails.tinNumber}"></s:textfield></td>
 						</tr>
 						<tr>
 							<td><s:textfield  label="Total Sales: PHP" id ="invoice.totalSales}" value="%{invoice.totalSales}"></s:textfield></td>

@@ -32,7 +32,7 @@
 						<table class="form">
 							<tr>
 								<td>
-									<s:select label="Customer Module:" headerKey="none"
+									<s:select label="Select Customer Module:" headerKey="none"
 									list="#{'Customer':'Profile', 'CustomerPurchaseOrder':'Purchase Order', 'DeliveryReceipt':'Delivery Receipt', 'CustomerSalesInvoice':'Sales Invoice', 'ItemSoldToCustomers':'Items Sold To Customers', 'StatementOfAccount':'Statement of Account'}" 
 								name="customerModule" id="customerModule" onchange="javascript:showCustomerList();" />
 								</td>
@@ -44,7 +44,7 @@
 						
 						<table class="form" cellpadding=5>
 							<tr>
-								<td colspan=4><h4 class="title">SELECT DATE RANGE & CUSTOMER/s TO BE INCLUDED IN THE REPORT:</h4></td>
+								<td colspan=4><h4 class="title">SELECT DATE RANGE TO BE INCLUDED IN THE REPORT:</h4></td>
 							</tr>
 							<tr>
 								<td class="others">Date From:</td>
@@ -52,16 +52,31 @@
 								<td class="others">Date To:</td>
 								<td><sx:datetimepicker displayFormat="MMM-dd-yyyy" displayWeeks="5" name="dateTo"></sx:datetimepicker></td>
 							</tr>
+						</table>
+					
+					
+						<table class="result" width="100%">
 							<tr>
-								<td>Tick this box for simple format of report: </td>
-								<td> <s:checkbox id="isFormatReport" name="isFormatReport" onclick="javascript:showFilterTable();"></s:checkbox> </td>
+								<td><b>TICK BELOW CHECK BOX FOR THE FOLLOWING REPORT: </b> <s:checkbox id="isFormatReport" name="isFormatReport" onclick="javascript:showFilterTable();"></s:checkbox></td>
+							</tr>
+							<tr>
+								<td> 1. Report per Module per Customer</td>
+							</tr>
+							<tr>
+								<td>2. Required for Items Sold to Customer Report</td>
+							</tr>
+							<tr>
+								<td> 3. Required for Statement of Account Report</td>
+							</tr>
+							<tr>
+								<td> 4. Required for Simple Format of Reports</td>
 							</tr>
 						</table>
-					</div>
+					
 					<div id="filterTbl" style="display: none;">	
 						<table class="form" cellpadding=5>		
 							<tr>
-								<td>Choose at least one supplier:</td>
+								<td>Choose at least one customer:</td>
 								<td><select id="customerList" name="customerList" multiple="multiple">
 									<c:forEach items="${customerList}" var="customer">
 										<option value="${customer.customerNo}">${customer.customerName}</option>
@@ -72,6 +87,7 @@
 						</table>
 					</div>
 				</div>
+			</div>
 			<div class="errors">
 				<s:actionerror/>
 				<s:actionmessage/>

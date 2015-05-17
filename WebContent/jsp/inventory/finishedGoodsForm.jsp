@@ -29,7 +29,7 @@
 		<div class="mainForm">
 			<h4 class="title">Finished Goods</h4>
 
-			<s:form action="loadLookUpItems" value="true" id="finForm">
+			<s:form action="loadLookUpItems" value="true" id="finForm" >
 				<div class="form" id="wholeForm">
 					<div class="errors">
 						<s:actionerror />
@@ -213,22 +213,7 @@
 								<th colspan="6">Ingredients</th>
 							</tr>
 						</table>
-						<table class="form">
-							<tr>
-								<%-- <td><s:submit disabled="%{forWhat}" cssClass="myButtons"
-										id="bGetItem" type="button" label="Get details"
-										action="loadIngredientAction">
-									</s:submit></td> --%>
-								<td><s:hidden name="forWhat" value="%{forWhat}" /></td>
-								<td><s:submit cssClass="myButtons" id="bAddItem"
-										type="button" label="Add Item" action="addIngredientAction">
-									</s:submit></td>
-								<td><s:submit cssClass="myButtons" id="bDeleteItem"
-										type="button" label="Delete Item"
-										action="deleteIngredientAction">
-									</s:submit></td>
-							</tr>
-						</table>
+						
 						<table>
 							<tr class="others">
 								<td class="desc">Item Code</td>
@@ -266,9 +251,22 @@
 										name="sangkap.transferPricePerUnit" theme="simple"></s:textfield></td>
 
 							</tr>
-
 						</table>
-
+						<table>
+						<s:hidden name="forWhat" value="%{forWhat}"/>
+							<tr>
+								<td>
+									<s:submit cssClass="myButtons" id="bAddItem"
+										type="button" label="Add Item" action="addIngredientAction">
+									</s:submit>
+								</td>
+								<td><s:submit cssClass="myButtons" id="bDeleteItem"
+										type="button" label="Delete Item"
+										action="deleteIngredientAction">
+									</s:submit>
+								</td>
+							</tr>
+						</table>
 					</div>
 					</p>
 

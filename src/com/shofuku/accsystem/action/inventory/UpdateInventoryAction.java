@@ -97,7 +97,7 @@ public class UpdateInventoryAction extends ActionSupport{
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	
@@ -387,7 +387,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			}
 			if(inventoryUpdateSuccess) {
 				//START - 2013 - PHASE 3 : PROJECT 1: MARK
-				transactionMananger.discontinuePreviousTransactions(rs.getReturnSlipNo(),session);
+				transactionManager.discontinuePreviousTransactions(rs.getReturnSlipNo(),session);
 				//transactionList = new ArrayList();
 				transactionList = getTransactionList();
 				updateAccountingEntries(rs.getReturnSlipNo(),session,SASConstants.INVENTORY_RETURN_SLIP_FORM);
@@ -492,13 +492,17 @@ public class UpdateInventoryAction extends ActionSupport{
 					}
 					if(inventoryUpdateSuccess) {
 						//START - 2013 - PHASE 3 : PROJECT 1: MARK
-						transactionMananger.discontinuePreviousTransactions(rf.getRequisitionNo(),session);
+						transactionManager.discontinuePreviousTransactions(rf.getRequisitionNo(),session);
 						//transactionList = new ArrayList();
 						transactionList = getTransactionList();
-						updateAccountingEntries(rf.getRequisitionNo(),session,SASConstants.INVENTORY_REQUISITION_FORM);
-						this.setTransactionList(transactions);
-						rf.setTransactions(transactions);
-						//END
+						if (transactionList.size()==0){
+							addActionMessage("REQUIRED: Accounting Entries Details");
+						}else{
+							updateAccountingEntries(rf.getRequisitionNo(),session,SASConstants.INVENTORY_REQUISITION_FORM);
+							this.setTransactionList(transactions);
+							rf.setTransactions(transactions);
+							//END
+						}
 						updateResult = inventoryManager.updateInventory(rf,session);
 					}else {
 						updateResult=false;
@@ -579,7 +583,7 @@ public class UpdateInventoryAction extends ActionSupport{
 					poDetailsHelper.setOrderDate(fpts.getTransactionDate());
 					fpts.setPurchaseOrderDetailsTransferred(poDetailsHelper.persistNewSetElements(session));
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
-					transactionMananger.discontinuePreviousTransactions(fpts.getFptsNo(),session);
+					transactionManager.discontinuePreviousTransactions(fpts.getFptsNo(),session);
 					//transactionList = new ArrayList();
 					transactionList = getTransactionList();
 					updateAccountingEntries(fpts.getFptsNo(),session,SASConstants.INVENTORY_FPTS);
@@ -1096,7 +1100,8 @@ private boolean validateRF() 	 {
 	if ("".equals(rf.getRequisitionBy())) {
 		addFieldError("rf.requisitionBy", "REQUIRED");
 		errorFound = true;
-	}  if ((getTransactionList().get(0).getAmount() == 0 )) {
+	} 
+	if ((getTransactionList().get(0).getAmount() == 0 )) {
 		addActionMessage("REQUIRED: Accounting Entries Details");
 		errorFound = true;
 	}
@@ -1127,7 +1132,8 @@ private boolean validateReturnSlip() {
 	if ("".equals(rs.getReturnSlipReferenceOrderNo())) {
 		addFieldError("rs.returnSlipReferenceOrderNo", "REQUIRED");
 		errorFound = true;
-	}  if ((getTransactionList().get(0).getAmount() == 0 )) {
+	} 
+	if ((getTransactionList().get(0).getAmount() == 0 )) {
 		addActionMessage("REQUIRED: Accounting Entries Details");
 		errorFound = true;
 	}
@@ -1164,7 +1170,7 @@ private boolean validateReturnSlip() {
 					transaction.setIsInUse(SASConstants.TRANSACTION_IN_USE);
 					transactions.add(transaction);
 				}
-				transactionMananger.addTransactionsList(transactions,session);
+				transactionManager.addTransactionsList(transactions,session);
 			}
 			//END - 2013 - PHASE 3 : PROJECT 1: MARK
 			//return transactions;

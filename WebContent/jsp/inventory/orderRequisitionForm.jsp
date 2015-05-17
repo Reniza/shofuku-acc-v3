@@ -269,7 +269,7 @@
 								
 								<td>
 								<s:submit cssClass="myButtons" type="button" id="bManageOrderDetails"
-								value="Manage Ordered" onclick="javascript:ManageOrderRequisition('rfForm','O');"
+								value="Manage Items Ordered" onclick="javascript:ManageOrderRequisition('rfForm','O');"
 								action="addOrderDetailAction"></s:submit></td>
 								
 						<!--  	<td>
@@ -387,7 +387,10 @@
 
 
 							</s:iterator>
-						
+							<tr>
+							<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
+							<td align="right" class="totalAmount"><s:property value="poDetailsHelper.totalAmount" /></td>
+							</tr>
 						</table>
 					<!-- 
 						</td>

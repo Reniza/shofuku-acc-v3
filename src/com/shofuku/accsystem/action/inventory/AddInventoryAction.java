@@ -342,6 +342,7 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						}
+						fg.setClassification(classification);
 						addResult = inventoryManager.addInventoryObject(fg, session);
 						if (addResult == true) {
 							addActionMessage(SASConstants.ADD_SUCCESS);

@@ -57,9 +57,19 @@
 								<td class="others">Date To:</td>
 								<td><sx:datetimepicker displayFormat="MMM-dd-yyyy" displayWeeks="5" name="dateTo"></sx:datetimepicker></td>
 							</tr>
+						</table>
+						<table class="result" width="100%">
 							<tr>
-								<td>Tick this box for simple format of report: </td>
-								<td> <s:checkbox id="isFormatReport" name="isFormatReport" onclick="javascript:showFilterTable();"></s:checkbox> </td>
+								<td><b>TICK BELOW CHECK BOX FOR THE FOLLOWING REPORT:  </b><s:checkbox id="isFormatReport" name="isFormatReport" onclick="javascript:showFilterTable();"></s:checkbox> </td>
+							</tr>
+							<tr>
+								<td> 1. Report per Module per Supplier</td>
+							</tr>
+							<tr>
+								<td>2. Required for Items Purchased From Supplier Report</td>
+							</tr>
+							<tr>
+								<td> 3. Required for Simple Format of Reports</td>
 							</tr>
 						</table>
 						

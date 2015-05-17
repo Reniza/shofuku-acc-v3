@@ -245,16 +245,18 @@ public class UpdateCustomerAction extends ActionSupport {
 								//START - 2013 - PHASE 3 : PROJECT 1: MARK
 								transactionManager.discontinuePreviousTransactions(dr.getDeliveryReceiptNo(),session);
 								transactionList = getTransactionList();
-								updateAccountingEntries(dr.getDeliveryReceiptNo(),session,SASConstants.DELIVERYREPORT);
-								this.setTransactionList(transactions);
-								dr.setTransactions(transactions);
-								//END
-								
+								if (transactionList.size()==0){
+									addActionMessage("REQUIRED: Accounting Entries Details");
+								}else{
+									updateAccountingEntries(dr.getDeliveryReceiptNo(),session,SASConstants.DELIVERYREPORT);
+									this.setTransactionList(transactions);
+									dr.setTransactions(transactions);
+									//END
+								}
 								updateResult = customerManager.updateCustomer(dr,session);
 							}else {
 								updateResult = false;
 							}
-							
 							if (updateResult == true) {
 								addActionMessage(SASConstants.UPDATED);
 								forWhat = "true";
@@ -301,9 +303,13 @@ public class UpdateCustomerAction extends ActionSupport {
 					//START - 2013 - PHASE 3 : PROJECT 1: MARK
 					transactionManager.discontinuePreviousTransactions(invoice.getCustomerInvoiceNo(),session);
 					transactionList = getTransactionList();
-					updateAccountingEntries(invoice.getCustomerInvoiceNo(),session,SASConstants.CUSTOMERINVOICE);
-					this.setTransactionList(transactions);
-					invoice.setTransactions(transactions);
+					if (transactionList.size()==0){
+						addActionMessage("REQUIRED: Accounting Entries Details");
+					}else{
+						updateAccountingEntries(invoice.getCustomerInvoiceNo(),session,SASConstants.CUSTOMERINVOICE);
+						this.setTransactionList(transactions);
+						invoice.setTransactions(transactions);
+					}
 					//END
 					
 					//START: 2013 - PHASE 3 : PROJECT 4: MARK
@@ -528,10 +534,10 @@ public class UpdateCustomerAction extends ActionSupport {
 			addActionMessage("REQUIRED: Purchase Order No");
 			errorFound = true;
 		}
-		if ((getTransactionList().get(0).getAmount() == 0 )) {
+		/*if ((getTransactionList().get(0).getAmount() == 0 )) {
 			addActionMessage("REQUIRED: Accounting Entries Details");
 			errorFound = true;
-		}
+		}*/
 		return errorFound;
 
 	}
@@ -565,10 +571,10 @@ public class UpdateCustomerAction extends ActionSupport {
 			 addFieldError("invoice.address", SASConstants.MAXIMUM_LENGTH_200);
 			 errorFound = true;
 		}
-		if ((getTransactionList().get(0).getAmount() == 0 )) {
+		/*if ((getTransactionList().get(0).getAmount() == 0 )) {
 			addActionMessage("REQUIRED: Accounting Entries Details");
 			errorFound = true;
-		}
+		}*/
 		return errorFound;
 
 	}

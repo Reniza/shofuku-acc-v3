@@ -45,10 +45,6 @@
 						<th colspan="8">Details</th>
 					</tr>
 					<tr>
-						<!--  <td width="70">
-						<s:hidden disabled="%{forWhat}" label="Item Code: " name="unl.itemCode" id="itemId"/>
-						
-						</td>-->
 						<s:hidden name="itemNo" value="%{unl.itemCode}"/>
 						
 						<s:if test="%{forWhat != 'print'}">
@@ -83,11 +79,16 @@
 						</tr>
 					</table>
 					<table class="form">
+						<s:if test="%{forWhat == 'print'}">
+							<td><s:textfield disabled="%{forWhat}" label="Classification:" size="90" name="unl.classification"/></td>
+						</s:if>
+						<s:else>
 						<tr>
 							<td width="90"><s:select disabled="%{forWhat}" label="Classification:" name="unl.classification" list="#{'WET':'WET','DRY':'DRY'}"  
 							id="classif"  headerValue="Choose One:" headerKey="-1"></s:select></td>
 							<s:hidden name="classification" id = "tempClassif"/>
 						</tr>
+						</s:else>
 					</table>
 		</div>
 	</div>
@@ -97,6 +98,7 @@
 				<tr><s:hidden name="subModule" value="unlistedItems"/>
 				<s:hidden name="requestingModule" value="unlistedItems" />
 				<s:hidden name="forWhatDisplay" value="%{forWhatDisplay}"/>
+				<s:hidden name="forWhat" value="%{forWhat}"/>
 					
 				<s:if test="%{forWhatDisplay == 'edit'}">
 				

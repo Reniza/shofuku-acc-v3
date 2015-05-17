@@ -72,7 +72,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
 	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionMananger = (TransactionManager) actionSession.get("transactionMananger");
+	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	
 	
 	String itemCode;
@@ -292,7 +292,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				poDetailsHelper.generateCommaDelimitedValues();
 			
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", fpts.getFptsNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", fpts.getFptsNo(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -345,7 +345,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				poDetailsHelper.generateCommaDelimitedValues();
 			
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rf.getRequisitionNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rf.getRequisitionNo(), session);
 				if(tempList.size()>0) {
 					itr = tempList.iterator();
 					transactionList = new ArrayList<Transaction>(); 
@@ -398,7 +398,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				}
 				
 				//START Phase 3 - Azhee
-				List tempList = transactionMananger.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rs.getReturnSlipNo(), session);
+				List tempList = transactionManager.listTransactionByParameterLike(Transaction.class, "transactionReferenceNumber", rs.getReturnSlipNo(), session);
 				if(tempList.size()>0) {
 				itr = tempList.iterator();
 				transactionList = new ArrayList<Transaction>(); 

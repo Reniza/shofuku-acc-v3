@@ -52,7 +52,7 @@
 							<td><s:submit cssClass="myButtons" type="button"
 									label="Get Details" action="loadOrderDetailsAction"></s:submit></td>
 							<td><s:submit cssClass="myButtons" type="button"
-									label="Modify Item" action="addOrderDetailAction">
+									label="Add/Modify Item" action="addOrderDetailAction">
 								</s:submit></td>
 							<td><s:submit cssClass="myButtons" type="button"
 									label="Delete Item" action="deleteOrderDetailAction">

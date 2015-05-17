@@ -235,36 +235,31 @@
 						</td>
 						<td>
 						<table class="compare">
-											<tr valign="top">
-												<td class="others" colspan="6">ORDER REQUISITION ITEMS</td>
-											</tr>
-											
-											<tr class="others" valign="top">
-												<td class="desc">Item Code</td>
-												<td class="desc">Quantity</td>
-												<td class="header" width="300px">Description</td>
-
-												<td>UOM</td>
-												<td>Unit Cost</td>
-												<td>Amount</td>
-											</tr>
-											<s:iterator
-												value="poDetailsHelperToCompare.purchaseOrderDetailsList">
-												<tr>
-													<td class="desc"><s:property value="itemCode" /></td>
-													<td class="desc"><s:property value="quantity" /></td>
-													<td class="desc"><s:property value="description" /></td>
-
-													<td><s:property value="unitOfMeasurement" /></td>
-													<td><s:property value="unitCost" /></td>
-													<td><s:property value="amount" /></td>
-												</tr>
-											</s:iterator>
-											<tr>
-							<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
-							<td align="right" class="totalAmount"><s:property value="poDetailsHelperToCompare.totalAmount" /></td>
-							</tr>
-									
+								<tr valign="top">
+									<td class="others" colspan="6">ORDER REQUISITION ITEMS</td>
+								</tr>
+								<tr class="others" valign="top">
+									<td class="desc">Item Code</td>
+									<td class="desc">Quantity</td>
+									<td class="header" width="300px">Description</td>
+									<td>UOM</td>
+									<td>Unit Cost</td>
+									<td>Amount</td>
+								</tr>
+								<s:iterator value="poDetailsHelperToCompare.purchaseOrderDetailsList">
+								<tr>
+									<td class="desc"><s:property value="itemCode" /></td>
+									<td class="desc"><s:property value="quantity" /></td>
+									<td class="desc"><s:property value="description" /></td>
+									<td><s:property value="unitOfMeasurement" /></td>
+									<td><s:property value="unitCost" /></td>
+									<td><s:property value="amount" /></td>
+								</tr>
+								</s:iterator>
+								<tr>
+									<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
+									<td align="right" class="totalAmount"><s:property value="poDetailsHelperToCompare.totalAmount" /></td>
+								</tr>
 						</table>
 						</td> 
 						
@@ -289,7 +284,7 @@
 								
 								<td>
 								<s:submit cssClass="myButtons" type="button" id="bManageOrderDetails"
-								value="Manage Transferred" onclick="javascript:ManageFPTS('fptsForm','T');"
+								value="Manage Transferred Items" onclick="javascript:ManageFPTS('fptsForm','T');"
 								action="addOrderDetailAction"></s:submit></td>
 								
 							<!-- 	<td>
@@ -322,9 +317,7 @@
 									id="bCancel"
 									onclick="javascript:clearAll('wholeForm','fptsForm');"
 									value="Cancel"></input></td>
-
 							</s:else>
-
 						</tr>
 					</table>
 					</p>
@@ -411,10 +404,11 @@
 									<td><s:property value="unitCost" /></td>
 									<td><s:property value="amount" /></td>
 								</tr>
-
-
 							</s:iterator>
-						
+						<tr>
+							<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
+							<td align="right" class="totalAmount"><s:property value="poDetailsHelper.totalAmount" /></td>
+							</tr>
 						</table>
 						
 						</td>
@@ -445,12 +439,14 @@
 													<td><s:property value="amount" /></td>
 												</tr>
 											</s:iterator>
-									
+											<tr>
+												<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
+												<td align="right" class="totalAmount"><s:property value="poDetailsHelperToCompare.totalAmount" /></td>
+											</tr>
 						</table>
 						</td> 
 						
 						</tr>
-							
 						</table>
 		</div>
 

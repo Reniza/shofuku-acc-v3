@@ -9,16 +9,16 @@
    <title>Login Page</title>
    <LINK Rel="stylesheet" Href="CSS/design.css" Type="text/css">
 </head>
-<body background="images/background.jpg" >
+<body background="images/background.jpg" onload="function(){document.getElementById('username').focus();}">
   <div align="center">
-  	<s:form action="login" validate="true">
+  	<s:form action="login" validate="true" focusElement = "username">
      <br><br><br><br><br><br><br><br><br><br><br><br><br>
  	 <table id="login" class="login" >
  		<tr valign="bottom">
 		 	<td id="error" colspan="2"><s:actionerror/></td>  
 		</tr>
 		<tr> 
-		 	<td><s:textfield name="username" label="Username:"/></td>
+		 	<td><s:textfield name="username" label="Username:" id="username"/></td>
 		</tr>
 		<tr>
 		    <td><s:password name="password" label="Password:"/></td>
