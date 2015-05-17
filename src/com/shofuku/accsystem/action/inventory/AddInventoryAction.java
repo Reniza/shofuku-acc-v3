@@ -168,6 +168,9 @@ public class AddInventoryAction extends ActionSupport {
 	}
 	public String execute() throws Exception {
 		Session session = getSession();
+		poDetailsHelper.setActionSession(actionSession);
+		poDetailsHelperToCompare.setActionSession(actionSession);
+		poDetailsHelperDraft.setActionSession(actionSession);
 		
 		try {
 			boolean addResult = false;
