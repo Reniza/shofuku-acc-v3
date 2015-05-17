@@ -224,10 +224,8 @@ public class UpdateInventoryAction extends ActionSupport{
 			}else if (getSubModule().equalsIgnoreCase("returnSlip")){
 				return updateReturnSlip();
 			}else if (getSubModule().equalsIgnoreCase("fpts")){
-				
 				return updateFPTS();
 			}else if (getSubModule().equalsIgnoreCase("rf")){
-				
 				return updateRF();
 			}
 			else {
@@ -328,6 +326,8 @@ public class UpdateInventoryAction extends ActionSupport{
 		//to get if disabled
 		rs.setReturnSlipNo(rsIdNo);
 		Session session = getSession();
+		poDetailsHelperToCompare.setActionSession(actionSession);
+		poDetailsHelperDraft.setActionSession(actionSession);
 		boolean updateResult=false;
 		boolean inventoryUpdateSuccess= false;
 
@@ -432,12 +432,12 @@ public class UpdateInventoryAction extends ActionSupport{
 		Session session = getSession();
 		rf.setRequisitionNo(rfNo);
 		boolean updateResult;
+		poDetailsHelper.setActionSession(actionSession);
 			/*
 			 * Checking and fetching existing return slips
 			 */
-			InventoryManager invManager= new InventoryManager();
 			Session rfSession = getSession();
-			List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rfNo, rfSession);
+			List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rfNo, rfSession);
 			if (validateRF()) {
 				includePoDetails();
 			}else {	

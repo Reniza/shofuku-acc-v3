@@ -140,6 +140,7 @@
 			</div>
 			</s:if>
 				<p>
+				
 				<table class="form">
 						<tr>
 						<th colspan="6">ORDER REFERENCE</th>
@@ -152,7 +153,9 @@
 						<td><s:submit cssClass="myButtons" type="button" label="Get Details" action="loadOrdersByReferenceNoAction">	</s:submit></td>
 						</tr>
 					</table>
-				</p>	
+				
+				</p>
+				
 				<h4 class="form" onclick="javascript:collapseSection('arrow1','div1')"><img id="arrow1" src="images/expand2.jpg"/>ITEMS ORDERED REFERENCE</h4>
 				<div id="div1" class="sectionDiv">
 				
@@ -399,6 +402,10 @@
 									<td><s:property value="amount" /></td>
 								</tr>
 							</s:iterator>
+							<tr>
+								<td colspan=5 align="right" class="totalAmount">Total Amount:</td>
+								<td align="right" class="totalAmount"><s:property value="poDetailsHelperDraft.totalAmount" /></td>
+							</tr>
 						</table>
 					</div>
 				

@@ -168,9 +168,6 @@ public class AddInventoryAction extends ActionSupport {
 	}
 	public String execute() throws Exception {
 		Session session = getSession();
-		poDetailsHelper.setActionSession(actionSession);
-		poDetailsHelperToCompare.setActionSession(actionSession);
-		poDetailsHelperDraft.setActionSession(actionSession);
 		
 		try {
 			boolean addResult = false;
@@ -556,6 +553,7 @@ public class AddInventoryAction extends ActionSupport {
 	private String addFPTS() {
 		Session session = getSession();
 		boolean addResult = false;
+		poDetailsHelperToCompare.setActionSession(actionSession);
 		rfNoList = inventoryManager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
 		if (validateFPTS()) {
 		} else {
@@ -599,6 +597,8 @@ public class AddInventoryAction extends ActionSupport {
 		}else {
 			boolean addResult = false;
 			Session session = getSession();
+			poDetailsHelperToCompare.setActionSession(actionSession);
+			poDetailsHelperDraft.setActionSession(actionSession);
 			poDetailsHelperToCompare.prepareSetAndList();
 			//2014 - ITEM COLORING
 			poDetailsHelperToCompare.generateItemTypesForExistingItems(session);
