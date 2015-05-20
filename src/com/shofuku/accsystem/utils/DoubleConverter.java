@@ -33,7 +33,8 @@ public class DoubleConverter extends StrutsTypeConverter {
 		DecimalFormat df = new DecimalFormat("000,000,000.00");
 		
 		try {
-			value = (Double) df.parse(String.valueOf(value));
+			value = df.parse(String.valueOf(value)).doubleValue();
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
