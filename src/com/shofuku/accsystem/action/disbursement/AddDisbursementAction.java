@@ -384,9 +384,9 @@ public class AddDisbursementAction extends ActionSupport {
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getTin());
 						vatDetails.setPayee(chp.getPayee());
-						vatDetails.setVattableAmount(invoice.getVatDetails().getVattableAmount());
-						vatDetails.setVatAmount(invoice.getVatDetails().getVatAmount());
-						vatDetails.setVatReferenceNo(invoice.getVatDetails().getVatReferenceNo());
+						vatDetails.setVattableAmount(disbursementManager.computeVat(chp.getAmountToPay()));
+						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
+						vatDetails.setVatReferenceNo(chp.getCheckVoucherNumber());
 						vatDetails.setOrNo(chp.getVatDetails().getOrNo());
 						vatDetails.setOrDate(chp.getCheckVoucherDate());
 						chp.setVatDetails(vatDetails);

@@ -69,10 +69,10 @@
 		</table>
 		<table class="form">
 			<tr>
-				<td class="others">Invoice No:</td>
+				<td class="others">Invoice Reference No:</td>
 				<td><sx:autocompleter listValue="supplierInvoiceNo" list="invoiceNoList" maxlength="50" resultsLimit="-1" name="chp.invoice.supplierInvoiceNo"></sx:autocompleter></td>
 				<s:hidden name="invId" value="%{chp.invoice.supplierInvoiceNo}"/>
-				<td><s:textfield disabled="disabled" label="Invoice Amount: PHP" name="chp.amount"></s:textfield></td>
+				<td><s:textfield disabled="disabled" label="Invoice Amount PHP" name="chp.amount"></s:textfield></td>
 				<s:hidden name="invAmount" value="%{chp.invoice.purchaseOrderDetailsTotalAmount}"/>
 			</tr>
 		</table>
@@ -89,7 +89,7 @@
 					</tr>
 					<tr>
 						<td><s:textfield disabled="%{forWhat}" label="TIN:" name="chp.vatDetails.tinNumber"></s:textfield></td>
-						<td><s:textfield disabled="%{forWhat}" label="Reference No:" name="chp.vatDetails.orNo"></s:textfield></td>
+						<!--  <td><s:textfield disabled="%{forWhat}" label="Reference No:" name="chp.vatDetails.orNo"></s:textfield></td> -->  
 					</tr>
 					</table>
 					<table class="form">
@@ -259,7 +259,7 @@
 		</table>
 		<table class="form">
 			<tr>
-				<td><s:textfield label="Invoice No:" value="%{chp.invoice.supplierInvoiceNo}"/>
+				<td><s:textfield label="Reference Invoice No:" value="%{chp.invoice.supplierInvoiceNo}"/>
 				<td><s:textfield label="Invoice Amount: PHP" value="%{chp.invoice.debit1Amount}"/>
 			</tr>
 		</table>
