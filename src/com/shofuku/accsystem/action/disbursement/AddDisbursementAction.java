@@ -329,6 +329,7 @@ public class AddDisbursementAction extends ActionSupport {
 	private String addSupplierCheckVoucher() {
 		boolean addResult = false;
 		Session session = getSession();
+		
 		invoiceNoList = disbursementManager.listAlphabeticalAscByParameter(SupplierInvoice.class, "supplierInvoiceNo", session);
 		try {
 			if (validateCheckVoucher()) {
@@ -371,6 +372,7 @@ public class AddDisbursementAction extends ActionSupport {
 						chp.setAmountToPay(0);
 						chp.setRemainingBalance(invoice.getRemainingBalance());
 						//START PHASE 3 
+						
 						transactionList = new ArrayList();
 						Transaction transaction = new Transaction();
 						transactionList.add(transaction);
@@ -542,7 +544,7 @@ public class AddDisbursementAction extends ActionSupport {
 			addFieldError("chp.checkVoucherNumber", "REQUIRED");
 			errorFound = true;
 		}
-		 if (null == chp.getCheckVoucherDate()) {
+		 /*if (null == chp.getCheckVoucherDate()) {
 		 addActionMessage("REQUIRED: Voucher Date");
 		 errorFound = true;
 		 }
@@ -550,6 +552,7 @@ public class AddDisbursementAction extends ActionSupport {
 			 addFieldError("chp.checkNo", "REQUIRED");
 			 errorFound = true;
 			 }
+			*/
 		 if ("".equals(chp.getBankName())) {
 			 addFieldError("chp.bankName", "REQUIRED");
 			 errorFound = true;

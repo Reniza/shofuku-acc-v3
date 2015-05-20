@@ -47,7 +47,7 @@
 				<td class="others">Check Voucher Date:</td>
 				<td><sx:datetimepicker displayWeeks="5" displayFormat="MMM-dd-yyyy" name="chp.checkVoucherDate"></sx:datetimepicker></td>
 				<td class="others">Invoice Due Date:</td>
-				<td><sx:datetimepicker displayWeeks="5" displayFormat="MMM-dd-yyyy"  name="chp.dueDate"></sx:datetimepicker></td>
+				<td><s:date format="MMM-dd-yyyy"  name="chp.dueDate"></s:date></td>
 		</table>
 		<table class="form">
 			<tr>

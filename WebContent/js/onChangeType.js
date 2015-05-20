@@ -99,14 +99,12 @@ function computeVat(){
 	var vatableAmount = 0;
 	var vatAmount = 0;
 	
-		alert(checkVat);
-		
 	if (checkVat==true){
 		document.getElementById("vattableAmount").value = 0;
 		document.getElementById("vatAmount").value = 0;
 	}else{
-		vatableAmount = amount / 1.12;
-		vatAmount = amount - vatableAmount;
+		vatableAmount = amount.replace(/\,/g,"") / 1.12;
+		vatAmount = amount.replace(/\,/g,"") - vatableAmount;
 		
 		document.getElementById("vattableAmount").value = roundPrice(vatableAmount);
 		document.getElementById("vatAmount").value = roundPrice(vatAmount);
