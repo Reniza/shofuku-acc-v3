@@ -269,6 +269,7 @@ private String updateSupplierCheckVoucher(Session session, boolean updateResult)
 			}
 		}
 	chp.setCheckVoucherNumber(chpNo);
+	chp.setDueDate(invoice.getReceivingReport().getReceivingReportPaymentDate());
 	chp.setInvoice(invoice);
 	//START - 2013 - PHASE 3 : PROJECT 1: MARK
 	transactionManager.discontinuePreviousTransactions(chp.getCheckVoucherNumber(),session);
@@ -282,6 +283,8 @@ private String updateSupplierCheckVoucher(Session session, boolean updateResult)
 	vatDetails.setVatReferenceNo(chpNo);
 	vatDetails.setPayee(chp.getPayee());
 	vatDetails.setOrDate(chp.getCheckVoucherDate());
+	vatDetails.setVattableAmount(disbursementManager.computeVat(chp.getAmountToPay()));
+	vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 	this.chp.setVatDetails(vatDetails);
 	financialsManager.updateVatDetails(chp.getVatDetails(), session);							
 	//END: 2013 - PHASE 3 : PROJECT 4: AZ
@@ -511,7 +514,7 @@ private boolean validateCheckVoucher() throws Exception {
 		 addFieldError("chp.amountInWords", "REQUIRED");
 		 errorFound = true;
 		 }
-	 if ("".equals(chp.getCheckNo())) {
+	/* if ("".equals(chp.getCheckNo())) {
 		 addFieldError("chp.checkNo", "REQUIRED");
 		 errorFound = true;
 		 }
@@ -522,7 +525,7 @@ private boolean validateCheckVoucher() throws Exception {
 	 if ((getTransactionList().get(0).getAmount() == 0 )) {
 			addActionMessage("REQUIRED: Accounting Entries Details");
 			errorFound = true;
-		}
+		} */
 	return errorFound;
 }
 	
