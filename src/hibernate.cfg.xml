@@ -14,9 +14,9 @@
 				<!--192.168.254.105-->
 			jdbc:mysql://192.168.254.102:3306/shofukuv3_corp
 			
-			<!--	 jdbc:mysql://192.168.1.32:3306/shofuku_dev  
-			 jdbc:mysql://192.168.0.225:3306/shofukuv3_corp_test 
-		 		jdbc:mysql://localhost/shofukuv3_corp  -->
+				<!-- jdbc:mysql://192.168.1.32:3306/shofuku_dev  
+			 jdbc:mysql://192.168.0.225:3306/shofukuv3_corp_test
+		 		jdbc:mysql://localhost/shofukuv3_corp   -->
 			 
 		</property>
 		<property name="connection.username">root</property>

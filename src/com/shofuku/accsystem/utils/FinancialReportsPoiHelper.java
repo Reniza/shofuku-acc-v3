@@ -435,7 +435,7 @@ public class FinancialReportsPoiHelper{
 			
 			cell = poiUtil.getCurrentCell(currentRow,cellPtr++);
 			cell.setCellStyle(headerListStyle);
-			poiUtil.putCellValue(cell, "OR NO");
+			poiUtil.putCellValue(cell, "INVOICE/OR NO");
 			
 			cell = poiUtil.getCurrentCell(currentRow,cellPtr++);
 			cell.setCellStyle(headerListStyle);
@@ -469,7 +469,7 @@ public class FinancialReportsPoiHelper{
 			if(checkVoucherList!=null) {
 				while(itr.hasNext()) {
 					CheckPayments checkVoucher = (CheckPayments) itr.next();
-					if(checkVoucher.getInvoice().getSupplierInvoiceNo()!=null)
+					if(checkVoucher.getInvoice() != null)
 					checkVoucherMap.put(checkVoucher.getCheckVoucherNumber(), checkVoucher.getInvoice().getSupplierInvoiceNo());
 				}
 			}
@@ -1027,7 +1027,7 @@ public class FinancialReportsPoiHelper{
 				
 				cell = poiUtil.getCurrentCell(row,5);
 				cell.setCellStyle(itemListStyle);
-				poiUtil.putCellValue(cell,parseNullDouble(vatDetails.getVatAmount()));
+				poiUtil.putCellValue(cell,parseNullDouble(vatDetails.getAmount()));
 				
 				cell = poiUtil.getCurrentCell(row,6);
 				cell.setCellStyle(itemListStyle);
