@@ -173,6 +173,7 @@ public class AddDisbursementAction extends ActionSupport {
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(supplier.getTin());
 						vatDetails.setPayee(pc.getPayee());
+						vatDetails.setAmount(pc.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(pc.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(pc.getPcVoucherNumber());
@@ -225,6 +226,7 @@ public class AddDisbursementAction extends ActionSupport {
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(supplier.getTin());
 						vatDetails.setPayee(cp.getPayee());
+						vatDetails.setAmount(cp.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(cp.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(cp.getCashVoucherNumber());
@@ -285,6 +287,7 @@ public class AddDisbursementAction extends ActionSupport {
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(supplier.getTin());
 						vatDetails.setPayee(chp.getPayee());
+						vatDetails.setAmount(chp.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(chp.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(chp.getCheckVoucherNumber());
@@ -384,6 +387,7 @@ public class AddDisbursementAction extends ActionSupport {
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getTin());
 						vatDetails.setPayee(chp.getPayee());
+						vatDetails.setAmount(chp.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(chp.getAmountToPay()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(chp.getCheckVoucherNumber());

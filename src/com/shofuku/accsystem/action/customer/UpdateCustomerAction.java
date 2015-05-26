@@ -315,8 +315,10 @@ public class UpdateCustomerAction extends ActionSupport {
 					//START: 2013 - PHASE 3 : PROJECT 4: MARK
 					invoice.getVatDetails().setAddress(invoice.getDeliveryReceipt().getCustomerPurchaseOrder().getCustomer().getBillingAddress());
 					invoice.getVatDetails().setVatReferenceNo(invId);
+					invoice.getVatDetails().setAmount(invoice.getTotalSales());
 					invoice.getVatDetails().setOrDate(invoice.getCustomerInvoiceDate());
 					invoice.setVatDetails(invoice.getVatDetails());
+					
 					financialsManager.updateVatDetails(invoice.getVatDetails(), session);							
 					//END: 2013 - PHASE 3 : PROJECT 4: MARK
 					

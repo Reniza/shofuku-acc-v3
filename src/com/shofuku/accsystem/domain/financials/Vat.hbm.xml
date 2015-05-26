@@ -10,6 +10,7 @@
 		<property name="payee" type="string" column="PAYEE" />
 		<property name="address" type="string" column="ADDRESS" />
 		<property name="orNo" type="string" column="OR_NO" />
+		<property name="amount" type="double" column="AMOUNT" />
 		<property name="vatAmount" type="double" column="VAT_AMOUNT" />
 		<property name="vattableAmount" type="double" column="VATTABLE_AMOUNT" />
 		<property type="timestamp" name="orDate" column="OR_DATE" />

@@ -16,12 +16,20 @@ public class Vat implements Serializable{
 	private String payee;
 	private String tinNumber;
 	private String address;
+	private double amount;
 	private double vatAmount;
 	private double vattableAmount;
 	private String orNo;
 	private Timestamp orDate;
 	
 	
+	
+	public double getAmount() {
+		return amount;
+	}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 	public Timestamp getOrDate() {
 		return orDate;
 	}

@@ -291,6 +291,7 @@ public class AddSupplierAction extends ActionSupport {
 							vatDetails.setPayee(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getSupplierName());
 							vatDetails.setTinNumber(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getTin());
 							vatDetails.setPayee(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getSupplierName());
+							vatDetails.setAmount(invoice.getDebit1Amount());
 							vatDetails.setVatAmount(poDetailsHelper.getTotalVatAmount());
 							vatDetails.setVattableAmount(poDetailsHelper.getTotalVattableAmount());
 							vatDetails.setVatReferenceNo(invoice.getSupplierInvoiceNo());
