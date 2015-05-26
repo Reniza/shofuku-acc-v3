@@ -90,6 +90,7 @@ public class AddReceiptsAction extends ActionSupport {
 						vatDetails.setAddress(orSales.getAddress());
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
 						vatDetails.setTinNumber(orSales.getTin());
+						vatDetails.setAmount(orSales.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(orSales.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(orSales.getOrNumber());
@@ -130,6 +131,7 @@ public class AddReceiptsAction extends ActionSupport {
 						Vat vatDetails = new Vat();
 						vatDetails.setAddress(orOthers.getAddress());
 						vatDetails.setTinNumber(orOthers.getTin());
+						vatDetails.setAmount(orOthers.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(orOthers.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(orOthers.getOrNumber());
@@ -170,6 +172,7 @@ public class AddReceiptsAction extends ActionSupport {
 						Vat vatDetails = new Vat();
 						
 						vatDetails.setTinNumber("000-000-000-000");
+						vatDetails.setAmount(ccReceipts.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(ccReceipts.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
 						vatDetails.setVatReferenceNo(ccReceipts.getCashReceiptNo());

@@ -385,7 +385,8 @@ public class AddCustomerAction extends ActionSupport {
 							Vat vatDetails = new Vat();
 							vatDetails.setAddress(invoice.getDeliveryReceipt().getCustomerPurchaseOrder().getCustomer().getBillingAddress());
 							//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
-							vatDetails.setTinNumber("000-000-000-001");
+							vatDetails.setTinNumber(invoice.getTin());
+							vatDetails.setAmount(poDetailsHelper.getTotalAmount());
 							vatDetails.setVatAmount(poDetailsHelper.getTotalVatAmount());
 							vatDetails.setVattableAmount(poDetailsHelper.getTotalVattableAmount());
 							vatDetails.setVatReferenceNo(invoice.getCustomerInvoiceNo());

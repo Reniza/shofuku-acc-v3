@@ -72,7 +72,7 @@
 				<td class="others">Invoice Reference No:</td>
 				<td><sx:autocompleter listValue="supplierInvoiceNo" list="invoiceNoList" maxlength="50" resultsLimit="-1" name="chp.invoice.supplierInvoiceNo"></sx:autocompleter></td>
 				<s:hidden name="invId" value="%{chp.invoice.supplierInvoiceNo}"/>
-				<td><s:textfield disabled="disabled" label="Invoice Amount PHP" name="chp.amount"></s:textfield></td>
+				<td><s:textfield readonly="true" label="Invoice Amount PHP" name="chp.amount"></s:textfield></td>
 				<s:hidden name="invAmount" value="%{chp.invoice.purchaseOrderDetailsTotalAmount}"/>
 			</tr>
 		</table>
@@ -99,7 +99,6 @@
 						</tr>
 					<!--END: 2013 - PHASE 3 : PROJECT 4: AZHEE-->
 			</table>
-		<!--END: 2013 - PHASE 3 : PROJECT 4: AZHEE-->
 		</p>
 		
 		<s:if test="%{forWhatDisplay == 'edit'}">			
