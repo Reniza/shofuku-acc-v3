@@ -149,8 +149,8 @@
 					</tr>
 					 -->
 					<tr>
-						<td><s:textfield readOnly="readOnly" label="Quantity Per Record:" name="ti.quantityPerRecord"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Quantity Per Count:" name="ti.quantityPerPhysicalCount"/></td>
+						<td><s:textfield readOnly="readOnly" label="Quantity Per Record:" name="ti.warehouse.quantityPerRecord"/></td>
+						<td><s:textfield disabled="%{forWhat}" label="Quantity Per Count:" name="ti.warehouse.quantityPerPhysicalCount"/></td>
 					</tr>
 					
 					</table>

@@ -387,7 +387,7 @@ public class GenerateStockStatusReportAction extends ActionSupport {
 					if(fg.getStockStatusDay().equals(endDay)) {
 							String itemCode = fg.getProductCode();
 							ssReport = new StockStatusReport(fg.getProductCode(),fg.getDescription(),fg.getUnitOfMeasurement(),
-									fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),fg.getQuantityPerRecord(),fg.getQuantityPerRecord()*fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,fg.getClassification(),fg.getSubClassification(),SASConstants.FINISHED_GOOD_ABBR);
+									fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),fg.getWarehouse().getQuantityPerRecord(),fg.getWarehouse().getQuantityPerRecord()*fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,fg.getClassification(),fg.getSubClassification(),SASConstants.FINISHED_GOOD_ABBR);
 					}else {
 						continue;
 					}
@@ -396,7 +396,7 @@ public class GenerateStockStatusReportAction extends ActionSupport {
 					if(ti.getStockStatusDay().equals(endDay)) {
 							String itemCode = ti.getItemCode();
 							ssReport = new StockStatusReport(ti.getItemCode(),ti.getDescription(),ti.getUnitOfMeasurement(),
-									ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),ti.getQuantityPerRecord(),ti.getQuantityPerRecord()*ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,ti.getClassification(),ti.getSubClassification(),SASConstants.TRADED_ITEM_ABBR);
+									ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),ti.getWarehouse().getQuantityPerRecord(),ti.getWarehouse().getQuantityPerRecord()*ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,ti.getClassification(),ti.getSubClassification(),SASConstants.TRADED_ITEM_ABBR);
 					}else {
 						continue;
 					}

@@ -189,14 +189,14 @@
 							</tr>
 							<tr>
 								<td><s:textfield readOnly="readOnly"
-										label="Quantity Per Record:" name="fg.quantityPerRecord" />
+										label="Quantity Per Record:" name="fg.warehouse.quantityPerRecord" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.quantityPerRecord"
 											value="%{fg.quantityPerRecord}" />
 									</s:if>
 								</td>
 								<td><s:textfield disabled="%{forWhat}"
-										label="Quantity Per Count:" name="fg.quantityPerCount" />
+										label="Quantity Per Count:" name="fg.warehouse.quantityPerPhysicalCount" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.quantityPerCount"
 											value="%{fg.quantityPerCount}" />

@@ -20,10 +20,10 @@ public class OfficeSupplies implements Serializable {
 	private String isVattable;
 	private double quantityIn;
 	private double quantityOut;
-	private double quantityPerRecord;
-	private double quantityPerPhysicalCount;
 	private ItemPricing itemPricing;
 	private Vat vatDetails;
+	private Warehouse warehouse;
+	
 	public String getItemCode() {
 		return itemCode;
 	}
@@ -84,18 +84,6 @@ public class OfficeSupplies implements Serializable {
 	public void setQuantityOut(double quantityOut) {
 		this.quantityOut = quantityOut;
 	}
-	public double getQuantityPerRecord() {
-		return quantityPerRecord;
-	}
-	public void setQuantityPerRecord(double quantityPerRecord) {
-		this.quantityPerRecord = quantityPerRecord;
-	}
-	public double getQuantityPerPhysicalCount() {
-		return quantityPerPhysicalCount;
-	}
-	public void setQuantityPerPhysicalCount(double quantityPerPhysicalCount) {
-		this.quantityPerPhysicalCount = quantityPerPhysicalCount;
-	}
 	public ItemPricing getItemPricing() {
 		return itemPricing;
 	}
@@ -107,6 +95,12 @@ public class OfficeSupplies implements Serializable {
 	}
 	public void setVatDetails(Vat vatDetails) {
 		this.vatDetails = vatDetails;
+	}
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 	
 	

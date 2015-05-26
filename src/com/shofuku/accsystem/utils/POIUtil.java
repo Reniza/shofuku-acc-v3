@@ -1586,9 +1586,9 @@ public class POIUtil {
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(finishedGood.getQuantityOut()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(finishedGood.getQuantityPerRecord()));
+		cell.setCellValue(parseNullDouble(finishedGood.getWarehouse().getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(finishedGood.getQuantityPerCount()));
+		cell.setCellValue(parseNullDouble(finishedGood.getWarehouse().getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 
 		putIngredients(
@@ -1712,9 +1712,9 @@ public class POIUtil {
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(tradedItems.getQuantityOut()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(tradedItems.getQuantityPerRecord()));
+		cell.setCellValue(parseNullDouble(tradedItems.getWarehouse().getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(tradedItems
+		cell.setCellValue(parseNullDouble(tradedItems.getWarehouse()
 				.getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 
@@ -1760,9 +1760,9 @@ public class POIUtil {
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(utensils.getQuantityOut()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(utensils.getQuantityPerRecord()));
+		cell.setCellValue(parseNullDouble(utensils.getWarehouse().getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(utensils
+		cell.setCellValue(parseNullDouble(utensils.getWarehouse()
 				.getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 	}
@@ -1808,9 +1808,9 @@ public class POIUtil {
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(officeSupplies.getQuantityOut()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(officeSupplies.getQuantityPerRecord()));
+		cell.setCellValue(parseNullDouble(officeSupplies.getWarehouse().getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(officeSupplies
+		cell.setCellValue(parseNullDouble(officeSupplies.getWarehouse()
 				.getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 

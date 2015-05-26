@@ -18,17 +18,12 @@ public class TradedItem implements Serializable{
 	private String stockStatusDay;
 	private String description;
 	private String unitOfMeasurement;
-	//START: 2013 - PHASE 3 : PROJECT 4: MARK
 	private String isVattable;
-	//END: 2013 - PHASE 3 : PROJECT 4: MARK
 	private double quantityIn;
 	private double quantityOut;
-	private double quantityPerRecord;
-	private double quantityPerPhysicalCount;
 	private ItemPricing itemPricing;
-	//START: 2013 - PHASE 3 : PROJECT 4: MARK
 	private Vat vatDetails;
-	//END: 2013 - PHASE 3 : PROJECT 4: MARK
+	private Warehouse warehouse;
 	
 	public TradedItem(){
 		
@@ -93,22 +88,6 @@ public class TradedItem implements Serializable{
 		this.unitOfMeasurement = unitOfMeasurement;
 	}
 
-	public double getQuantityPerRecord() {
-		return quantityPerRecord;
-	}
-
-	public void setQuantityPerRecord(double quantityPerRecord) {
-		this.quantityPerRecord = quantityPerRecord;
-	}
-
-	public double getQuantityPerPhysicalCount() {
-		return quantityPerPhysicalCount;
-	}
-
-	public void setQuantityPerPhysicalCount(double quantityPerPhysicalCount) {
-		this.quantityPerPhysicalCount = quantityPerPhysicalCount;
-	}
-
 	public ItemPricing getItemPricing() {
 		return itemPricing;
 	}
@@ -153,5 +132,11 @@ public class TradedItem implements Serializable{
 		this.isVattable = isVattable;
 	}
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
 	
 }

@@ -19,15 +19,14 @@
 		
 		<property name="quantityOut" type="double" column="QUANTITY_OUT" />
 		
-		<property name="quantityPerRecord" type="double" column="QUANTITY_PER_RECORD" />
-		
-		<property name="quantityPerCount" type="double" column="QUANTITY_PER_COUNT" />
 		<property name="standardTotalCost" type="double" column="STANDARD_TOTAL_COST" />
 		<property name="actualTotalCost" type="double" column="ACTUAL_TOTAL_COST" />
 		<property name="transferTotalCost" type="double" column="TRANSFER_TOTAL_COST" />
 		
 		<property name="yields" type="double" column="YIELDS" />
 		<property name="markUp" type="double" column="MARK_UP" />
+		
+		<property name="isShared" column="IS_SHARED" type="string" not-null="false"/>
 		
 		<many-to-one name="itemPricing"
 			class="com.shofuku.accsystem.domain.inventory.ItemPricing" column="PRICING_ID"
@@ -39,5 +38,12 @@
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.Ingredient" />
 		</set>
+		
+		
+		<many-to-one name="warehouse"
+		class="com.shofuku.accsystem.domain.inventory.Warehouse" column="WAREHOUSE_ID" cascade="all"
+		not-null="false" unique="true" lazy="false" />
+			
+			
 	</class>
 </hibernate-mapping>

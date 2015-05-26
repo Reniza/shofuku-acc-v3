@@ -17,6 +17,9 @@ public class FinishedGood implements Serializable{
 	private String template;
 	private String stockStatusDay;
 	
+	private String isShared;
+	private Warehouse warehouse;
+	
 	public String getStockStatusDay() {
 		return stockStatusDay;
 	}
@@ -31,8 +34,6 @@ public class FinishedGood implements Serializable{
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
 	private double quantityIn;
 	private double quantityOut;
-	private double quantityPerRecord;
-	private double quantityPerCount;
 	private double standardTotalCost;
 	private double actualTotalCost;
 	private double transferTotalCost;
@@ -138,21 +139,6 @@ public class FinishedGood implements Serializable{
 		this.ingredients = ingredients;
 	}
 
-	public double getQuantityPerRecord() {
-		return quantityPerRecord;
-	}
-	
-	public void setQuantityPerRecord(double quantityPerRecord) {
-		this.quantityPerRecord = quantityPerRecord;
-	}
-	
-	public double getQuantityPerCount() {
-		return quantityPerCount;
-	}
-	
-	public void setQuantityPerCount(double quantityPerCount) {
-		this.quantityPerCount = quantityPerCount;
-	}
 	public String getClassification() {
 		return classification;
 	}
@@ -182,5 +168,17 @@ public class FinishedGood implements Serializable{
 		this.isVattable = isVattable;
 	}
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
+	public String getIsShared() {
+		return isShared;
+	}
+	public void setIsShared(String isShared) {
+		this.isShared = isShared;
+	}
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
 	
 }

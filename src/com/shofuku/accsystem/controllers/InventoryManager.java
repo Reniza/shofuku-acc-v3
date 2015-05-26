@@ -163,38 +163,54 @@ public class InventoryManager extends BaseController{
 			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+			}			
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
 			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+			}	
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
 			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+			}	
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
 			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+			}	
 		}
 
 		//passed an unknown item type
@@ -229,34 +245,54 @@ public class InventoryManager extends BaseController{
 			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), 0));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), 0));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}		
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
 			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
 			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
 			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}
 
 		//passed an unknown item type
@@ -291,37 +327,54 @@ public class InventoryManager extends BaseController{
 			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), 0, incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), 0, incomingItem.getQuantityOut()));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
 			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-				
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
 			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-				
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
 			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-				
-			}
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 		}
 		//passed an unknown item type
 		return false;

@@ -136,8 +136,8 @@
 							</tr>
 							
 							<tr>
-								<td><s:textfield readOnly="readOnly" label="Quantity Per Record:" name="os.quantityPerRecord"/></td>
-								<td><s:textfield disabled="%{forWhat}" label="Quantity Per Count:" name="os.quantityPerPhysicalCount"/></td>
+								<td><s:textfield readOnly="readOnly" label="Quantity Per Record:" name="os.warehouse.quantityPerRecord"/></td>
+								<td><s:textfield disabled="%{forWhat}" label="Quantity Per Count:" name="os.warehouse.quantityPerPhysicalCount"/></td>
 							</tr>
 						</table>
 			</div>

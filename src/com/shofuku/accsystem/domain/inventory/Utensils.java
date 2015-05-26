@@ -24,10 +24,9 @@ public class Utensils implements Serializable{
 	private String isVattable;
 	private double quantityIn;
 	private double quantityOut;
-	private double quantityPerRecord;
-	private double quantityPerPhysicalCount;
 	private ItemPricing itemPricing;
 	private Vat vatDetails;
+	private Warehouse warehouse;
 	
 	
 	public Utensils(){
@@ -93,22 +92,6 @@ public class Utensils implements Serializable{
 		this.unitOfMeasurement = unitOfMeasurement;
 	}
 
-	public double getQuantityPerRecord() {
-		return quantityPerRecord;
-	}
-
-	public void setQuantityPerRecord(double quantityPerRecord) {
-		this.quantityPerRecord = quantityPerRecord;
-	}
-
-	public double getQuantityPerPhysicalCount() {
-		return quantityPerPhysicalCount;
-	}
-
-	public void setQuantityPerPhysicalCount(double quantityPerPhysicalCount) {
-		this.quantityPerPhysicalCount = quantityPerPhysicalCount;
-	}
-
 	public ItemPricing getItemPricing() {
 		return itemPricing;
 	}
@@ -150,6 +133,12 @@ public class Utensils implements Serializable{
 	}
 	public void setIsVattable(String isVattable) {
 		this.isVattable = isVattable;
+	}
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 	
 }
