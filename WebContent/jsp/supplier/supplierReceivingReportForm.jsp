@@ -139,7 +139,8 @@
 						</td>
 					</tr>
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Payment Date:" name="rr.receivingReportPaymentDate"></s:textfield></td>
+						<td>Payment Date: </td>
+						<td><s:date name="rr.receivingReportPaymentDate" format="MMM-dd-yyyy"></s:date></td>
 						<td><s:textfield disabled="%{forWhat}" label="Total Purchases: PHP" name="rr.totalAmount" ></s:textfield></td>
 					</tr>
 				</table>
