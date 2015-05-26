@@ -1651,9 +1651,9 @@ public class POIUtil {
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 		cell.setCellValue(parseNullDouble(rawMat.getQuantityOut()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(rawMat.getQuantityPerRecord()));
+		cell.setCellValue(parseNullDouble(rawMat.getWarehouse().getQuantityPerRecord()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
-		cell.setCellValue(parseNullDouble(rawMat.getQuantityPerPhysicalCount()));
+		cell.setCellValue(parseNullDouble(rawMat.getWarehouse().getQuantityPerPhysicalCount()));
 		cell = row.getCell(col++, Row.CREATE_NULL_AS_BLANK);
 
 	}

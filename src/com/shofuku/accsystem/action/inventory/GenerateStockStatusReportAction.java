@@ -378,7 +378,7 @@ public class GenerateStockStatusReportAction extends ActionSupport {
 					if(rm.getStockStatusDay().equals(endDay)) {
 							String itemCode = rm.getItemCode();
 							ssReport = new StockStatusReport(rm.getItemCode(),rm.getDescription(),rm.getUnitOfMeasurement(),
-									rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),rm.getQuantityPerRecord(),rm.getQuantityPerRecord()*rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,rm.getClassification(),rm.getSubClassification(),SASConstants.RAW_MATERIAL_ABBR);
+									rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),rm.getWarehouse().getQuantityPerRecord(),rm.getWarehouse().getQuantityPerRecord()*rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,rm.getClassification(),rm.getSubClassification(),SASConstants.RAW_MATERIAL_ABBR);
 					}else {
 						continue;
 					}

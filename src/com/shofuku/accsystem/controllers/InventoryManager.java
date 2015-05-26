@@ -21,6 +21,7 @@ import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
+import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 
@@ -126,6 +127,21 @@ public class InventoryManager extends BaseController{
 	 * 
 	 * </p>
 	 */
+	
+	/**
+	 * 
+	 * @param originalItem.quantityPerRecord, quantityIn, quantityOut
+	 * @param session
+	 * @return
+	 */
+	
+	private Warehouse updateItemWarehouseRecord(Warehouse warehouse,String itemCode, double quantityIn, double quantityOut) {
+		warehouse.setLocationCode(inventoryDao.getUser().getLocation());
+		warehouse.setItemCode(itemCode);
+		warehouse.setQuantityPerRecord( (quantityIn + warehouse.getQuantityPerRecord()) - quantityOut);
+		return warehouse;
+	}
+	
 	public boolean updateInventoryItemRecordCountFromOrder(Object object,Session session) {
 				
 		if (object instanceof RawMaterial) {
@@ -133,8 +149,12 @@ public class InventoryManager extends BaseController{
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}			
 			
@@ -195,8 +215,13 @@ public class InventoryManager extends BaseController{
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(incomingItem.getQuantityIn() + originalItem.getQuantityPerRecord());
-				 inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
 			}			
 			
 		}else if (object instanceof FinishedGood) {
@@ -252,9 +277,14 @@ public class InventoryManager extends BaseController{
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
 			if(originalItem != null) {
-				originalItem.setQuantityPerRecord(originalItem.getQuantityPerRecord() - incomingItem.getQuantityOut());
-				inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}			
+				if(originalItem.getWarehouse()!=null) {
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}else {
+					originalItem.setWarehouse(new Warehouse());
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+				}
+				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
+			}	
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;

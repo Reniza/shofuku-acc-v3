@@ -43,4 +43,8 @@ public class FinancialsManager extends BaseController {
 		return financialsDao.getAllTransactionPerAccount(clazz, propertyName, value, session);
 	}
 	
+	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
+		return supplierDao.listAlphabeticalAscByParameter(clazz, parameter,session);
+	}
+	
 }

@@ -12,34 +12,27 @@ public class RawMaterial implements Serializable{
 	private String subClassification;
 	private String template;
 	private String stockStatusDay;
-	
-	public String getStockStatusDay() {
-		return stockStatusDay;
-	}
-	public void setStockStatusDay(String stockStatusDay) {
-		this.stockStatusDay = stockStatusDay;
-	}
+	private Warehouse warehouse;
 	private String description;
 	private String unitOfMeasurement;
+	private double quantityIn;
+	private double quantityOut;
+
 	//START: 2013 - PHASE 3 : PROJECT 4: MARK
 	private String isVattable;
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
-	private double quantityIn;
-	private double quantityOut;
-	private double quantityPerRecord;
-	private double quantityPerPhysicalCount;
+	
+	
 	private ItemPricing itemPricing;
 	
-	public RawMaterial(){
-		
-	}
+	public RawMaterial(){}
+	
 	public RawMaterial(String itemCode,String description,String unitOfMeasurement,ItemPricing itemPricing) {
 		this.itemCode = itemCode;
 		this.description = description;
 		this.unitOfMeasurement = unitOfMeasurement;
 		this.itemPricing = itemPricing;
 	}
-	
 	
 	public RawMaterial(String itemCode, String classification,
 			String subClassification , String template, String description,
@@ -52,6 +45,11 @@ public class RawMaterial implements Serializable{
 		this.unitOfMeasurement = unitOfMeasurement;
 		this.itemPricing = itemPricing;
 	}
+
+	
+	
+	
+	
 	
 	public double getQuantityIn() {
 		return quantityIn;
@@ -93,22 +91,6 @@ public class RawMaterial implements Serializable{
 		this.unitOfMeasurement = unitOfMeasurement;
 	}
 
-	public double getQuantityPerRecord() {
-		return quantityPerRecord;
-	}
-
-	public void setQuantityPerRecord(double quantityPerRecord) {
-		this.quantityPerRecord = quantityPerRecord;
-	}
-
-	public double getQuantityPerPhysicalCount() {
-		return quantityPerPhysicalCount;
-	}
-
-	public void setQuantityPerPhysicalCount(double quantityPerPhysicalCount) {
-		this.quantityPerPhysicalCount = quantityPerPhysicalCount;
-	}
-
 	public ItemPricing getItemPricing() {
 		return itemPricing;
 	}
@@ -142,4 +124,18 @@ public class RawMaterial implements Serializable{
 	}
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
 	
+	public String getStockStatusDay() {
+		return stockStatusDay;
+	}
+	public void setStockStatusDay(String stockStatusDay) {
+		this.stockStatusDay = stockStatusDay;
+	}
+	
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
 }
