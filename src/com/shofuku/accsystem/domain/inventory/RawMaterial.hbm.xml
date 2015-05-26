@@ -21,7 +21,7 @@
 			not-null="false" unique="true" lazy="false" />
 			
 		<many-to-one name="warehouse"
-			class="com.shofuku.accsystem.domain.inventory.Warehouse" column="WAREHOUSE_ID"
+			class="com.shofuku.accsystem.domain.inventory.Warehouse" column="WAREHOUSE_ID" cascade="all"
 			not-null="false" unique="true" lazy="false" />
 
 	</class>

@@ -26,6 +26,7 @@ import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.BaseController;
 import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
+import com.shofuku.accsystem.domain.disbursements.CheckPayments;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.Vat;
@@ -55,6 +56,9 @@ public class FinancialReportsPoiHelper{
 	HSSFCellStyle itemListStyle;
 	HSSFCellStyle headerListStyle;
 	HSSFCellStyle noStyle;
+	
+	//Map for supplier invoice on vat report
+	Map checkVoucherMap;
 
 	private static final Logger logger = Logger
 			.getLogger(FinancialReportsPoiHelper.class);
@@ -452,6 +456,23 @@ public class FinancialReportsPoiHelper{
 			cell = poiUtil.getCurrentCell(currentRow,cellPtr++);
 			cell.setCellStyle(headerListStyle);
 			poiUtil.putCellValue(cell, "VAT AMOUNT");
+			
+			
+			/*
+			 * get supplier invoice details for reference numbers pertaining to check vouchers
+			 */
+			checkVoucherMap = new HashMap();
+			List checkVoucherList = financialsManager.listAlphabeticalAscByParameter(
+					CheckPayments.class, "checkVoucherNumber",session);
+			
+			Iterator itr = checkVoucherList.iterator();
+			if(checkVoucherList!=null) {
+				while(itr.hasNext()) {
+					CheckPayments checkVoucher = (CheckPayments) itr.next();
+					if(checkVoucher.getInvoice().getSupplierInvoiceNo()!=null)
+					checkVoucherMap.put(checkVoucher.getCheckVoucherNumber(), checkVoucher.getInvoice().getSupplierInvoiceNo());
+				}
+			}
 			
 			//populate table
 			insertItem(sheet, rowPtr++, 5, vatDetailsList);
@@ -975,6 +996,7 @@ public class FinancialReportsPoiHelper{
 			List invoiceList = (List)object;
 			Iterator itr = invoiceList.iterator();
 			HSSFRow row=poiUtil.getRow(sheet, currentRow);
+			
 			while(itr.hasNext()) {
 				Vat vatDetails = (Vat)itr.next();
 				
@@ -989,7 +1011,11 @@ public class FinancialReportsPoiHelper{
 				
 				cell = poiUtil.getCurrentCell(row,2);
 				cell.setCellStyle(itemListStyle);
-				poiUtil.putCellValue(cell,parseNullString(vatDetails.getVatReferenceNo()));
+				if(vatDetails.getVatReferenceNo().indexOf("CV-")>-1) {
+					poiUtil.putCellValue(cell,parseNullString((String)checkVoucherMap.get(vatDetails.getVatReferenceNo())));
+				}else {
+					poiUtil.putCellValue(cell,parseNullString(vatDetails.getVatReferenceNo()));
+				}
 				
 				cell = poiUtil.getCurrentCell(row,3);
 				cell.setCellStyle(itemListStyle);
