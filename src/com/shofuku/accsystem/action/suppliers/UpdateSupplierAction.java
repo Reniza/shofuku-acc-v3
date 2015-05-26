@@ -335,6 +335,7 @@ public class UpdateSupplierAction extends ActionSupport{
 								//START: 2013 - PHASE 3 : PROJECT 4: MARK
 								Vat vatDetails = invoice.getVatDetails();
 								vatDetails.setVatReferenceNo(invId);
+								vatDetails.setAmount(invoice.getDebit1Amount());
 								vatDetails.setPayee(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getSupplierName());
 								vatDetails.setOrDate(invoice.getSupplierInvoiceDate());
 								vatDetails.setAddress(invoice.getReceivingReport().getSupplierPurchaseOrder().getSupplier().getCompanyAddress());
