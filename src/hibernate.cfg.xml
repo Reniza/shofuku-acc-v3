@@ -60,6 +60,9 @@
 			<mapping resource="com/shofuku/accsystem/domain/inventory/Utensils.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/OfficeSupplies.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/UnlistedItem.hbm.xml" />
+			
+			<mapping resource="com/shofuku/accsystem/domain/inventory/Warehouse.hbm.xml" />
+			
 			<mapping resource="com/shofuku/accsystem/domain/inventory/FPTS.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/RequisitionForm.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/ReturnSlip.hbm.xml" />

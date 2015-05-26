@@ -78,6 +78,8 @@ public class UpdateSupplierAction extends ActionSupport{
 	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+	InventoryManager inventoryManager =(InventoryManager) actionSession.get("inventoryManager"); 
+	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
 	
 	Vat vatDetails;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
@@ -85,8 +87,6 @@ public class UpdateSupplierAction extends ActionSupport{
 	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
 	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
-	InventoryManager inventoryManager = new InventoryManager();
-	DisbursementManager disbursementManager = new DisbursementManager();
 	
 	
 	InventoryUtil invUtil = new InventoryUtil(actionSession);
@@ -180,9 +180,8 @@ public class UpdateSupplierAction extends ActionSupport{
 						 * Checking and fetching existing return slips
 						 */
 						
-						InventoryManager invManager= new InventoryManager();
 						Session rsSession = getSession();
-						List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rr.getReceivingReportNo(), rsSession);
+						List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rr.getReceivingReportNo(), rsSession);
 						
 						if(returnSlipList.size()>0) {
 							rr.setReturnSlipList(returnSlipList);

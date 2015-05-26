@@ -15,11 +15,13 @@
 		<property name="isVattable" 				type="string" 	column="IS_VATTABLE" />
 		<property name="quantityIn" 				type="double" 	column="QUANTITY_IN" />
 		<property name="quantityOut" 				type="double" 	column="QUANTITY_OUT" />
-		<property name="quantityPerRecord" 			type="double" 	column="QUANTITY_PER_RECORD" />
-		<property name="quantityPerPhysicalCount" 	type="double"	column="QUANTITY_PER_PHYSICAL" />
-
+		
 		<many-to-one name="itemPricing"
 			class="com.shofuku.accsystem.domain.inventory.ItemPricing" column="PRICING_ID"
+			not-null="false" unique="true" lazy="false" />
+			
+		<many-to-one name="warehouse"
+			class="com.shofuku.accsystem.domain.inventory.Warehouse" column="WAREHOUSE_ID"
 			not-null="false" unique="true" lazy="false" />
 
 	</class>
