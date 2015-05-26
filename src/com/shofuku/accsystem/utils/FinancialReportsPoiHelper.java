@@ -469,7 +469,7 @@ public class FinancialReportsPoiHelper{
 			if(checkVoucherList!=null) {
 				while(itr.hasNext()) {
 					CheckPayments checkVoucher = (CheckPayments) itr.next();
-					if(checkVoucher.getInvoice().getSupplierInvoiceNo()!="")
+					if(checkVoucher.getInvoice() != null)
 					checkVoucherMap.put(checkVoucher.getCheckVoucherNumber(), checkVoucher.getInvoice().getSupplierInvoiceNo());
 				}
 			}
