@@ -13,7 +13,6 @@
 		<property name="itemCode" 				type="string" 	column="ITEM_CODE" />
 		<property name="quantityPerRecord" 			type="double" 	column="QUANTITY_PER_RECORD" />
 		<property name="quantityPerPhysicalCount" 	type="double"	column="QUANTITY_PER_PHYSICAL" />
-
-
+		
 	</class>
 </hibernate-mapping>

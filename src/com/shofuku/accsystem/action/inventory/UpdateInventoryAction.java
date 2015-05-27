@@ -30,6 +30,7 @@ import com.shofuku.accsystem.domain.inventory.RequisitionForm;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
+import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -129,6 +130,21 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,rm);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							rm.getClassification(), session);
+					
+					
+					//ADDED FOR WAREHOUSE IMPLEMENTATION
+					
+					//get original warehouses list
+					RawMaterial originalRM = (RawMaterial) inventoryManager.listInventoryByParameter(RawMaterial.class, "itemCode",
+							this.getRm().getItemCode(),session).get(0);
+					
+					//get warehouse from list and set new physical count value
+					Warehouse incomingWarehouse = inventoryManager.getWarehouseBasedOnUserLocation(rm.getItemCode(),originalRM.getWarehouses());
+					incomingWarehouse.setQuantityPerPhysicalCount(rm.getWarehouse().getQuantityPerPhysicalCount());
+					
+					rm.setWarehouses(inventoryManager.populateNewWarehousesSet(originalRM.getWarehouses() , incomingWarehouse));
+					//END WAREHOUSE IMPLEMENTATION
+					
 					updateResult = inventoryManager.updateInventory(rm,session);
 					
 					if (updateResult== true) {
@@ -156,6 +172,21 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,ti);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							ti.getClassification(), session);
+					
+
+					//ADDED FOR WAREHOUSE IMPLEMENTATION
+					
+					//get original warehouses list
+					TradedItem originalTi = (TradedItem) inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode",
+							this.getTi().getItemCode(),session).get(0);
+					
+					//get warehouse from list and set new physical count value
+					Warehouse incomingWarehouse = inventoryManager.getWarehouseBasedOnUserLocation(ti.getItemCode(),originalTi.getWarehouses());
+					incomingWarehouse.setQuantityPerPhysicalCount(ti.getWarehouse().getQuantityPerPhysicalCount());
+					
+					ti.setWarehouses(inventoryManager.populateNewWarehousesSet(originalTi.getWarehouses() , incomingWarehouse));
+					//END WAREHOUSE IMPLEMENTATION
+					
 					updateResult = inventoryManager.updateInventory(ti,session);
 					
 					if (updateResult== true) {
@@ -209,6 +240,20 @@ public class UpdateInventoryAction extends ActionSupport{
 					processItemPricing(session,u);
 					itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 							u.getClassification(), session);
+					
+					//ADDED FOR WAREHOUSE IMPLEMENTATION
+					
+					//get original warehouses list
+					Utensils originalUtensils = (Utensils) inventoryManager.listInventoryByParameter(Utensils.class, "itemCode",
+							this.getU().getItemCode(),session).get(0);
+					
+					//get warehouse from list and set new physical count value
+					Warehouse incomingWarehouse = inventoryManager.getWarehouseBasedOnUserLocation(u.getItemCode(),originalUtensils.getWarehouses());
+					incomingWarehouse.setQuantityPerPhysicalCount(u.getWarehouse().getQuantityPerPhysicalCount());
+					
+					u.setWarehouses(inventoryManager.populateNewWarehousesSet(originalUtensils.getWarehouses() , incomingWarehouse));
+					//END WAREHOUSE IMPLEMENTATION
+					
 					updateResult = inventoryManager.updateInventory(u,session);
 					
 					if (updateResult== true) {
@@ -256,6 +301,21 @@ public class UpdateInventoryAction extends ActionSupport{
 							loadLookLists();							
 						}
 					}
+					
+					//ADDED FOR WAREHOUSE IMPLEMENTATION
+					
+					//get original warehouses list
+					FinishedGood originalFG = (FinishedGood) inventoryManager.listInventoryByParameter(FinishedGood.class, "productCode",
+							this.getFg().getItemCode(),session).get(0);
+					
+					//get warehouse from list and set new physical count value
+					Warehouse incomingWarehouse = inventoryManager.getWarehouseBasedOnUserLocation(originalFG.getItemCode(),originalFG.getWarehouses());
+					incomingWarehouse.setQuantityPerPhysicalCount(fg.getWarehouse().getQuantityPerPhysicalCount());
+					
+					fg.setWarehouses(inventoryManager.populateNewWarehousesSet(originalFG.getWarehouses() , incomingWarehouse));
+					//END WAREHOUSE IMPLEMENTATION
+					
+					
 					updateResult = inventoryManager.updateInventory(fg,session);
 					if (updateResult== true) {
 						addActionMessage(SASConstants.UPDATED);
@@ -311,6 +371,20 @@ public class UpdateInventoryAction extends ActionSupport{
 				processItemPricing(session,os);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						os.getClassification(), session);
+				
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				
+				//get original warehouses list
+				OfficeSupplies originalOS = (OfficeSupplies) inventoryManager.listInventoryByParameter(OfficeSupplies.class, "itemCode",
+						this.getOs().getItemCode(),session).get(0);
+				
+				//get warehouse from list and set new physical count value
+				Warehouse incomingWarehouse = inventoryManager.getWarehouseBasedOnUserLocation(os.getItemCode(),originalOS.getWarehouses());
+				incomingWarehouse.setQuantityPerPhysicalCount(os.getWarehouse().getQuantityPerPhysicalCount());
+				
+				os.setWarehouses(inventoryManager.populateNewWarehousesSet(originalOS.getWarehouses() , incomingWarehouse));
+				//END WAREHOUSE IMPLEMENTATION
+				
 				updateResult = inventoryManager.updateInventory(os,session);
 				
 				if (updateResult== true) {
@@ -422,11 +496,15 @@ public class UpdateInventoryAction extends ActionSupport{
 	}
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) throws Exception {
-			if(rs.getReturnSlipTo().equalsIgnoreCase("CTOW")){
+			
+		inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails),session);
+		/*
+		if(rs.getReturnSlipTo().equalsIgnoreCase("CTOW")){
 					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
-				}else {
+			}else {
 					inventoryManager.deductInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
 			}
+		*/
 	}
 	private String updateRF() {
 		Session session = getSession();

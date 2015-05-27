@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -142,75 +143,138 @@ public class InventoryManager extends BaseController{
 		return warehouse;
 	}
 	
+	public Warehouse getWarehouseBasedOnUserLocation(String itemCode, Set<Warehouse> warehouses) {
+		Iterator iterator = warehouses.iterator();
+		Warehouse warehouse = new Warehouse();
+		boolean inList = false;
+		while(iterator.hasNext()) {
+			warehouse = (Warehouse) iterator.next();
+			if(warehouse.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation())) {
+				inList=true;
+				break;
+			}
+		}
+		
+		if(!inList) {
+			warehouse.setLocationCode(inventoryDao.getUser().getLocation());
+			warehouse.setItemCode(itemCode);
+		}
+		
+		return warehouse;
+	}
+
+	public Set<Warehouse> populateNewWarehousesSet(Set<Warehouse> oldWarehousesSet,
+			Warehouse updatedWarehouse) {
+		
+		Set<Warehouse> newWarehouses =	new HashSet<Warehouse>(0);
+		if(oldWarehousesSet !=null) {
+			newWarehouses.add(updatedWarehouse);
+			Iterator iterator = oldWarehousesSet.iterator();
+			while(iterator.hasNext()) {
+				Warehouse warehouse = (Warehouse) iterator.next();
+				if(warehouse.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation())) {
+				}else {
+					newWarehouses.add(warehouse);
+				}
+			}
+		}
+		return newWarehouses;
+	}
+	
 	public boolean updateInventoryItemRecordCountFromOrder(Object object,Session session) {
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
-				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
-				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				if(originalItem.getWarehouses() !=null) {
+					originalItem.setWarehouse(getWarehouseBasedOnUserLocation(originalItem.getItemCode(),originalItem.getWarehouses()));
+					originalItem.setWarehouses(populateNewWarehousesSet(
+															originalItem.getWarehouses(),
+															updateItemWarehouseRecord(	originalItem.getWarehouse(), 
+																						originalItem.getItemCode(), 
+																						incomingItem.getQuantityIn(), 
+																						incomingItem.getQuantityOut())));
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}			
+			}
+			//END WAREHOUSE IMPLEMENTATION
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
 			FinishedGood originalItem = (FinishedGood)inventoryDao.load(incomingItem.getProductCode(),FinishedGood.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
-				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
-				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getProductCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				if(originalItem.getWarehouses() !=null) {
+					originalItem.setWarehouse(getWarehouseBasedOnUserLocation(originalItem.getItemCode(),originalItem.getWarehouses()));
+					originalItem.setWarehouses(populateNewWarehousesSet(
+															originalItem.getWarehouses(),
+															updateItemWarehouseRecord(	originalItem.getWarehouse(), 
+																						originalItem.getItemCode(), 
+																						incomingItem.getQuantityIn(), 
+																						incomingItem.getQuantityOut())));
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}			
+			}
+			//END WAREHOUSE IMPLEMENTATION	
 			
 		}else if (object instanceof TradedItem) {
 			TradedItem incomingItem = (TradedItem) object;
 			TradedItem originalItem = (TradedItem)inventoryDao.load(incomingItem.getItemCode(),TradedItem.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
-				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
-				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				if(originalItem.getWarehouses() !=null) {
+					originalItem.setWarehouse(getWarehouseBasedOnUserLocation(originalItem.getItemCode(),originalItem.getWarehouses()));
+					originalItem.setWarehouses(populateNewWarehousesSet(
+															originalItem.getWarehouses(),
+															updateItemWarehouseRecord(	originalItem.getWarehouse(), 
+																						originalItem.getItemCode(), 
+																						incomingItem.getQuantityIn(), 
+																						incomingItem.getQuantityOut())));
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}	
+			}
+			//END WAREHOUSE IMPLEMENTATION
 		}else if (object instanceof Utensils) {
 			Utensils incomingItem = (Utensils) object;
 			Utensils originalItem = (Utensils)inventoryDao.load(incomingItem.getItemCode(),Utensils.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
-				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
-				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				if(originalItem.getWarehouses() !=null) {
+					originalItem.setWarehouse(getWarehouseBasedOnUserLocation(originalItem.getItemCode(),originalItem.getWarehouses()));
+					originalItem.setWarehouses(populateNewWarehousesSet(
+															originalItem.getWarehouses(),
+															updateItemWarehouseRecord(	originalItem.getWarehouse(), 
+																						originalItem.getItemCode(), 
+																						incomingItem.getQuantityIn(), 
+																						incomingItem.getQuantityOut())));
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}	
+			}
+			//END WAREHOUSE IMPLEMENTATION
 		}else if (object instanceof OfficeSupplies) {
 			OfficeSupplies incomingItem = (OfficeSupplies) object;
 			OfficeSupplies originalItem = (OfficeSupplies)inventoryDao.load(incomingItem.getItemCode(),OfficeSupplies.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
-				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
-				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+				if(originalItem.getWarehouses() !=null) {
+					originalItem.setWarehouse(getWarehouseBasedOnUserLocation(originalItem.getItemCode(),originalItem.getWarehouses()));
+					originalItem.setWarehouses(populateNewWarehousesSet(
+															originalItem.getWarehouses(),
+															updateItemWarehouseRecord(	originalItem.getWarehouse(), 
+																						originalItem.getItemCode(), 
+																						incomingItem.getQuantityIn(), 
+																						incomingItem.getQuantityOut())));
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}	
+			}
+			//END WAREHOUSE IMPLEMENTATION
 		}
 
 		//passed an unknown item type
@@ -218,27 +282,45 @@ public class InventoryManager extends BaseController{
 
 	}
 	
+	
+	
+
 	/*
 	 * <p><b>Description:</b> This adds quantity per record to an item based on the quantityIn value of the incoming object.
 	 * Handles RawMaterial,FinishedGood and TradedItem
 	 * 
 	 * </p>
 	 */
-	public boolean addInventoryItem(Object object,Session session) {
+	@Deprecated //see updateInventoryItemRecordCountFromOrder
+	public boolean addsInventoryItem(Object object,Session session) {
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
 				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
 				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), 0));
+					Set<Warehouse> newWarehouses =	new HashSet<Warehouse>(0);
+					if(originalItem.getWarehouses() !=null) {
+						Iterator iterator = originalItem.getWarehouses().iterator();
+						while(iterator.hasNext()) {
+							Warehouse warehouse = (Warehouse) iterator.next();
+							if(warehouse.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation()))
+								originalItem.setWarehouse(warehouse);
+							else
+								newWarehouses.add(warehouse);
+						}
+					}
+					newWarehouses.add(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+					originalItem.setWarehouses(newWarehouses);
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}			
+			}
+			//END WAREHOUSE IMPLEMENTATION
+			
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
@@ -306,21 +388,35 @@ public class InventoryManager extends BaseController{
 	 * 
 	 * </p>
 	 */
-	public boolean deductInventoryItem(Object object,Session session) {
+	@Deprecated //see updateInventoryItemRecordCountFromOrder
+	public boolean deductsInventoryItem(Object object,Session session) {
 				
 		if (object instanceof RawMaterial) {
 			RawMaterial incomingItem = (RawMaterial) object;
 			RawMaterial originalItem = (RawMaterial)inventoryDao.load(incomingItem.getItemCode(),RawMaterial.class);
 			
+			//ADDED FOR WAREHOUSE IMPLEMENTATION
 			if(originalItem != null) {
 				if(originalItem.getWarehouse()!=null) {
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
 				}else {
-					originalItem.setWarehouse(new Warehouse());
-					originalItem.setWarehouse(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), 0, incomingItem.getQuantityOut()));
+					Set<Warehouse> newWarehouses =	new HashSet<Warehouse>(0);
+					if(originalItem.getWarehouses() !=null) {
+						Iterator iterator = originalItem.getWarehouses().iterator();
+						while(iterator.hasNext()) {
+							Warehouse warehouse = (Warehouse) iterator.next();
+							if(warehouse.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation()))
+								originalItem.setWarehouse(warehouse);
+							else
+								newWarehouses.add(warehouse);
+						}
+					}
+					newWarehouses.add(updateItemWarehouseRecord(originalItem.getWarehouse(), originalItem.getItemCode(), incomingItem.getQuantityIn(), incomingItem.getQuantityOut()));
+					originalItem.setWarehouses(newWarehouses);
 				}
 				return inventoryDao.updateInventoryPerRecordCount(originalItem, session);
-			}	
+			}
+			//END WAREHOUSE IMPLEMENTATION
 			
 		}else if (object instanceof FinishedGood) {
 			FinishedGood incomingItem = (FinishedGood) object;
@@ -399,10 +495,6 @@ public class InventoryManager extends BaseController{
 				
 				Item item = getInventoryObject(podetails.getItemCode(),fullItemList);
 				
-				double qtyIn=0;
-				double qtyOut=0;
-				qtyIn=podetails.getQuantityIn();
-				qtyOut=podetails.getQuantityOut();
 				try {
 				if(item.getItemType().equalsIgnoreCase("rawMat")) {
 					object = (RawMaterial)inventoryDao.load(podetails.getItemCode(), RawMaterial.class);	
@@ -427,13 +519,7 @@ public class InventoryManager extends BaseController{
 				}
 				
 				if(object!=null) {
-					if(qtyIn>0) {
-						addInventoryItem(object, session);
-					}
-					
-					if(qtyOut>0) {
-						deductInventoryItem(object, session);
-					}
+					updateInventoryItemRecordCountFromOrder(object, session);
 				}
 				}catch(NullPointerException npe) {
 					//catch unlisted Items null pointer on inventory update
@@ -457,7 +543,7 @@ public class InventoryManager extends BaseController{
 		return itemFound;
 	}
 
-	public Object determineItemTypeFromPoDetails(PurchaseOrderDetails poDetails) {
+	public Object setQinAndQoutBasedOnItemType(PurchaseOrderDetails poDetails) {
 		Object object= null;
 		object = (RawMaterial)inventoryDao.load(poDetails.getItemCode(), RawMaterial.class);
 		if(object!=null) {

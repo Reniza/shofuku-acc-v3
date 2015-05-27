@@ -30,6 +30,7 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
+import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -221,7 +222,11 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				rawMat = (RawMaterial) inventoryManager.listInventoryByParameter(RawMaterial.class, "itemCode",
 						this.getRm().getItemCode(),session).get(0);
 				
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				rawMat.setWarehouse(inventoryManager.getWarehouseBasedOnUserLocation(rawMat.getItemCode(),rawMat.getWarehouses()));
+				//END WAREHOUSE IMPLEMENTATION
 				this.setRm(rawMat);
+				
 				
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						rm.getClassification(), session);
@@ -232,7 +237,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				TradedItem ti = new TradedItem();
 				ti = (TradedItem) inventoryManager.listInventoryByParameter(TradedItem.class, "itemCode",
 						this.getTi().getItemCode(),session).get(0);
-				
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				ti.setWarehouse(inventoryManager.getWarehouseBasedOnUserLocation(ti.getItemCode(),ti.getWarehouses()));
+				//END WAREHOUSE IMPLEMENTATION
 				this.setTi(ti);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						ti.getClassification(), session);
@@ -242,6 +249,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				u = (Utensils) inventoryManager.listInventoryByParameter(Utensils.class, "itemCode",
 						this.getU().getItemCode(),session).get(0);
 				
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				u.setWarehouse(inventoryManager.getWarehouseBasedOnUserLocation(u.getItemCode(),u.getWarehouses()));
+				//END WAREHOUSE IMPLEMENTATION
 				this.setU(u);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						u.getClassification(), session);
@@ -250,7 +260,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				OfficeSupplies os = new OfficeSupplies();
 				os = (OfficeSupplies) inventoryManager.listInventoryByParameter(OfficeSupplies.class, "itemCode",
 						this.getOs().getItemCode(),session).get(0);
-				
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				os.setWarehouse(inventoryManager.getWarehouseBasedOnUserLocation(os.getItemCode(),os.getWarehouses()));
+				//END WAREHOUSE IMPLEMENTATION
 				this.setOs(os);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						os.getClassification(), session);
@@ -259,7 +271,6 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				UnlistedItem unl = new UnlistedItem();
 				unl = (UnlistedItem) inventoryManager.listInventoryByParameterLike(UnlistedItem.class, "description",
 						this.getUnl().getDescription(),session).get(0);
-				
 				this.setUnl(unl);
 				//itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 				//		ti.getClassification(), session);
@@ -433,6 +444,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					ingredients.add(ingredient);
 				}
 				itemCodeList = inventoryManager.loadItemListFromRawAndFin(session);
+				//ADDED FOR WAREHOUSE IMPLEMENTATION
+				finGood.setWarehouse(inventoryManager.getWarehouseBasedOnUserLocation(finGood.getItemCode(),finGood.getWarehouses()));
+				//END WAREHOUSE IMPLEMENTATION
 				this.setFg(finGood);
 				itemSubClassificationList = lookupManager.listItemByClassification(InventoryClassification.class, "classification", 
 						fg.getClassification(), session);

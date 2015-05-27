@@ -26,8 +26,6 @@
 		<property name="yields" type="double" column="YIELDS" />
 		<property name="markUp" type="double" column="MARK_UP" />
 		
-		<property name="isShared" column="IS_SHARED" type="string" not-null="false"/>
-		
 		<many-to-one name="itemPricing"
 			class="com.shofuku.accsystem.domain.inventory.ItemPricing" column="PRICING_ID"
 			not-null="false" unique="true" lazy="false" />
@@ -39,11 +37,11 @@
 				class="com.shofuku.accsystem.domain.inventory.Ingredient" />
 		</set>
 		
+		<set name="warehouses" table="t300_ITEM_X_WAREHOUSE" cascade="all" lazy="false">
+			<key column="FINISHED_PRODUCT_ITEM_CODE" />
+			<many-to-many lazy="false" column="id" unique="true"
+				class="com.shofuku.accsystem.domain.inventory.Warehouse" />
+		</set>
 		
-		<many-to-one name="warehouse"
-		class="com.shofuku.accsystem.domain.inventory.Warehouse" column="WAREHOUSE_ID" cascade="all"
-		not-null="false" unique="true" lazy="false" />
-			
-			
 	</class>
 </hibernate-mapping>

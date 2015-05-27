@@ -61,6 +61,7 @@
 			<mapping resource="com/shofuku/accsystem/domain/inventory/OfficeSupplies.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/UnlistedItem.hbm.xml" />
 			
+			<mapping resource="com/shofuku/accsystem/domain/inventory/Item.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/inventory/Warehouse.hbm.xml" />
 			
 			<mapping resource="com/shofuku/accsystem/domain/inventory/FPTS.hbm.xml" />

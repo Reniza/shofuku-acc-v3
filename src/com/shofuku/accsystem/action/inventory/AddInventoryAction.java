@@ -35,6 +35,7 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
+import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
@@ -176,13 +177,6 @@ public class AddInventoryAction extends ActionSupport {
 
 				if (validateRawMat()) {
 				} else {
-					//getListOfAllItems(getSubModule());
-//					List itemsList = new ArrayList();
-//					List<RawMaterial> rawMatList = null;
-//					rawMatList = manager.listInventoryByParameter(
-//							RawMaterial.class, "itemCode", getRm()
-//									.getItemCode(), session);
-//				
 					if (isExistingInAllItems(getRm().getItemCode())) {
 						addActionMessage(SASConstants.EXISTS);
 					} else {
@@ -194,6 +188,13 @@ public class AddInventoryAction extends ActionSupport {
 								loadLookLists();
 							}
 						processItemPricing(session, rm);
+						
+						//ADDED FOR WAREHOUSE IMPLEMENTATION
+						rm.getWarehouse().setItemCode(rm.getItemCode());
+						rm.getWarehouse().setLocationCode(inventoryManager.getUser().getLocation());
+						rm.setWarehouses(inventoryManager.populateNewWarehousesSet(new HashSet<Warehouse>(0) , rm.getWarehouse()));
+						//END WAREHOUSE IMPLEMENTATION
+						
 						addResult = inventoryManager.addInventoryObject(rm, session);
 
 						if (addResult == true) {
@@ -210,10 +211,6 @@ public class AddInventoryAction extends ActionSupport {
 				
 				if (validateTradedItems()) {
 				} else {
-//					List<TradedItem> tradedItemsList = null;
-//					tradedItemsList = manager.listInventoryByParameter(
-//							TradedItem.class, "itemCode", getTi()
-//									.getItemCode(), session);
 					if (isExistingInAllItems(getTi()
 							.getItemCode())) {
 						addActionMessage(SASConstants.EXISTS);
@@ -677,6 +674,9 @@ public class AddInventoryAction extends ActionSupport {
 	}
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) {
+		inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails),session);
+		inventoryManager.commitChanges(session);
+/*		
 			if(rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_CUSTOMER_TO_WAREHOUSE) || rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_PRODUCTION_TO_WAREHOUSE)){
 					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
 					inventoryManager.commitChanges(session);
@@ -685,6 +685,7 @@ public class AddInventoryAction extends ActionSupport {
 					inventoryManager.commitChanges(session);
 			}else {
 			}
+			*/
 			
 	}
 

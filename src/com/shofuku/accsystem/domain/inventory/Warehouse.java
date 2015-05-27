@@ -12,7 +12,6 @@ public class Warehouse implements Serializable{
 	
 	
 	private int id;
-	
 	private String locationCode;
 	private String itemCode;
 	private double quantityPerRecord;
@@ -48,5 +47,4 @@ public class Warehouse implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-
 }

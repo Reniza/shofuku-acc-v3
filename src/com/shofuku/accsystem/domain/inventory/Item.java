@@ -1,6 +1,8 @@
 package com.shofuku.accsystem.domain.inventory;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Item  implements Serializable{
 	
@@ -8,6 +10,19 @@ public class Item  implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 6945630721070450867L;
+	private int id;
+	private String itemCode;
+	private String description;
+	private String unitOfMeasurement;
+	private String classification;
+	private String subClassification;
+	private String itemType;
+	private String isVattable;
+	private double customerStockLevel;
+
+	private Warehouse warehouse;
+	private Set<Warehouse> warehouses = 
+			new HashSet<Warehouse>(0);
 	
 	public Item() {
 		
@@ -20,12 +35,9 @@ public class Item  implements Serializable{
 		this.unitOfMeasurement = unitOfMeasurement;
 		this.classification = classification;
 		this.subClassification = subClassification;
-		//START: 2013 - PHASE 3 : PROJECT 4: MARK
 		this.isVattable = isVattable;
-		//END: 2013 - PHASE 3 : PROJECT 4: MARK
 	}
 
-	//START: 2015 - PHASE 3a - stock level per customer
 	public Item(String itemCode, String description, String unitOfMeasurement,
 			String classification, String subClassification,String isVattable,double customerStockLevel) {
 		this.itemCode = itemCode;
@@ -37,23 +49,13 @@ public class Item  implements Serializable{
 		this.customerStockLevel = customerStockLevel;
 		
 	}
-	//END: 2015 - PHASE 3a - stock level per customer
 
-	private String itemCode;
-	private String description;
-	private String unitOfMeasurement;
-	private String classification;
-	private String subClassification;
-	private String itemType;
-	//START: 2013 - PHASE 3 : PROJECT 4: MARK
-	private String isVattable;
-	//END: 2013 - PHASE 3 : PROJECT 4: MARK
+
 	
-	//START: 2015 - PHASE 3a - stock level per customer
-		private double customerStockLevel;
-		//END: 2015 - PHASE 3a - stock level per customer
-		
-
+	/*
+	 * getters setters
+	 */
+	
 	public String getItemCode() {
 		return itemCode;
 	}
@@ -107,5 +109,29 @@ public class Item  implements Serializable{
 		this.customerStockLevel = customerStockLevel;
 	}
 	//END: 2015 - PHASE 3a - stock level per customer
+
+	public Set<Warehouse> getWarehouses() {
+		return warehouses;
+	}
+
+	public void setWarehouses(Set<Warehouse> warehouses) {
+		this.warehouses = warehouses;
+	}
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 }
