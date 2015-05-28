@@ -13,6 +13,7 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -35,7 +36,7 @@ import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class AddSupplierAction extends ActionSupport {
+public class AddSupplierAction extends ActionSupport implements Preparable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger
@@ -43,18 +44,44 @@ public class AddSupplierAction extends ActionSupport {
 
 	private static final Logger logger2 = logger.getRootLogger();
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
-
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
 	
-	
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
+	Map actionSession;
+	UserAccount user;
 
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	FinancialsManager financialsManager;	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(poDetailsHelper!=null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}
+		if(poDetailsHelperToCompare!=null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}
+		
+	}
+	
 	private String forWhat;
 	private String forWhatDisplay;
 	private String subModule;
@@ -70,13 +97,13 @@ public class AddSupplierAction extends ActionSupport {
 	List purchaseOrderNoList;
 	List supplierNoList;
 	List receivingReportNoList;
+	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 	List accountProfileCodeList;
 	List<Transaction> transactionList;
 	List<Transaction> transactions;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 
 	private Session getSession() {
@@ -122,11 +149,6 @@ public class AddSupplierAction extends ActionSupport {
 	
 	public String execute() throws Exception {
 		Session session = getSession();
-		//TODO: try login here
-		/*
-		Map actionSession = ActionContext.getContext().getSession();
-		Object data = (Object) actionSession.get("user");
-		*/
 		
 		try {
 			boolean addResult = false;
@@ -274,6 +296,7 @@ public class AddSupplierAction extends ActionSupport {
 										.persistNewSetElements(session);
 								invoice.setPurchaseOrderDetails(podetailSet);
 								//2014 - ITEM COLORING
+								poDetailsHelper.setActionSession(actionSession);
 			 					poDetailsHelper.generateItemTypesForExistingItems(session);
 
 							}
@@ -573,8 +596,6 @@ public class AddSupplierAction extends ActionSupport {
 		return errorFound;
 	}
 
-	PurchaseOrderDetailHelper poDetailsHelper;
-
 	public PurchaseOrderDetailHelper getPoDetailsHelper() {
 		return poDetailsHelper;
 	}
@@ -582,8 +603,6 @@ public class AddSupplierAction extends ActionSupport {
 	public void setPoDetailsHelper(PurchaseOrderDetailHelper poDetailsHelper) {
 		this.poDetailsHelper = poDetailsHelper;
 	}
-
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 
 	public PurchaseOrderDetailHelper getPoDetailsHelperToCompare() {
 		return poDetailsHelperToCompare;

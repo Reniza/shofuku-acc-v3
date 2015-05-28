@@ -60,7 +60,7 @@ public class RecordCountHelper {
 		}catch(Exception e){
 			maxCount=1;
 		}
-		return "S"+firstLetter+maxCount;
+		return manager.getUser().getLocation()+"-"+"S"+firstLetter+maxCount;
 		} catch (Exception e) {
 			return "";
 		} finally {
@@ -82,7 +82,7 @@ public class RecordCountHelper {
 		}
 		prefix = prefix + count;
 		
-		return prefix;
+		return manager.getUser().getLocation()+"-"+prefix;
 		} catch (Exception e) {
 			return "";
 		} finally {

@@ -148,9 +148,10 @@ public class InventoryManager extends BaseController{
 		Warehouse warehouse = new Warehouse();
 		boolean inList = false;
 		while(iterator.hasNext()) {
-			warehouse = (Warehouse) iterator.next();
-			if(warehouse.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation())) {
+			Warehouse tempWH = (Warehouse) iterator.next();
+			if(tempWH.getLocationCode().equalsIgnoreCase(inventoryDao.getUser().getLocation())) {
 				inList=true;
+				warehouse=tempWH;
 				break;
 			}
 		}

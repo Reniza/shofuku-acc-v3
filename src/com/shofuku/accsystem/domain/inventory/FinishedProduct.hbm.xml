@@ -15,6 +15,8 @@
 		<property name="unitOfMeasurement" type="string" column="UNIT_OF_MEASUREMENT" />
 		<property name="isVattable" 				type="string" 	column="IS_VATTABLE" />
 		
+		<property name="isShared" 				type="string" 	column="IS_SHARED" />
+		
 		<property name="quantityIn" type="double" column="QUANTITY_IN" />
 		
 		<property name="quantityOut" type="double" column="QUANTITY_OUT" />

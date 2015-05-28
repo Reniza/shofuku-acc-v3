@@ -1,7 +1,5 @@
 package com.shofuku.accsystem.action.customer;
 
-
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +9,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
@@ -26,12 +25,38 @@ import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditCustomerAction extends ActionSupport {
+public class EditCustomerAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
+	 
+	Map actionSession;
+	UserAccount user;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	CustomerManager customerManager;
+	
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+		
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager= (InventoryManager) actionSession.get("inventoryManager");
+		customerManager = (CustomerManager) actionSession.get("customerManager");		
+		
+		if(poDetailsHelper!=null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}
+		if(poDetailsHelperToCompare!=null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}
+	}
 
 	private String customerModule;
 	private String forWhat;
@@ -45,22 +70,14 @@ public class EditCustomerAction extends ActionSupport {
 	List deliveryReceiptNoList;
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-			List accountProfileCodeList;
-			List<Transaction> transactionList;
-			List<Transaction> transactions;
-			Iterator itr;
-			//END 2013 - PHASE 3 : PROJECT 1: MARK  
+	List accountProfileCodeList;
+	List<Transaction> transactionList;
+	List<Transaction> transactions;
+	Iterator itr;
+	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-	
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	InventoryManager inventoryManager= (InventoryManager) actionSession.get("inventoryManager");
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 		
-@Deprecated
 	public String loadCustomerPO() {
 	Session session = getSession();
 	try{
@@ -89,7 +106,6 @@ public class EditCustomerAction extends ActionSupport {
 		}
 	}
 	}
-@Deprecated	
 	public String loadCustomerDR() {
 	Session session = getSession();
 	try{	

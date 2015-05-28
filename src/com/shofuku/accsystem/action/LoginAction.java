@@ -88,6 +88,7 @@ public class LoginAction extends ActionSupport {
 			InventoryManager inventoryManager 		= new InventoryManager(); 
 			LookupManager lookupManager = new LookupManager();
 			ReceiptsManager receiptsManager = new ReceiptsManager();
+			SecurityManager securityManager = new SecurityManager();
 			
 			SupplierManager supplierManager = new SupplierManager ();
 			TransactionManager transactionMananger = new TransactionManager();
@@ -101,6 +102,7 @@ public class LoginAction extends ActionSupport {
 			inventoryManager.setUser(user);
 			lookupManager.setUser(user);
 			receiptsManager.setUser(user);
+			securityManager.setUser(user);
 			supplierManager.setUser(user);
 			transactionMananger.setUser(user);
 			
@@ -114,6 +116,7 @@ public class LoginAction extends ActionSupport {
 			sess.put("inventoryManager",inventoryManager);
 			sess.put("lookupManager", lookupManager);
 			sess.put("receiptsManager",receiptsManager);
+			sess.put("securityManager", securityManager);
 			sess.put("supplierManager",supplierManager);
 			sess.put("transactionManager",transactionMananger);
 			
@@ -125,6 +128,7 @@ public class LoginAction extends ActionSupport {
 			inventoryManager.initializeDaos();
 			lookupManager.initializeDaos();
 			receiptsManager.initializeDaos();
+			securityManager.initializeDaos();
 			supplierManager.initializeDaos();
 			transactionMananger.initializeDaos();
 

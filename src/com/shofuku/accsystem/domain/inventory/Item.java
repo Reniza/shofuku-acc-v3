@@ -18,6 +18,8 @@ public class Item  implements Serializable{
 	private String subClassification;
 	private String itemType;
 	private String isVattable;
+	private String isShared;
+	
 	private double customerStockLevel;
 
 	private Warehouse warehouse;
@@ -132,6 +134,14 @@ public class Item  implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getIsShared() {
+		return isShared;
+	}
+
+	public void setIsShared(String isShared) {
+		this.isShared = isShared;
 	}
 	
 }
