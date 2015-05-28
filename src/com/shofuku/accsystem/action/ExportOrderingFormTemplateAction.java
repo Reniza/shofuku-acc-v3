@@ -23,6 +23,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
@@ -35,49 +36,102 @@ import com.shofuku.accsystem.domain.customers.CustomerStockLevel;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
 import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
+import com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails;
 import com.shofuku.accsystem.domain.inventory.RawMaterial;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.POIUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class ExportOrderingFormTemplateAction extends ActionSupport  {
+public class ExportOrderingFormTemplateAction extends ActionSupport implements Preparable {
 
 	private static final long serialVersionUID = -8557620697888911805L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
 
-	private static final Logger logger = Logger
-			.getLogger(ExportOrderingFormTemplateAction.class);
+	InventoryUtil inventoryUtil;
+	AccountEntryProfileUtil accountEntryUtil;
+	POIUtil poiUtil;
+	
+	SupplierManager supplierManager;
+	CustomerManager customerManager;
+	InventoryManager inventoryManager; 
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+
+	PurchaseOrderDetails orderDetails;
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsGrouped;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+
+	// add other managers for other modules Manager()
+	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryUtil = new InventoryUtil(actionSession);
+		accountEntryUtil = new AccountEntryProfileUtil(actionSession);
+		poiUtil = new POIUtil(actionSession);
+		
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		if(poDetailsGrouped==null) {
+			poDetailsGrouped = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsGrouped.setActionSession(actionSession);
+		}
+		
+	}
 	
 	InputStream excelStream;
 	String contentDisposition;
-	POIUtil poiUtil = new POIUtil(actionSession);
 	
 	String orderingFormType;
-	
 	Customer customer;
 	List customerNoList;
 	
-	
-	
-	
-	// add other managers for other modules Manager()
-	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
-	InventoryManager inventoryManager		= (InventoryManager) 	actionSession.get("inventoryManager");
-	
 	HashMap<String,HashMap<String,ArrayList<Item>>> itemMap = new HashMap<String,HashMap<String,ArrayList<Item>>>(); 
+	
+	private static final Logger logger = Logger
+			.getLogger(ExportOrderingFormTemplateAction.class);
 	
 	@Override
 	public String execute() throws Exception {
 
 		Session session = getSession();
-		
-		
 		
 		//GET INVENTORY LIST PER CLASSIFICATION (WET/DRY/OFFICE)
 		itemMap = getAllItemList(session);
@@ -92,7 +146,6 @@ public class ExportOrderingFormTemplateAction extends ActionSupport  {
 	public String listCustomer(){
 		Session session = getSession();
 		customerNoList = customerManager.listAllCustomerNo(session);
-		//customerNoList.add(0, "none");
 		
 		return "listCustomer";
 		

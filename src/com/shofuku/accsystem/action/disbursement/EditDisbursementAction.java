@@ -13,6 +13,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.LookupManager;
@@ -31,16 +32,33 @@ import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditDisbursementAction extends ActionSupport {
+public class EditDisbursementAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
-	
+
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		
+	}
 	private String subModule;
 	private String forWhat;
 	private String forWhatDisplay;
@@ -54,11 +72,6 @@ public class EditDisbursementAction extends ActionSupport {
 	CashPayment cp;
 	CheckPayments chp;
 	
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
 
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
@@ -66,7 +79,6 @@ public class EditDisbursementAction extends ActionSupport {
 		List<Transaction> transactions;
 		Iterator itr;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
-
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

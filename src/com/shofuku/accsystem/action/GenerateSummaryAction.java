@@ -11,6 +11,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.LookupManager;
@@ -29,27 +30,41 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
-public class GenerateSummaryAction extends ActionSupport {
+public class GenerateSummaryAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 5247219508332414659L;
 	
+
+	Map actionSession;
+	UserAccount user;
+
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	SupplierManager supplierManager;
+	CustomerManager customerManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+	ReportAndSummaryManager reportAndSummaryManager;
+	ReceiptsManager receiptsManager;
+
+	// add other managers for other modules Manager()
+	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+		receiptsManager			= (ReceiptsManager) actionSession.get("receiptsManager");
+		
+	}
 	
 	InputStream excelStream;
 	String contentDisposition;
 	String isFormatReport;
-	
-	
-	public String getIsFormatReport() {
-		return isFormatReport;
-	}
-
-	public void setIsFormatReport(String isFormatReport) {
-		this.isFormatReport = isFormatReport;
-	}
-
 	String documentFormat = "xls";
 	String dateFrom;
 	String dateTo;
@@ -74,21 +89,10 @@ public class GenerateSummaryAction extends ActionSupport {
 	
 
 	boolean byRef = false;
-	
 	boolean itemsSoldReport = false;
 	boolean itemsPurchasedReport = false;
 	boolean soaReport = false;
 	boolean isInventorySummaryReport=false;
-
-	// add other managers for other modules Manager()
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
-	SupplierManager supplierManager = (SupplierManager)actionSession.get("supplierManager"); 
-	
-	
 
 	private void getModuleAndSubmodule() {
 
@@ -519,6 +523,12 @@ public class GenerateSummaryAction extends ActionSupport {
 	public void setPettyCashSearchType(String pettyCashSearchType) {
 		this.pettyCashSearchType = pettyCashSearchType;
 	}
-	
+	public String getIsFormatReport() {
+		return isFormatReport;
+	}
+
+	public void setIsFormatReport(String isFormatReport) {
+		this.isFormatReport = isFormatReport;
+	}
 	
 }

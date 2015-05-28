@@ -75,8 +75,6 @@ public class EditCustomerAction extends ActionSupport implements Preparable{
 	List<Transaction> transactions;
 	Iterator itr;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
-	
-	
 		
 	public String loadCustomerPO() {
 	Session session = getSession();

@@ -9,13 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import ognl.enhance.OrderedReturn;
-
 import org.hibernate.Session;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
@@ -28,9 +26,7 @@ import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.disbursements.CheckPayments;
-import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
-//import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
@@ -54,15 +50,8 @@ import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
-//import com.shofuku.accsystem.utils.TransactionUtil;
 
-public class AddOrderDetailsAction extends ActionSupport {
-
-	private static final long serialVersionUID = 1L;
-	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
-
+public class AddOrderDetailsAction extends ActionSupport implements Preparable {
 	/*
 	 * To checklist:
 	 * 
@@ -96,26 +85,69 @@ public class AddOrderDetailsAction extends ActionSupport {
 	 * list ready for table iteration
 	 */
 
-	// add other managers for other modules Manager()
-	SupplierManager supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
-	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
-	InventoryManager inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager 	= (TransactionManager) 	actionSession.get("transactionManager");
-	LookupManager lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	private static final long serialVersionUID = 1L;
+	
+	Map actionSession;
+	UserAccount user;
 
+	InventoryUtil inventoryUtil;
+	AccountEntryProfileUtil accountEntryUtil;
 	
-	
+	SupplierManager supplierManager;
+	CustomerManager customerManager;
+	InventoryManager inventoryManager; 
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+
 	PurchaseOrderDetails orderDetails;
-
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;
 	PurchaseOrderDetailHelper poDetailsGrouped;
 	PurchaseOrderDetailHelper poDetailsHelper;
 	PurchaseOrderDetailHelper poDetailsHelperDraft;
+
+	// add other managers for other modules Manager()
 	
-	InventoryUtil inventoryUtil = new InventoryUtil(actionSession);
-	AccountEntryProfileUtil accountEntryUtil = new AccountEntryProfileUtil(actionSession);
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryUtil = new InventoryUtil(actionSession);
+		accountEntryUtil = new AccountEntryProfileUtil(actionSession);
+		
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		if(poDetailsGrouped==null) {
+			poDetailsGrouped = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsGrouped.setActionSession(actionSession);
+		}
+		
+	}
+	
 	//TransactionUtil transactionUtil = new TransactionUtil();
 
 	private String forWhat;
@@ -128,7 +160,6 @@ public class AddOrderDetailsAction extends ActionSupport {
 	private String fptsId;
 	private String rfId;
 	String rsIdNo;
-	
 	String returnSlipToValue;
 
 	private String custpoid;

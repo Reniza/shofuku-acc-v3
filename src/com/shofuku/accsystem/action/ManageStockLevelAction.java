@@ -16,6 +16,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.domain.customers.Customer;
@@ -25,18 +26,31 @@ import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.POIUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class ManageStockLevelAction extends ActionSupport{
+public class ManageStockLevelAction extends ActionSupport implements Preparable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	POIUtil poiUtil;
 	
+	CustomerManager customerManager;
+	LookupManager lookupManager;
+
 	// add other managers for other modules Manager()
 	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		poiUtil = new POIUtil(actionSession);
+		
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+	}
 	
 	private String fileUpload;
 	Customer customer;
@@ -44,14 +58,8 @@ public class ManageStockLevelAction extends ActionSupport{
 	List stockLevelList;
 	String cusId;
 	
-	POIUtil poiUtil = new POIUtil(actionSession);
 	private String forWhat = "false";
 	private String forWhatDisplay ="edit"; 
-	CustomerManager customerManager;
-
-	private void initializeController() {
-		customerManager = (CustomerManager) 	actionSession.get("customerManager");	
-	}
 	
 	Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -59,7 +67,6 @@ public class ManageStockLevelAction extends ActionSupport{
 
 	public String execute() {
 		Session session = getSession();
-		initializeController();
 		
 		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		Iterator itr = customer.getCustomerStockLevelMap().keySet().iterator();
@@ -78,7 +85,6 @@ public class ManageStockLevelAction extends ActionSupport{
 	
 	public String readStockLevelExcel() {
 		Session session = getSession();
-		initializeController();
 		//customer = this.getCustomer();
 		customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 		
@@ -103,7 +109,6 @@ public class ManageStockLevelAction extends ActionSupport{
 	
 	public String showCustomerProfile() {
 		Session session = getSession();
-		initializeController();
 			customer = (Customer) customerManager.listByParameter(Customer.class, "customerNo", cusId, session).get(0);
 			
 			Map sess = ActionContext.getContext().getSession();
@@ -112,8 +117,6 @@ public class ManageStockLevelAction extends ActionSupport{
 		return "showCustomer";
 		
 	}
-	
-	
 	
 	//getter and setter		
 	public String getFileUpload() {

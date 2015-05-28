@@ -13,6 +13,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -29,26 +30,36 @@ import com.shofuku.accsystem.utils.FinancialReportsPoiHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class GenerateFinancialReportsAction extends ActionSupport {
+public class GenerateFinancialReportsAction extends ActionSupport implements Preparable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5015769544134286832L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	CustomerManager customerManager;
+	AccountEntryManager accountEntryManager;
+	ReportAndSummaryManager reportAndSummaryManager;
+	FinancialsManager financialsManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		
+	}
 
 	private static final Logger logger = Logger
 			.getLogger(ExportSearchResultsHelper.class);
 	
-	//Controllers
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
-
 	//General Variables
 	InputStream excelStream;
 	String contentDisposition;
@@ -64,8 +75,6 @@ public class GenerateFinancialReportsAction extends ActionSupport {
 	//Ledger Account Variables
 	List supplierList;
 	List customerList;
-	
-	
 	
 	/*LEGEND:
 	 * 	01-	Ledger account
