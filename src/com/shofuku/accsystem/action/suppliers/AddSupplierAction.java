@@ -73,11 +73,15 @@ public class AddSupplierAction extends ActionSupport implements Preparable {
 		rch = new RecordCountHelper(actionSession);
 		invUtil = new InventoryUtil(actionSession);
 		
-		if(poDetailsHelper!=null) {
+		if(poDetailsHelper==null) {
 			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
 		}
-		if(poDetailsHelperToCompare!=null) {
+		if(poDetailsHelperToCompare==null) {
 			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
 		}
 		
 	}

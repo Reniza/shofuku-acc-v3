@@ -95,7 +95,6 @@ public class AddSecurityAction extends ActionSupport implements Preparable{
 	}
 	
 	private String addUserRole(Session session) {
-		// TODO Auto-generated method stub
 		boolean addResult = false;
 		
 	if (validateUserRoleAccount()) {
@@ -128,7 +127,6 @@ public class AddSecurityAction extends ActionSupport implements Preparable{
 	}
 
 	private boolean validateUserRoleAccount() {
-		// TODO Auto-generated method stub
 		boolean errorFound = false;
 		
 		if ("".equals(role.getRoleName())) {
