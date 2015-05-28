@@ -25,7 +25,7 @@
 		<property type="double" name="remainingBalance" column="REMAINING_BALANCE" not-null="true" />
 
 
-		<set name="purchaseOrderDetails" table="t602_orders" >
+		<set name="purchaseOrderDetails" table="t602_orders" cascade="all">
 			<key column="SUPPLIER_INVOICE_NO" />
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
@@ -44,5 +44,6 @@
 			lazy="false" />
 		<!--END: 2013 - PHASE 3 : PROJECT 4: MARK-->
 	
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

@@ -25,6 +25,6 @@
          <one-to-many class="com.shofuku.accsystem.domain.customers.CustomerStockLevel"/>
       	</map>
       	
-		
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

@@ -50,13 +50,13 @@ public class DisbursementManager extends BaseController{
 	@SuppressWarnings("rawtypes")
 	public List getDisbursementElementsBetweenDatesByParameter(Date startDate,
 			Date endDate,String className,String parameter,Session session) {
-		return  disbursementDao.getBetweenDates(startDate, endDate,className, parameter,session);
+		return  disbursementDao.getBetweenDatesWithOrderBy(startDate, endDate,className, parameter,session);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public List getDisbursementElementsByDate(Date date,
 			String className,String parameter,Session session) {
-		return  disbursementDao.getBetweenDates(date, date,className, parameter,session);
+		return  disbursementDao.getBetweenDatesWithOrderBy(date, date,className, parameter,session);
 	}
 	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
 			return  disbursementDao.listAlphabeticalAscByParameter(clazz, parameter, session);

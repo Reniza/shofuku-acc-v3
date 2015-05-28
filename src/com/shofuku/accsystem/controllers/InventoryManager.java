@@ -99,7 +99,7 @@ public class InventoryManager extends BaseController{
 	
 	public List getInventoryElementsByDate(Date date,
 			String className,String parameter,Session session) {
-		return  inventoryDao.getBetweenDates(date, date,className, parameter,session);
+		return  inventoryDao.getBetweenDatesWithOrderBy(date, date,className, parameter,session);
 	}
 
 	

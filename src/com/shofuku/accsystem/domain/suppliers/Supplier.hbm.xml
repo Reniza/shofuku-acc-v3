@@ -18,5 +18,7 @@
 		<property name="website" type="string" column="WEBSITE" />
 		<property name="paymentTerm" type="string" column="PAYMENT_TERM" />
 		<property name="tin" type="string" column="TIN" />
+		
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

@@ -29,6 +29,8 @@ public class FPTS implements Serializable{
 	
 	private String transferredBy;
 	private String receivedBy;
+	private String location;
+	
 	private Set<PurchaseOrderDetails> purchaseOrderDetailsTransferred;
 	private Set<PurchaseOrderDetails> purchaseOrderDetailsReceived;
 	
@@ -184,6 +186,14 @@ public class FPTS implements Serializable{
 
 	public void setReturnSlipList(List<ReturnSlip> returnSlipList) {
 		this.returnSlipList = returnSlipList;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 

@@ -28,6 +28,7 @@ public class OROthers implements Serializable {
 	private String bankCheckNo;
 	private double total;
 	private String amountInWords;
+	private String location;
 	//2013 - PHASE 3 : PROJECT 1: MARK
 		private List<Transaction> transactions;
 		public List<Transaction> getTransactions() {
@@ -170,6 +171,12 @@ public class OROthers implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

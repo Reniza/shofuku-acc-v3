@@ -63,7 +63,7 @@ public class AddDisbursementAction extends ActionSupport {
 		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
 		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
 		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
-		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager");
 		
 	}
 	// search parameters

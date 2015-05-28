@@ -19,7 +19,7 @@
 
 		<property type="string" name="checkBox" column="CHECK_BOX" />
 
-		<set name="purchaseOrderDetails" table="t602_orders" >
+		<set name="purchaseOrderDetails" table="t602_orders" cascade="all">
 			<key column="DELIVERY_RECEIPT_NO" />
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
@@ -28,5 +28,6 @@
 		<property type="double" name="totalAmount" column="TOTAL_AMOUNT" />
 		<property type="string" name="preparedBy" column="PREPARED_BY" />
 
+<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

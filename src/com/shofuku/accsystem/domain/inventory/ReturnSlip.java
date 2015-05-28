@@ -24,6 +24,7 @@ public class ReturnSlip implements Serializable{
 	private Memo memo;
 	private Timestamp returnDate;
 	private Set<PurchaseOrderDetails> purchaseOrderDetails;
+	private String location;
 	
 	//2013 - PHASE 3 : PROJECT 1: MARK
 		private List<Transaction> transactions;
@@ -109,6 +110,14 @@ public class ReturnSlip implements Serializable{
 	
 	public ReturnSlip() {
 		
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

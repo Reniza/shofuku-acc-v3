@@ -26,6 +26,7 @@ public class DeliveryReceipt implements Serializable {
 	private Set<PurchaseOrderDetails> purchaseOrderDetails;
 	private String checkBox;
 	private String remarks;
+	private String location;
 	
 	private List<ReturnSlip> returnSlipList;
 
@@ -145,6 +146,14 @@ public class DeliveryReceipt implements Serializable {
 
 	public void setReturnSlipList(List<ReturnSlip> returnSlipList) {
 		this.returnSlipList = returnSlipList;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	

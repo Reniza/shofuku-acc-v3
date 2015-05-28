@@ -43,6 +43,8 @@ public class GenerateFinancialReportsAction extends ActionSupport implements Pre
 	AccountEntryManager accountEntryManager;
 	ReportAndSummaryManager reportAndSummaryManager;
 	FinancialsManager financialsManager;
+	
+	FinancialReportsPoiHelper poiHelper;
 
 	public void prepare() throws Exception {
 		
@@ -53,7 +55,9 @@ public class GenerateFinancialReportsAction extends ActionSupport implements Pre
 		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
 		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
 		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager");
+		
+		poiHelper = new FinancialReportsPoiHelper(actionSession);
 		
 	}
 
@@ -93,7 +97,7 @@ public class GenerateFinancialReportsAction extends ActionSupport implements Pre
 	 * */
 	public String execute() throws Exception{
 		Session session = getSession();
-		FinancialReportsPoiHelper poiHelper = new FinancialReportsPoiHelper(actionSession);
+
 		DateFormatHelper dfh= new DateFormatHelper();
 		ServletContext servletContext = ServletActionContext
 				.getServletContext();
@@ -111,10 +115,6 @@ public class GenerateFinancialReportsAction extends ActionSupport implements Pre
 				//sess.put("user",user.getUserName());
 				//sess.put("role",user.getRole());
 
-				Map actionSession = ActionContext.getContext().getSession();
-				Object data = (Object) actionSession.get("logined");
-				Object data2 = (Object) actionSession.get("context");
-				
 				poiHelper.setReportType(reportType);
 				excelStream = poiHelper.generateLedgerAccountsReport(dateFrom,dateTo,supplierList,customerList, session);
 				filename= SASConstants.LEDGER_REPORTS_FILENAME + dfh.getDateToday();
@@ -170,7 +170,6 @@ public class GenerateFinancialReportsAction extends ActionSupport implements Pre
 						dateFrom, dateTo, subModule,session);
 			}else {
 				 preloadLists(session);
-				 Map actionSession = ActionContext.getContext().getSession();
 				 actionSession.put("logined","true");
 				 actionSession.put("context", new Date());
 				return INPUT;

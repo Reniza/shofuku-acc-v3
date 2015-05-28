@@ -66,7 +66,7 @@ public class UpdateDisbursementAction extends ActionSupport implements Preparabl
 		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
 		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
 		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
-		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager");
 		
 	}
 	private String pcNo;

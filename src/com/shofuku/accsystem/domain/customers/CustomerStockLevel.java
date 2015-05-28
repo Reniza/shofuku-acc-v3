@@ -6,6 +6,10 @@ public class CustomerStockLevel implements Serializable
 
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6590898953277019557L;
 	private int id;
 	private double stockLevel;
 	private String itemCode;

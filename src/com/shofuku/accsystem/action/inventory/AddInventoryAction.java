@@ -586,7 +586,7 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 	private String addFPTS() {
 		Session session = getSession();
 		boolean addResult = false;
-		poDetailsHelperToCompare.setActionSession(actionSession);
+		
 		rfNoList = inventoryManager.listAlphabeticalAscByParameter(RequisitionForm.class, "requisitionNo", session);
 		if (validateFPTS()) {
 		} else {
@@ -594,9 +594,7 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 			rfList = inventoryManager.listInventoryByParameter(RequisitionForm.class, "requisitionNo", getFpts().getRequisitionForm().getRequisitionNo(), session);
 			fpts.setRequisitionForm((RequisitionForm) rfList.get(0));
 			fpts.setPurchaseOrderDetailsReceived(fpts.getRequisitionForm().getPurchaseOrderDetailsOrdered());
-			if (null == poDetailsHelperToCompare) {
-				poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-			}
+
 			poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getRequisitionForm().getPurchaseOrderDetailsOrdered());
 			poDetailsHelperToCompare.generateCommaDelimitedValues();
 			poDetailsHelperToCompare.setOrderDate(fpts.getTransactionDate());
@@ -630,8 +628,7 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 		}else {
 			boolean addResult = false;
 			Session session = getSession();
-			poDetailsHelperToCompare.setActionSession(actionSession);
-			poDetailsHelperDraft.setActionSession(actionSession);
+			
 			poDetailsHelperToCompare.prepareSetAndList();
 			//2014 - ITEM COLORING
 			poDetailsHelperToCompare.generateItemTypesForExistingItems(session);
@@ -1198,7 +1195,7 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 
 	public String newFinishedGood() throws Exception {
 		loadLookLists();
-		RecordCountHelper rch = new RecordCountHelper(actionSession);
+		
 		if (getSubModule().equalsIgnoreCase("rawMat")) {
 			return "rawMat";
 		}else if (getSubModule().equalsIgnoreCase("tradedItems")) {

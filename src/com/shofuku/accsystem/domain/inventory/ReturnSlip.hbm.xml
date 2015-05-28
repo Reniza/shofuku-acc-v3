@@ -17,9 +17,11 @@
 	
 	<many-to-one name="memo"
 			class="com.shofuku.accsystem.domain.inventory.Memo" column="MEMO"
-			not-null="false" unique="false" lazy="false" />
+			not-null="false" unique="false" lazy="false"  cascade="all"/>
 	
-	<set name="purchaseOrderDetails" table="t602_orders" lazy="true">
+	<property name="location" type="string" column="LOCATION" />
+	
+	<set name="purchaseOrderDetails" table="t602_orders" lazy="true" cascade="all">
 			<key column="RETURN_SLIP_NO" not-null="false" />			
 			<many-to-many lazy="false" column="id" unique="true" 
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />

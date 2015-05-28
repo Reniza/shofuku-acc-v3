@@ -18,7 +18,7 @@
 			class="com.shofuku.accsystem.domain.customers.DeliveryReceipt" column="DELIVERY_RECEIPT"
 			not-null="true" unique="true" lazy="false" />
 
-		<set name="purchaseOrderDetails" table="t602_orders" >
+		<set name="purchaseOrderDetails" table="t602_orders" cascade="all">
 			<key column="SALES_INVOICE_NO" />
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
@@ -37,5 +37,7 @@
 			column="VAT_REFERENCE_NO" not-null="true" unique="true"
 			lazy="false" />
 		<!--END: 2013 - PHASE 3 : PROJECT 4: MARK-->
+		
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

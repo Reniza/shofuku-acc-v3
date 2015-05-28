@@ -22,16 +22,18 @@
 			column="REQUISITION_NO" not-null="true" unique="true"
 			lazy="false" />
 		
-		<set name="purchaseOrderDetailsTransferred" table="t602_orders" lazy="true">
+		<set name="purchaseOrderDetailsTransferred" table="t602_orders" lazy="true" cascade="all">
 			<key column="FPTS_NO_T" not-null="false"/>
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
 		</set>
 		
-		<set name="purchaseOrderDetailsReceived" table="t602_orders" lazy="true">
+		<set name="purchaseOrderDetailsReceived" table="t602_orders" lazy="true" cascade="all">
 			<key column="FPTS_NO_R" not-null="false"/>
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
 		</set>
+		
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

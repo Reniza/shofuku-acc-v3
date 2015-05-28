@@ -25,6 +25,9 @@ public class PettyCash implements Serializable {
 	double creditAmount;
 	String referenceNo;
 	boolean isByRef;
+	
+	private String location;
+	
 	//2013 - PHASE 3 : PROJECT 1: MARK
 	private List<Transaction> transactions;
 			
@@ -126,6 +129,12 @@ public class PettyCash implements Serializable {
 	}
 	public void setCreditAmount(double creditAmount) {
 		this.creditAmount = creditAmount;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 

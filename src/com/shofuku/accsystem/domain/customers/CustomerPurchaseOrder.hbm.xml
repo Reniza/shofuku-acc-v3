@@ -27,5 +27,6 @@
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />
 		</set>
 		
+		<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

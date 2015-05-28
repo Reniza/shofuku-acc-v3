@@ -16,6 +16,9 @@
 		<property name="bankName" type="string" column="BANK_NAME" />
 		<property name="bankAccountNo" type="string" column="BANK_ACCOUNT_NO" />
 		<property name="checkRemarks" type="string" column="CHECK_REMARKS" />
+		
+		<property name="location" type="string" column="LOCATION" />
+		
 		<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 		<many-to-one name="vatDetails"
 			class="com.shofuku.accsystem.domain.financials.Vat"

@@ -16,13 +16,14 @@
 		<property type="timestamp" name="dateOfDelivery" column="DATE_OF_DELIVERY" />
 		<property type="string" name="paymentTerm" column="PAYMENT_TERM" />
 		<property type="timestamp" name="paymentDate" column="PAYMENT_DATE" />
+		<property name="location" type="string" column="LOCATION" />
 
 		<many-to-one name="supplier"
 			class="com.shofuku.accsystem.domain.suppliers.Supplier" column="SUPPLIER_ID"
 			not-null="true" unique="true" lazy="false" />
 
 
-		<set name="purchaseOrderDetails" table="t602_orders" >
+		<set name="purchaseOrderDetails" table="t602_orders" cascade="all">
 			<key column="SUPPLIER_PURCHASE_ORDER_NO" />
 			<many-to-many lazy="false" column="id" unique="true"
 				class="com.shofuku.accsystem.domain.inventory.PurchaseOrderDetails" />

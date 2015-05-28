@@ -39,13 +39,13 @@ public class ReceiptsManager extends BaseController{
 	@SuppressWarnings("rawtypes")
 	public List getReceiptElementsBetweenDatesByParameter(Date startDate,
 			Date endDate,String className,String parameter,Session session){
-		return  receiptsDao.getBetweenDates(startDate, endDate,className, parameter,session);
+		return  receiptsDao.getBetweenDatesWithOrderBy(startDate, endDate,className, parameter,session);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public List getReceiptElementsByDate(Date date,
 			String className,String parameter,Session session){
-		return  receiptsDao.getBetweenDates(date, date,className, parameter,session);
+		return  receiptsDao.getBetweenDatesWithOrderBy(date, date,className, parameter,session);
 	}
 	
 	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {

@@ -31,7 +31,7 @@ public class FinancialsManager extends BaseController {
 	
 	public List getVatDetailsBetweenDates(Date startDate, Date endDate, String className,
 			String field,Session session,String orderBy) {
-		return financialsDao.getBetweenDates(startDate, endDate, className, field, session);
+		return financialsDao.getBetweenDatesWithOrderBy(startDate, endDate, className, field, session);
 	}
 	
 	public List getActiveTransactionsBetweenDates(Date startDate, Date endDate, String className,

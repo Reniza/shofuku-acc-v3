@@ -362,7 +362,7 @@ public class ReportAndSummaryManager extends BaseController{
 		baseHibernateDao.setUser(super.getUser());
 		
 		if (subModule.equalsIgnoreCase("Supplier")) {
-			list = baseHibernateDao.listSummaryByLocation(Supplier.class,"supplierName","supplierId",session);
+			list = baseHibernateDao.listAlphabeticalAscByParameter(Supplier.class,"supplierName",session);
 		}else if(subModule.equalsIgnoreCase("Customer")) {
 			list = baseHibernateDao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
 		}else if(subModule.equalsIgnoreCase("RawMaterials")) {

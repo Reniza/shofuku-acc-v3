@@ -25,6 +25,8 @@ public class CashPayment implements Serializable {
 	String creditTitle;
 	double creditAmount;
 	SupplierInvoice invoice;
+	private String location;
+	
 	//2013 - PHASE 3 : PROJECT 1: MARK
 		private List<Transaction> transactions;
 				
@@ -144,6 +146,12 @@ public class CashPayment implements Serializable {
 
 	public void setCreditAmount(double creditAmount) {
 		this.creditAmount = creditAmount;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

@@ -22,6 +22,7 @@ public class CashCheckReceipts implements Serializable {
 	private String bankName;
 	private String bankAccountNo;
 	private String checkRemarks;
+	private String location;
 	
 	//2013 - PHASE 3 : PROJECT 1: MARK
 		private List<Transaction> transactions;
@@ -121,6 +122,14 @@ public class CashCheckReceipts implements Serializable {
 
 	public void setPayee(String payee) {
 		this.payee = payee;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

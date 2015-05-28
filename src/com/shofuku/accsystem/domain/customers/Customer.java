@@ -21,6 +21,7 @@ public class Customer implements Serializable {
 	private String emailAddress;
 	private String website;
 	private String tin;
+	private String location;
 	
 	/*
 	 * v3 adding customer stock level
@@ -138,6 +139,14 @@ public class Customer implements Serializable {
 
 	public void setCustomerStockLevelMap(Map customerStockLevelMap) {
 		this.customerStockLevelMap = customerStockLevelMap;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	

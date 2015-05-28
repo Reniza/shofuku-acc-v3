@@ -12,7 +12,7 @@
 <!-- 			jdbc:mysql://192.168.1.99/shofuku  -->
 				<!-- jdbc:mysql://localhost/shofuku -->
 				<!--192.168.254.105-->
-			jdbc:mysql://192.168.254.102:3306/shofukuv3_corp
+			jdbc:mysql://192.168.254.102:3306/shofukuv3a_corp
 			
 				<!-- jdbc:mysql://192.168.1.32:3306/shofuku_dev  
 			 jdbc:mysql://192.168.0.225:3306/shofukuv3_corp_test
@@ -99,6 +99,8 @@
 			<mapping resource="com/shofuku/accsystem/domain/security/UserAccount.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/security/Role.hbm.xml" />
 			<mapping resource="com/shofuku/accsystem/domain/security/Module.hbm.xml" />
+
+			<mapping resource="com/shofuku/accsystem/utils/RecordCount.hbm.xml" />
 			
 			
 	</session-factory>

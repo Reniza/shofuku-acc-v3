@@ -22,6 +22,7 @@ public class Supplier implements Serializable {
 	private String website;
 	private String paymentTerm;
 	private String tin;
+	private String location;
 	
 	
 	public Supplier() {
@@ -151,5 +152,14 @@ public class Supplier implements Serializable {
 	public void setTin(String tin) {
 		this.tin = tin;
 	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	
 }

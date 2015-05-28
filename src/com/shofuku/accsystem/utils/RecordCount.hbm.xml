@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.shofuku.accsystem.utils.RecordCount"
+		table="t901_record_counts">
+		  
+     <id name="id" type="int" column="id">
+         <generator class="increment"/>
+      </id>
+		<property name="moduleName" type="string" column="MODULE_NAME" />
+		<property name="recordCount" type="string" column="RECORD_COUNT" />
+	</class>
+</hibernate-mapping>

@@ -27,6 +27,8 @@
 		<property type="double" name="check" column="CHECK_AMOUNT" />
 		<property type="string" name="bankCheckNo" column="BANK_CHECK_NO" />
 		<property name="amountInWords" type="string" column="AMOUNT_IN_WORDS" />
+		
+		<property name="location" type="string" column="LOCATION" />
 
 	<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 		<many-to-one name="vatDetails"

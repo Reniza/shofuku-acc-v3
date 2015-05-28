@@ -39,6 +39,7 @@ public class CheckPayments implements Serializable {
 	private double amountToPay;
 	private String isEncashed;
 	private String isPrinted;
+	private String location;
 	
 	//2013 - PHASE 3 : PROJECT 1: MARK
 		private List<Transaction> transactions;
@@ -266,6 +267,12 @@ public class CheckPayments implements Serializable {
 	}
 	public void setChequeDate(Timestamp chequeDate) {
 		this.chequeDate = chequeDate;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

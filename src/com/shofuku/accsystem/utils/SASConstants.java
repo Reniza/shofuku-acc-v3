@@ -503,13 +503,22 @@ public class SASConstants {
 	public final static int IMPORT_COLUMN_DR_UNLISTED_ITEM_DESCRIPTION =16;
 	public final static int IMPORT_COLUMN_DR_ITEM_QUANTITY =17;
 	
+	public static final String DEFAULT_TIN = "000-000-000-000";
 	
 	/**
 	 * USER LOCATIONS
 	 */
 	public static final String LOCATION_MANILA = "MNL";
-	
-	public static final String DEFAULT_TIN = "000-000-000-000";
+	public static final String LOCATION = "location";
+	public static final String ARRAY_CLASS_WITHOUT_LOCATION[] = {
+			"Module.class", "UserAccount.class", "RawMaterials.class",
+			"UnitOfMeasurements.class", "ExpenseClassification.class",
+			"InventoryClassification.class","PaymentClassification.class",
+			"PaymentTerms.class","Remarks.class","SupplierStatus.class",
+			"UnitOfMeasurements.class,CustomerStockLevel.class"
+	};
+	public static final String SHOFUKU_PACKAGE_NAME = "com.shofuku.accsystem.";
+	public static final String ARRAY_PACKAGES_WITHOUT_LOCATION [] = {"utils","helpers","security,financials"};
 
 
 	

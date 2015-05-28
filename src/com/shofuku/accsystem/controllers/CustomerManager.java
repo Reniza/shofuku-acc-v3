@@ -43,12 +43,12 @@ public class CustomerManager extends BaseController{
 
 	public List getCustomerElementsBetweenDatesByParameter(Date startDate,
 			Date endDate, String className, String parameter,Session session) {
-		return customerDao.getBetweenDates(startDate, endDate, className, parameter,session);
+		return customerDao.getBetweenDatesWithOrderBy(startDate, endDate, className, parameter,session);
 	}
 
 	public List getCustomerElementsByDate(Date date, String className,
 			String parameter,Session session) {
-		return customerDao.getBetweenDates(date, date, className, parameter,session);
+		return customerDao.getBetweenDatesWithOrderBy(date, date, className, parameter,session);
 	}
 
 	public List listByParameter(Class clazz, String parameter, String value,Session session) {

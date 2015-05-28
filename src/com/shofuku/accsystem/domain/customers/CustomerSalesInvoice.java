@@ -21,6 +21,7 @@ public class CustomerSalesInvoice implements Serializable{
 	private String address;
 	private String busStyle;
 	private String tin;
+	private String location;
 
 	private DeliveryReceipt deliveryReceipt;
 	private Set<PurchaseOrderDetails> purchaseOrderDetails;
@@ -160,6 +161,14 @@ public class CustomerSalesInvoice implements Serializable{
 
 	public void setReceivedBy(String receivedBy) {
 		this.receivedBy = receivedBy;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

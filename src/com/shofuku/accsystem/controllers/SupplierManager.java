@@ -50,12 +50,12 @@ public class SupplierManager extends BaseController{
 
 	public List getSupplierElementsBetweenDatesByParameter(Date startDate,
 			Date endDate,String className,String parameter,Session session) {
-		return  supplierDao.getBetweenDates(startDate, endDate,className, parameter,session);
+		return  supplierDao.getBetweenDatesWithOrderBy(startDate, endDate,className, parameter,session);
 	}
 	
 	public List getSupplierElementsByDate(Date date,
 			String className,String parameter,Session session) {
-		return  supplierDao.getBetweenDates(date, date,className, parameter,session);
+		return  supplierDao.getBetweenDatesWithOrderBy(date, date,className, parameter,session);
 	}
 
 	public List listSuppliersByParameter(Class clazz,

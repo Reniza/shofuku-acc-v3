@@ -29,6 +29,8 @@ public class ReceivingReport implements Serializable{
 	private List<Transaction> transactions;
 
 	private double totalAmount;
+	private String location;
+	
 	
 	
 	private String preparedBy;
@@ -120,6 +122,14 @@ public class ReceivingReport implements Serializable{
 
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

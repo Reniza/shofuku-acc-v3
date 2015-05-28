@@ -27,6 +27,9 @@
 		<property type="double" name="cash" column="CASH" />
 		<property type="double" name="check" column="CHECK_AMOUNT" />
 		<property type="string" name="bankCheckNo" column="BANK_CHECK_NO" />
+		
+		<property name="location" type="string" column="LOCATION" />
+		
 		<!--START: 2013 - PHASE 3 : PROJECT 4: AZ-->
 		<many-to-one name="vatDetails"
 			class="com.shofuku.accsystem.domain.financials.Vat"

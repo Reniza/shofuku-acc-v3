@@ -21,7 +21,7 @@ public class CustomerPurchaseOrder implements Serializable{
 	private double totalAmount;
 	private String orderedBy;
 	private String approvedBy;
-	
+	private String location;
 
 	public String getCustomerPurchaseOrderId() {
 		return customerPurchaseOrderId;
@@ -102,6 +102,14 @@ public class CustomerPurchaseOrder implements Serializable{
 
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

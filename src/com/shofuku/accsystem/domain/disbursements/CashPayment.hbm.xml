@@ -31,5 +31,6 @@
 			lazy="false" />
 		<!--END: 2013 - PHASE 3 : PROJECT 4: AZ-->
 
+<property name="location" type="string" column="LOCATION" />
 	</class>
 </hibernate-mapping>

@@ -70,7 +70,7 @@ public class UpdateCustomerAction extends ActionSupport implements Preparable{
 		inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
 		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
 		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
-		financialsManager 		= (FinancialsManager)	actionSession.get("financialsManager ");
+		financialsManager 		= (FinancialsManager)	actionSession.get("financialsManager");
 
 		if(poDetailsHelper==null) {
 			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
@@ -385,6 +385,7 @@ public class UpdateCustomerAction extends ActionSupport implements Preparable{
 				return "invoiceUpdated";
 			}
 		} catch (RuntimeException re) {
+			re.printStackTrace();
 			if (getSubModule().equalsIgnoreCase("profile")) {
 				return "profileUpdated";
 			}else if (getSubModule().equalsIgnoreCase("purchaseOrder")) {

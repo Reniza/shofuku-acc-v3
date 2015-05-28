@@ -34,6 +34,8 @@ public class SupplierInvoice implements Serializable{
 	private String preparedBy;
 	private double purchaseOrderDetailsTotalAmount;
 	private double remainingBalance;
+	private String location;
+	
 	
 	//START: 2013 - PHASE 3 : PROJECT 4: MARK
 	private Vat vatDetails;
@@ -195,6 +197,12 @@ public class SupplierInvoice implements Serializable{
 //		this.transactions = transactions;
 //	}
 	//END - 2013 - PHASE 3 : PROJECT 1: MARK
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
 
 }

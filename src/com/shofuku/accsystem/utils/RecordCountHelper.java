@@ -38,7 +38,7 @@ public class RecordCountHelper {
 		}catch(Exception e){
 			maxCount=1;
 		}
-		return "C"+firstLetter+maxCount;
+		return manager.getUser().getLocation()+"-"+"C"+firstLetter+maxCount;
 		} catch (Exception e) {
 			return "";
 		} finally {
@@ -105,7 +105,7 @@ public class RecordCountHelper {
 		if(action.equalsIgnoreCase("add")){
 			count++;
 		}
-			manager.getBaseHibernateDao().getUpdateCount(subModule,count,session);
+			manager.getBaseHibernateDao().updateRecordCounts(subModule,count,session);
 	} catch (Exception e) {
 	} finally {
 		if(session.isOpen()){

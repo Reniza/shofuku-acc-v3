@@ -43,7 +43,8 @@ public class RequisitionForm implements Serializable{
 	private String requistionReceivedBy;
 	
 	private List<ReturnSlip> returnSlipList;
-
+	private String location;
+	
 	private Set<PurchaseOrderDetails> purchaseOrderDetailsOrdered;
 	private Set<PurchaseOrderDetails> purchaseOrderDetailsReceived;
 
@@ -142,6 +143,12 @@ public class RequisitionForm implements Serializable{
 
 	public void setReturnSlipList(List<ReturnSlip> returnSlipList) {
 		this.returnSlipList = returnSlipList;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}	
 	
 }
