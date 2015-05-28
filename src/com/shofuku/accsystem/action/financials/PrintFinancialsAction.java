@@ -7,18 +7,31 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
-public class PrintFinancialsAction extends ActionSupport{
+public class PrintFinancialsAction extends ActionSupport implements Preparable{
 
 private static final long serialVersionUID = 1L;
 
-Map actionSession = ActionContext.getContext().getSession();
-UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+	
+	AccountEntryManager accountEntryManager;
+	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+	
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		
+	}
 	
 	private String accId;
 	private String subModule;
@@ -27,8 +40,6 @@ UserAccount user = (UserAccount) actionSession.get("user");
 	
 	AccountEntryProfile aep;
 	JournalEntryProfile jep;
-	
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 	
 	
 	private Session getSession() {

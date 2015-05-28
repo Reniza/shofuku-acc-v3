@@ -15,6 +15,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
@@ -28,11 +29,25 @@ import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class PrintDisbursementAction  extends ActionSupport{
-private static final long serialVersionUID = 1L;
+public class PrintDisbursementAction  extends ActionSupport implements Preparable{
 
-Map actionSession = ActionContext.getContext().getSession();
-UserAccount user = (UserAccount) actionSession.get("user");
+	private static final long serialVersionUID = 1L;
+
+	Map actionSession;
+	UserAccount user;
+
+	DisbursementManager disbursementManager;
+	ReportAndSummaryManager reportAndSummaryManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+		
+	}
 	
 	private String pcNo;
 	private String cpNo;
@@ -45,9 +60,6 @@ UserAccount user = (UserAccount) actionSession.get("user");
 	private String amount;
 	private String amountInWords;
 	List<PurchaseOrderDetails> orderDetails;
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-	
 	PettyCash pc;
 	CashPayment cp;
 	CheckPayments chp;

@@ -13,6 +13,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -27,22 +28,33 @@ import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
 
-public class AddFinancialsAction extends ActionSupport {
+public class AddFinancialsAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	RecordCountHelper rch;
 	
-	
+	AccountEntryManager accountEntryManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		rch = new RecordCountHelper(actionSession);
+		
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		
+	}
 	private static final Logger logger = Logger
 			.getLogger(AddFinancialsAction.class);
 
 	private static final Logger logger2 = logger.getRootLogger();
 
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
-	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
@@ -81,8 +93,6 @@ public class AddFinancialsAction extends ActionSupport {
 		}
 		
 	}
-
-	
 
 	public String loadParentCode() {
 		Session session = getSession();

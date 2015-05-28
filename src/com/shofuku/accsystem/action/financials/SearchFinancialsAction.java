@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.JournalEntryProfile;
@@ -15,12 +16,23 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchFinancialsAction extends ActionSupport{
+public class SearchFinancialsAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	AccountEntryManager accountEntryManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+	}
 
 	private String financialModule;
 	private String moduleParameter;
@@ -29,7 +41,6 @@ public class SearchFinancialsAction extends ActionSupport{
 	private String clicked;
 	List financialsList;
 
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

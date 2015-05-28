@@ -7,6 +7,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.domain.lookups.ExpenseClassification;
 import com.shofuku.accsystem.domain.lookups.PaymentClassification;
@@ -14,21 +15,30 @@ import com.shofuku.accsystem.domain.lookups.PaymentTerms;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 
-public class LoadLookUpAction extends ActionSupport {
+public class LoadLookUpAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String whatLookUp;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	private static final long serialVersionUID = 1L;
 
-	List classifList;
+	Map actionSession;
+	UserAccount user;
+
+	LookupManager lookupManager;
+
 	// add other managers for other modules Manager()
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
 
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		
+	}
+	
+	private String whatLookUp;
+	List classifList;
+	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}

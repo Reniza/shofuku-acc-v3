@@ -36,13 +36,15 @@ public class AddCustomerAction extends ActionSupport implements Preparable{
 	Map actionSession;
 	UserAccount user;
 	
+	InventoryUtil invUtil;
+	RecordCountHelper rch;
+
 	AccountEntryManager accountEntryManager;
 	TransactionManager transactionManager;
 	InventoryManager inventoryManager;
 	CustomerManager customerManager;
 	FinancialsManager financialsManager;
 	
-	RecordCountHelper rch;
 	PurchaseOrderDetailHelper poDetailsHelper;
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;
 	
@@ -51,13 +53,14 @@ public class AddCustomerAction extends ActionSupport implements Preparable{
 		actionSession = ActionContext.getContext().getSession();
 		user = (UserAccount) actionSession.get("user");
 		
+		invUtil = new InventoryUtil(actionSession);
+		rch = new RecordCountHelper(actionSession);
+		
 		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 		transactionManager = (TransactionManager) actionSession.get("transactionManager");
 		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 		customerManager = (CustomerManager) actionSession.get("customerManager");
 		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-		
-		rch = new RecordCountHelper(actionSession);
 		
 		if(poDetailsHelper==null) {
 			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
@@ -72,9 +75,7 @@ public class AddCustomerAction extends ActionSupport implements Preparable{
 		
 	}
 	
-	
 	private String subModule;
-	
 	Customer customer;
 	CustomerPurchaseOrder custpo;
 	DeliveryReceipt dr;
@@ -94,13 +95,8 @@ public class AddCustomerAction extends ActionSupport implements Preparable{
 	List<Transaction> transactions;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
-
-	
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
-
 	public String newCustomerEntry(){
 		Session session = getSession();
-		customerManager.setUser(user);
 		
 		try {
 			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);			
@@ -141,13 +137,6 @@ public class AddCustomerAction extends ActionSupport implements Preparable{
 	}
 	public String execute() throws Exception{
 		Session session = getSession();
-		financialsManager.setUser(user);
-		accountEntryManager.setUser(user);
-		customerManager.setUser(user);
-		inventoryManager.setUser(user);
-		poDetailsHelper.setActionSession(actionSession);
-		poDetailsHelperToCompare.setActionSession(actionSession);
-		
 		
 		try {
 			boolean addResult = false;

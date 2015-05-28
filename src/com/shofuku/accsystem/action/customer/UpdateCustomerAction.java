@@ -10,6 +10,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -32,17 +33,68 @@ import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class UpdateCustomerAction extends ActionSupport {
+public class UpdateCustomerAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	InventoryUtil inventoryUtil;
+	AccountEntryProfileUtil accountEntryUtil;
 	
-	private String subModule;
+	CustomerManager customerManager;
+	InventoryManager inventoryManager; 
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	FinancialsManager financialsManager;
+
+	PurchaseOrderDetails orderDetails;
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsGrouped;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+
+	// add other managers for other modules Manager()
+	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryUtil = new InventoryUtil(actionSession);
+		accountEntryUtil = new AccountEntryProfileUtil(actionSession);
+		
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		financialsManager 		= (FinancialsManager)	actionSession.get("financialsManager ");
+
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		if(poDetailsGrouped==null) {
+			poDetailsGrouped = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsGrouped.setActionSession(actionSession);
+		}
+		
+	}
+ 	private String subModule;
 	private String cusId;
 	private String custpoid;
 	private String drId;
@@ -55,7 +107,6 @@ public class UpdateCustomerAction extends ActionSupport {
 	DeliveryReceipt dr;
 	CustomerSalesInvoice invoice;
 	
-	
 	List customerNoList;
 	List purchaseOrderNoList;
 	List deliveryReceiptNoList;
@@ -64,20 +115,8 @@ public class UpdateCustomerAction extends ActionSupport {
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 		
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
-	
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
-
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 
 	private Session getSession() {
@@ -85,8 +124,7 @@ public class UpdateCustomerAction extends ActionSupport {
 	}
 	public String execute() throws Exception{
 		Session session = getSession();
-		poDetailsHelper.setActionSession(actionSession);
-		poDetailsHelperToCompare.setActionSession(actionSession);
+
 		try {
 			boolean updateResult = false;
 			accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);	
@@ -222,7 +260,7 @@ public class UpdateCustomerAction extends ActionSupport {
 								DeliveryReceipt.class, "deliveryReceiptNo",drId,session).get(0);
 						PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 						helperOld.generatePODetailsListFromSet(oldCustDr.getPurchaseOrderDetails());
-						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_DR);
+						PurchaseOrderDetailHelper inventoryUpdateRequest = inventoryUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_DR);
 						
 						try {
 							inventoryManager.updateInventoryFromOrders(inventoryUpdateRequest);
@@ -396,7 +434,7 @@ public class UpdateCustomerAction extends ActionSupport {
 				transaction.setAccountEntry(accountEntry);
 				transaction.setTransactionReferenceNumber(referenceNo);
 				transaction.setTransactionType(type);
-				transaction.setTransactionAction(apeUtil.getActionBasedOnType(
+				transaction.setTransactionAction(accountEntryUtil.getActionBasedOnType(
 						accountEntry, type));
 				transaction.setTransactionDate(df.getTimeStampToday());
 				transaction.setIsInUse(SASConstants.TRANSACTION_IN_USE);
@@ -407,8 +445,7 @@ public class UpdateCustomerAction extends ActionSupport {
 		// return transactions;
 	}
 
-	private String getActionBasedOnType(AccountEntryProfile accountEntry,
-			String type) {
+	private String getActionBasedOnType(AccountEntryProfile accountEntry, String type) {
 
 		String action = "";
 

@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.AccountingRules;
@@ -16,7 +17,7 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class UpdateFinancialsAction extends ActionSupport{
+public class UpdateFinancialsAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger
@@ -24,17 +25,20 @@ public class UpdateFinancialsAction extends ActionSupport{
 
 	private static final Logger logger2 = logger.getRootLogger();
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
 
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	String parentCode;
-	
-	private Session getSession() {
-		return HibernateUtil.getSessionFactory().getCurrentSession();
+	Map actionSession;
+	UserAccount user;
+	AccountEntryManager accountEntryManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
 	}
-	
-	// beans
+		
+	String parentCode;
 		private String subModule;
 		private String forWhat;
 		private String forWhatDisplay;
@@ -42,6 +46,10 @@ public class UpdateFinancialsAction extends ActionSupport{
 		
 		AccountEntryProfile aep;
 		JournalEntryProfile jep;
+		
+	private Session getSession() {
+			return HibernateUtil.getSessionFactory().getCurrentSession();
+		}
 	
 	public String execute() throws Exception {
 		Session session = getSession();

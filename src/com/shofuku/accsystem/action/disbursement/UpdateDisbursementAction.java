@@ -14,6 +14,7 @@ import org.hibernate.annotations.Check;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -37,16 +38,37 @@ import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class UpdateDisbursementAction extends ActionSupport {
+public class UpdateDisbursementAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	Map actionSession;
+	UserAccount user;
+
+	AccountEntryProfileUtil accountEntryUtil;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+	FinancialsManager financialsManager;
 	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		accountEntryUtil = new AccountEntryProfileUtil(actionSession);
+		
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		
+	}
 	private String pcNo;
 	private String cpNo;
 	private String chpNo;
@@ -66,16 +88,8 @@ public class UpdateDisbursementAction extends ActionSupport {
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
 	//END 2013 - PHASE 3 : PROJECT 1: AZ  
 		
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	
 	DateFormatHelper df = new DateFormatHelper();
 	
 	PettyCash pc;
@@ -240,7 +254,7 @@ private void updateAccountingEntries(String referenceNo, Session session, String
 				transaction.setAccountEntry(accountEntry);
 				transaction.setTransactionReferenceNumber(referenceNo);
 				transaction.setTransactionType(type);
-				transaction.setTransactionAction(apeUtil.getActionBasedOnType(accountEntry, type));
+				transaction.setTransactionAction(accountEntryUtil.getActionBasedOnType(accountEntry, type));
 				transaction.setTransactionDate(df.getTimeStampToday());
 				transaction.setIsInUse(SASConstants.TRANSACTION_IN_USE);
 				transactions.add(transaction);

@@ -8,30 +8,36 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.ImportOfflineOrdersUtil;
 
-public class ImportOfflineOrdersAction extends ActionSupport {
-	
-	/**
-	 * 
-	 */
+public class ImportOfflineOrdersAction extends ActionSupport implements Preparable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	Map<String,Object> actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	CustomerManager customerManager;
+	InventoryManager inventoryManager; 
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
+	}
 	
 	private String fileUpload;
 	List<String> errorStringList;
 	private String importType;
-	
-	// add other managers for other modules Manager()
-	CustomerManager customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
-	InventoryManager inventoryManager 		= (InventoryManager) 	actionSession.get("inventoryManager"); 
 	
 	public String execute(){
 		

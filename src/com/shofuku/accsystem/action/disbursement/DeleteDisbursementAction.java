@@ -6,6 +6,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
 import com.shofuku.accsystem.domain.disbursements.CheckPayments;
@@ -14,19 +15,24 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class DeleteDisbursementAction extends ActionSupport{
+public class DeleteDisbursementAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
 
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+	Map actionSession;
+	UserAccount user;
+
+	DisbursementManager disbursementManager;
 	
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		
+	}
 	private String subModule;
 	private String pcNo;
 	private String cpNo;

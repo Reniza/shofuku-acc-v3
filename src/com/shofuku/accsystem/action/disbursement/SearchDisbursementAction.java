@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.domain.disbursements.CashPayment;
@@ -17,16 +18,25 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchDisbursementAction extends ActionSupport {
+public class SearchDisbursementAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
 
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	DisbursementManager disbursementManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		
+	}
 	private String subModule;
 	private String moduleParameter;
 	private String moduleParameterValue;
@@ -34,8 +44,6 @@ public class SearchDisbursementAction extends ActionSupport {
 	private String clicked;
 	List disbursementList;
 	
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}

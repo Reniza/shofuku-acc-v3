@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
@@ -19,11 +20,22 @@ import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchCustomerAction extends ActionSupport {
+public class SearchCustomerAction extends ActionSupport implements Preparable{
 
+
+	Map actionSession;
+	UserAccount user;
+
+	CustomerManager customerManager;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
+		
+	}
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger
@@ -38,8 +50,6 @@ public class SearchCustomerAction extends ActionSupport {
 	CustomerSalesInvoice invoice;
 	private String clicked;
 	private String customerModule;
-	
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

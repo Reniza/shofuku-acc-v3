@@ -36,14 +36,36 @@ import com.shofuku.accsystem.utils.SASConstants;
 
 public class AddDisbursementAction extends ActionSupport {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5808746491946120539L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
+	Map actionSession;
+	UserAccount user;
+
+	RecordCountHelper rch;
 	
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	LookupManager lookupManager;
+	DisbursementManager disbursementManager;
+	FinancialsManager financialsManager;
+
+	public void prepare() throws Exception {
+		
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		rch = new RecordCountHelper(actionSession);
+		
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		accountEntryManager		= (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager 		= (TransactionManager) 	actionSession.get("transactionManager");
+		lookupManager 			= (LookupManager) 		actionSession.get("lookupManager");
+		disbursementManager 	= (DisbursementManager) actionSession.get("disbursementManager");
+		financialsManager 		= (FinancialsManager) 	actionSession.get("financialsManager ");
+		
+	}
 	// search parameters
 	private String subModule;
 	private String moduleParameter;
@@ -60,7 +82,6 @@ public class AddDisbursementAction extends ActionSupport {
 	PettyCash pc;
 	CashPayment cp;
 	CheckPayments chp;
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	private String invId;
 
 	List orderDetails;
@@ -72,13 +93,6 @@ public class AddDisbursementAction extends ActionSupport {
 		List<Transaction> transactions;
 		//END 2013 - PHASE 3 : PROJECT 1: MARK 
 	
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager") ;
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager= (TransactionManager) actionSession.get("transactionManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-
 	public String newDisbursementEntry() {
 		Session session = getSession();
 		supplierList = supplierManager.listAlphabeticalAscByParameter(Supplier.class,"supplierName", session);
