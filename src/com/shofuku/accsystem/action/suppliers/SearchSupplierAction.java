@@ -11,7 +11,12 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
+import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
@@ -20,13 +25,28 @@ import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.ExportSearchResultsHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchSupplierAction extends ActionSupport {
+public class SearchSupplierAction extends ActionSupport implements Preparable {
 
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		
+	}
+	
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger
@@ -34,7 +54,6 @@ public class SearchSupplierAction extends ActionSupport {
 	List supplierList;
 	private String clicked;
 
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
 	
 	private String supplierModule;
 	private String moduleParameter;

@@ -28,7 +28,14 @@ import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.ItemPricing;
@@ -39,24 +46,38 @@ import com.shofuku.accsystem.domain.inventory.StockStatus;
 import com.shofuku.accsystem.domain.inventory.StockStatusReport;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.utils.AccountEntryProfileUtil;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateSessionWatcher;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 import com.shofuku.accsystem.utils.StockStatusReportPoiUtil;
 import com.thoughtworks.xstream.XStream;
 
-public class GenerateStockStatusReportAction extends ActionSupport {
+public class GenerateStockStatusReportAction extends ActionSupport implements Preparable {
 
 	private static final long serialVersionUID = 1L;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
 
+	InventoryManager inventoryManager;
 	
-	HibernateSessionWatcher watcher = new HibernateSessionWatcher();
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		
+	}
+	
 	
 	@SuppressWarnings("rawtypes")
 	List stockStatusList;
@@ -73,7 +94,6 @@ public class GenerateStockStatusReportAction extends ActionSupport {
 	@SuppressWarnings("rawtypes")
 	List stockStatusParameterFields;
 	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	InputStream xmlStreamOut;
 	
 	//summary report vars

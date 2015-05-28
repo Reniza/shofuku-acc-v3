@@ -16,7 +16,10 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
+import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
@@ -28,19 +31,61 @@ import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
 
-public class PrintSupplierAction extends ActionSupport{
+public class PrintSupplierAction extends ActionSupport implements Preparable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	FinancialsManager financialsManager;	
+	ReportAndSummaryManager reportAndSummaryManager;
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		
+	}
 	
 	private String subModule;
 	Supplier supplier;
@@ -49,24 +94,14 @@ public class PrintSupplierAction extends ActionSupport{
 	SupplierInvoice invoice;
 	private String forWhat;
 	
-	PurchaseOrderDetailHelper poDetailsHelper;
-	PurchaseOrderDetailHelper poDetailsHelperToCompare;
-	
 
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
 		Iterator itr;
-		//END 2013 - PHASE 3 : PROJECT 1: MARK  
+	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 		
-		//START 2013 - PHASE 3 : PROJECT 1: MARK
-		SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-		AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-		TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-		ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
-		//END 2013 - PHASE 3 : PROJECT 1: MARK  
-	
 	InputStream excelStream;
 	String contentDisposition;
 	String documentFormat = "xls";

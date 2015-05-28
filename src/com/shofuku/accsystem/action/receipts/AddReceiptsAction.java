@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -23,12 +24,36 @@ import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class AddReceiptsAction extends ActionSupport {
+public class AddReceiptsAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	ReceiptsManager receiptsManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	FinancialsManager financialsManager;	
+	DisbursementManager disbursementManager;
+	
+	RecordCountHelper rch;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		
+	}
+	
 
 	private String subModule;
 	private String moduleParameter;
@@ -44,13 +69,6 @@ public class AddReceiptsAction extends ActionSupport {
 		List<Transaction> transactions;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK 
 
-	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
 
 	public String newReceiptEntry() {
 
@@ -171,7 +189,7 @@ public class AddReceiptsAction extends ActionSupport {
 						//START: 2013 - PHASE 3 : PROJECT 4: AZ
 						Vat vatDetails = new Vat();
 						
-						vatDetails.setTinNumber("000-000-000-000");
+						vatDetails.setTinNumber(SASConstants.DEFAULT_TIN);
 						vatDetails.setAmount(ccReceipts.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(ccReceipts.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
@@ -242,18 +260,6 @@ public class AddReceiptsAction extends ActionSupport {
 				 addFieldError("orSales.address",SASConstants.MAXIMUM_LENGTH_200);
 			 }
 		 }
-		// if ("".equals(getOrSales().getBusStyle())){
-		// addFieldError("orSales.busStyle","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrSales().getTin())){
-		// addFieldError("orSales.tin","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrSales().getTheAmountOf())){
-		// addFieldError("orSales.theAmountOf","REQUIRED");
-		// errorFound= true;
-		// }
 		 if ("".equals(getOrSales().getInFullPartialPaymentOf())){
 		 addFieldError("orSales.inFullPartialPaymentOf","REQUIRED");
 		 errorFound= true;
@@ -262,30 +268,6 @@ public class AddReceiptsAction extends ActionSupport {
 		 addFieldError("orSales.salesInvoiceNumber","REQUIRED");
 		 errorFound= true;
 		 }
-		// if (0==(getOrSales().getAmount())){
-		// addFieldError("orSales.amount","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrSales().getCash())){
-		// addFieldError("orSales.cash","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrSales().getCheck())){
-		// addFieldError("orSales.check","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrSales().getBankCheckNo())){
-		// addFieldError("orSales.bankCheckNo","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrSales().getTotal())){
-		// addFieldError("orSales.total","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrSales().getAmountInWords())){
-		// addFieldError("orSales.amountInWords","REQUIRED");
-		// errorFound= true;
-		// }
 		return errorFound;
 	}
 
@@ -315,18 +297,6 @@ public class AddReceiptsAction extends ActionSupport {
 				 addFieldError("orOthers.address",SASConstants.MAXIMUM_LENGTH_200);
 			 }
 		 }
-		// if ("".equals(getOrOthers().getBusStyle())){
-		// addFieldError("orOthers.busStyle","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrOthers().getTin())){
-		// addFieldError("orOthers.tin","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrOthers().getTheAmountOf())){
-		// addFieldError("orOthers.theAmountOf","REQUIRED");
-		// errorFound= true;
-		// }
 		 if ("".equals(getOrOthers().getInFullPartialPaymentOf())){
 		 addFieldError("orOthers.inFullPartialPaymentOf","REQUIRED");
 		 errorFound= true;
@@ -335,30 +305,6 @@ public class AddReceiptsAction extends ActionSupport {
 		 addFieldError("orOthers.salesInvoiceNumber","REQUIRED");
 		 errorFound= true;
 		 }
-		// if (0==(getOrOthers().getAmount())){
-		// addFieldError("orOthers.amount","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrOthers().getCash())){
-		// addFieldError("orOthers.cash","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrOthers().getCheck())){
-		// addFieldError("orOthers.check","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrOthers().getBankCheckNo())){
-		// addFieldError("orOthers.bankCheckNo","REQUIRED");
-		// errorFound= true;
-		// }
-		// if (0==(getOrOthers().getTotal())){
-		// addFieldError("orOthers.total","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getOrOthers().getAmountInWords())){
-		// addFieldError("orOthers.amountInWords","REQUIRED");
-		// errorFound= true;
-		// }
 		return errorFound;
 	}
 
@@ -384,22 +330,6 @@ public class AddReceiptsAction extends ActionSupport {
 		 addFieldError("ccReceipts.amount","REQUIRED");
 		 errorFound= true;
 		 }
-		// if ("".equals(getCcReceipts().getCheckNo())){
-		// addFieldError("ccReceipts.checkNo","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getCcReceipts().getBankName())){
-		// addFieldError("ccReceipts.bankName","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getCcReceipts().getBankAccountNo())){
-		// addFieldError("ccReceipts.bankAccountNo","REQUIRED");
-		// errorFound= true;
-		// }
-		// if ("".equals(getCcReceipts().getCheckRemarks())){
-		// addFieldError("ccReceipts.checkRemarks","REQUIRED");
-		// errorFound= true;
-		// }
 
 		return errorFound;
 

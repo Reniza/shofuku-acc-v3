@@ -10,8 +10,12 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
+import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.SecurityManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
@@ -22,13 +26,26 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.security.Role;
 import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditSecurityAction extends ActionSupport{
+public class EditSecurityAction extends ActionSupport implements Preparable{
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SecurityManager securityManager;
 	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		securityManager = (SecurityManager) actionSession.get("securityManager");
+		
+	}
 	private String securityModule;
 	private String forWhat;
 	private String forWhatDisplay;
@@ -38,7 +55,7 @@ public class EditSecurityAction extends ActionSupport{
 	Role role;
 	
 	List roleList;
-	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
+	
 
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

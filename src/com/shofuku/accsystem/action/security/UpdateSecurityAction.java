@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.SecurityManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.security.Role;
@@ -15,14 +16,27 @@ import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class UpdateSecurityAction extends ActionSupport{
+public class UpdateSecurityAction extends ActionSupport implements Preparable{
 
 	/**
 	 * 
 	 */
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+
 	private static final long serialVersionUID = 934004434406221113L;
+
+	Map actionSession;
+	UserAccount user;
+
+	SecurityManager securityManager;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		securityManager = (SecurityManager) actionSession.get("securityManager");
+		
+	}
 	
 	String subModule;
 	
@@ -34,9 +48,6 @@ public class UpdateSecurityAction extends ActionSupport{
 	private int userRoleId;
 	List roleList = null;
 	String tempPassword;
-	
-	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
-	
 
 	//roles
 	private List modulesNotGrantedList= new ArrayList<>();
@@ -134,14 +145,12 @@ private boolean validateUserAccount() {
 }
 
 public String loadRoleList() {
-	// TODO Auto-generated method stub
 	Session session = getSession();
 	roleList= securityManager.listAlphabeticalAscByParameter(Role.class, "roleName",  session);
 	return "userAccount";
 }
 
 private String updateUserAccount(Session session) {
-	// TODO Auto-generated method stub
 	boolean updateResult = false;
 	user.setUserId(userId);
 	if (validateUserAccount()) {

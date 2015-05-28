@@ -7,8 +7,14 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.OfficeSupplies;
@@ -23,12 +29,37 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class DeleteInventoryAction extends ActionSupport{
+public class DeleteInventoryAction extends ActionSupport implements Preparable{
 
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	InventoryManager inventoryManager;
+	LookupManager lookupManager;
+	PurchaseOrderDetailHelper helperItemsToDelete;
+
+	InventoryUtil invUtil;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		lookupManager = (LookupManager) actionSession.get("lookupManager");
+		
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(helperItemsToDelete==null) {
+			helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			helperItemsToDelete.setActionSession(actionSession);
+		}
+	}
+	
 	
 	private static final long serialVersionUID = 1L;
 	RawMaterial rm;
@@ -47,20 +78,15 @@ public class DeleteInventoryAction extends ActionSupport{
 	private String rfNo;
 	private String rsIdNo;
 	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
+	List itemCodeList;
+	List UOMList;
 	
-	public String getRsIdNo() {
-		return rsIdNo;
-	}
-	public void setRsIdNo(String rsIdNo) {
-		this.rsIdNo = rsIdNo;
-	}
-
 	private String subModule;
+	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
 	}
+	
 	public String execute() throws Exception{
 		Session session = getSession();
 		try {
@@ -185,21 +211,8 @@ public class DeleteInventoryAction extends ActionSupport{
 		}
 	}
 	
-	/*
-	 * this is the part to update inventory
-	 * inventoryManager
-	 * .updateInventoryFromOrders(poDetailsHelper
-	 * ,"rr");
-	 */
-	
-	/*parameters for the changein order
-	 *  1st - old orderDetail helper (for update use only , for add leave it blank)
-	 *  2nd - incoming order
-	 *  3rd - order type to determine if there is an addition or deduction to inventory
-	 */
 	private void updateInventoryCountForDelete(String subModule,String id,Session session) {
 		String orderType = "";
-		PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
 		
 		if (getSubModule().equalsIgnoreCase("fpts")) {
 			orderType = SASConstants.ORDER_TYPE_FPTS;
@@ -214,7 +227,7 @@ public class DeleteInventoryAction extends ActionSupport{
 			ReturnSlip oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",	id,session).get(0);
 			helperItemsToDelete.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
 		}
-		InventoryUtil invUtil = new InventoryUtil(actionSession);
+	
 		PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.updateInventoryCountsForDeletion(helperItemsToDelete , orderType);
 		
 		try {
@@ -225,9 +238,6 @@ public class DeleteInventoryAction extends ActionSupport{
 		}
 		
 	}
-
-	List itemCodeList;
-	List UOMList;
 
 	public String loadLookLists(){
 		Session session = getSession();
@@ -364,6 +374,12 @@ public class DeleteInventoryAction extends ActionSupport{
 	}
 	public void setUnl(UnlistedItem unl) {
 		this.unl = unl;
+	}
+	public String getRsIdNo() {
+		return rsIdNo;
+	}
+	public void setRsIdNo(String rsIdNo) {
+		this.rsIdNo = rsIdNo;
 	}
 	
 		

@@ -10,10 +10,13 @@ import java.util.Set;
 
 
 
+
+
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -37,16 +40,62 @@ import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class UpdateSupplierAction extends ActionSupport{
+public class UpdateSupplierAction extends ActionSupport implements Preparable{
 
 	/**
 	 * 
 	 */
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	FinancialsManager financialsManager;	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	AccountEntryProfileUtil apeUtil;
+
+	DisbursementManager disbursementManager;
+	
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		apeUtil = new AccountEntryProfileUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		
+	}
+	
 	
 	private static final long serialVersionUID = 1L;
 	private String subModule;
@@ -72,24 +121,9 @@ public class UpdateSupplierAction extends ActionSupport{
 	List accountProfileCodeList;
 	List<Transaction> transactionList;
 	List<Transaction> transactions;
-	AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
-	
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	FinancialsManager financialsManager = (FinancialsManager) actionSession.get("financialsManager");
-	InventoryManager inventoryManager =(InventoryManager) actionSession.get("inventoryManager"); 
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	
+
 	Vat vatDetails;
-	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-	
-	
-	
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 	
 	private Session getSession(){

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
@@ -21,15 +22,28 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditReceiptAction extends ActionSupport {
+public class EditReceiptAction extends ActionSupport implements Preparable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	ReceiptsManager receiptsManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	}
+	
 	
 	private String receiptModule;
 	private String forWhat;
@@ -47,9 +61,7 @@ public class EditReceiptAction extends ActionSupport {
 			Iterator itr;
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
-	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	
 
 
 	private Session getSession() {

@@ -12,9 +12,13 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.financials.AccountEntryProfile;
 import com.shofuku.accsystem.domain.financials.Transaction;
@@ -40,15 +44,74 @@ import com.shofuku.accsystem.utils.DoubleConverter;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
 
-public class UpdateInventoryAction extends ActionSupport{
+public class UpdateInventoryAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	InventoryManager inventoryManager;
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	FinancialsManager financialsManager;	
+	LookupManager lookupManager;
+	CustomerManager customerManager;
+	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	AccountEntryProfileUtil apeUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+	PurchaseOrderDetailHelper helperOld;
+	
+	
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		customerManager = (CustomerManager) actionSession.get("customerManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		lookupManager = (LookupManager) actionSession.get("lookupManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		apeUtil = new AccountEntryProfileUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		if(helperOld ==null) {
+			helperOld  = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			helperOld .setActionSession(actionSession);
+		}
+	}
 	
 	private String forWhat;
 	private String forWhatDisplay;
@@ -85,24 +148,12 @@ public class UpdateInventoryAction extends ActionSupport{
 	String tempClassif;
 
 	private boolean otherUOMSelected; 
-	PurchaseOrderDetailHelper poDetailsHelperDraft;	
-
-	
-	PurchaseOrderDetailHelper poDetailsHelperToCompare;
-	PurchaseOrderDetailHelper poDetailsHelper;
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
-		AccountEntryProfileUtil apeUtil = new AccountEntryProfileUtil(actionSession);
 	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
 	DateFormatHelper df = new DateFormatHelper();
 	
 	private Session getSession() {
@@ -400,8 +451,6 @@ public class UpdateInventoryAction extends ActionSupport{
 		//to get if disabled
 		rs.setReturnSlipNo(rsIdNo);
 		Session session = getSession();
-		poDetailsHelperToCompare.setActionSession(actionSession);
-		poDetailsHelperDraft.setActionSession(actionSession);
 		boolean updateResult=false;
 		boolean inventoryUpdateSuccess= false;
 
@@ -439,7 +488,7 @@ public class UpdateInventoryAction extends ActionSupport{
 			ReturnSlip oldRs = new ReturnSlip();
 			oldRs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 					rsIdNo,session).get(0);
-			PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
+			
 			helperOld.generatePODetailsListFromSet(oldRs.getPurchaseOrderDetails());
 			
 			PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelperDraft ,rs.getReturnSlipTo());
@@ -510,7 +559,6 @@ public class UpdateInventoryAction extends ActionSupport{
 		Session session = getSession();
 		rf.setRequisitionNo(rfNo);
 		boolean updateResult;
-		poDetailsHelper.setActionSession(actionSession);
 			/*
 			 * Checking and fetching existing return slips
 			 */
@@ -552,7 +600,6 @@ public class UpdateInventoryAction extends ActionSupport{
 					*/
 					RequisitionForm oldRR = 
 							(RequisitionForm) inventoryManager.listInventoryByParameter(RequisitionForm.class,"requisitionNo", rfNo, session).get(0);
-					PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 					helperOld.generatePODetailsListFromSet(oldRR.getPurchaseOrderDetailsOrdered());
 					try {
 						PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_ORDER_REQUISITION);
@@ -640,7 +687,6 @@ public class UpdateInventoryAction extends ActionSupport{
 				*/
 				
 				FPTS oldFpts = (FPTS) inventoryManager.listInventoryByParameter(FPTS.class,"fptsNo",fptsNo, session).get(0);
-				PurchaseOrderDetailHelper helperOld = new PurchaseOrderDetailHelper(actionSession);
 				helperOld.generatePODetailsListFromSet(oldFpts.getPurchaseOrderDetailsTransferred());
 				try {
 					PurchaseOrderDetailHelper inventoryUpdateRequest = invUtil.getChangeInOrder(helperOld, poDetailsHelper , SASConstants.ORDER_TYPE_FPTS);

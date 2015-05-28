@@ -7,8 +7,12 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
@@ -20,19 +24,42 @@ import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class DeleteSupplierAction extends ActionSupport {
+public class DeleteSupplierAction extends ActionSupport implements Preparable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	InventoryManager inventoryManager;
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
 	
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
+	PurchaseOrderDetailHelper helperItemsToDelete;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		
+		
+		if(helperItemsToDelete==null) {
+			helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			helperItemsToDelete.setActionSession(actionSession);
+		}
+	}
 	
 	private String subModule;
 	private String supId;
@@ -77,23 +104,10 @@ public class DeleteSupplierAction extends ActionSupport {
 				return "poDeleted";
 			} else if (getSubModule().equalsIgnoreCase("receivingReport")) {
 
-				/*
-				 * this is the part to update inventory
-				 * inventoryManager
-				 * .updateInventoryFromOrders(poDetailsHelper
-				 * ,"rr");
-				 */
-				
-				/*parameters for the changein order
-				 *  1st - old orderDetail helper (for update use only , for add leave it blank)
-				 *  2nd - incoming order
-				 *  3rd - order type to determine if there is an addition or deduction to inventory
-				*/
-				InventoryUtil invUtil = new InventoryUtil(actionSession);
 				ReceivingReport orderToDelete = 
 						(ReceivingReport) supplierManager.listSuppliersByParameter(rr.getClass(), "receivingReportNo", 
 								rrId,getSession()).get(0);
-				PurchaseOrderDetailHelper helperItemsToDelete = new PurchaseOrderDetailHelper(actionSession);
+				
 				helperItemsToDelete.generatePODetailsListFromSet(orderToDelete.getPurchaseOrderDetails());
 				String orderType =SASConstants.ORDER_TYPE_RR; 
 				try {

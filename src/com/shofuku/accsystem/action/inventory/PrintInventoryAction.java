@@ -11,8 +11,14 @@ import org.hibernate.Session;
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 
+
+
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
@@ -28,13 +34,50 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 
-public class PrintInventoryAction {
+public class PrintInventoryAction implements Preparable{
+	
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	InventoryManager inventoryManager;
+	LookupManager lookupManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
 	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		lookupManager = (LookupManager) actionSession.get("lookupManager");
+		
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		
+	}
 	
 	RawMaterial rm;
 	FinishedGood fg;
@@ -58,10 +101,6 @@ public class PrintInventoryAction {
 	List<Ingredient> ingredients;
 	List itemCodeList;
 	
-	
-	PurchaseOrderDetailHelper poDetailsHelper;
-	PurchaseOrderDetailHelper poDetailsHelperToCompare;
-	PurchaseOrderDetailHelper poDetailsHelperDraft;
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
@@ -121,15 +160,9 @@ public String execute() throws Exception{
 						FPTS.class, "fptsNo",
 						getFptsNo(),session).get(0);
 				
-				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
-				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelper.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsTransferred());
 				poDetailsHelper.generateCommaDelimitedValues();
 				
@@ -144,15 +177,9 @@ public String execute() throws Exception{
 						RequisitionForm.class, "requisitionNo",
 						getRfNo(),session).get(0);
 				
-				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
-				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelper.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsOrdered());
 				poDetailsHelper.generateCommaDelimitedValues();
 				
@@ -163,7 +190,7 @@ public String execute() throws Exception{
 				ReturnSlip rs = new ReturnSlip();
 				rs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 						this.getRs().getReturnSlipNo(),session).get(0);
-				poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+				
 				poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
 				poDetailsHelperDraft.generateCommaDelimitedValues();
 				
@@ -220,147 +247,147 @@ public String execute() throws Exception{
 		
 	}
 
-public RawMaterial getRm() {
-	return rm;
-}
-
-public void setRm(RawMaterial rm) {
-	this.rm = rm;
-}
-
-public FinishedGood getFg() {
-	return fg;
-}
-
-public void setFg(FinishedGood fg) {
-	this.fg = fg;
-}
-
-public String getProductNo() {
-	return productNo;
-}
-
-public void setProductNo(String productNo) {
-	this.productNo = productNo;
-}
-
-public String getItemNo() {
-	return itemNo;
-}
-
-public void setItemNo(String itemNo) {
-	this.itemNo = itemNo;
-}
-
-public String getSubModule() {
-	return subModule;
-}
-
-public void setSubModule(String subModule) {
-	this.subModule = subModule;
-}
-
-public String getForWhat() {
-	return forWhat;
-}
-
-public void setForWhat(String forWhat) {
-	this.forWhat = forWhat;
-}
-
-public List<Ingredient> getIngredients() {
-	return ingredients;
-}
-
-public void setIngredients(List<Ingredient> ingredients) {
-	this.ingredients = ingredients;
-}
-public TradedItem getTi() {
-	return ti;
-}
-public void setTi(TradedItem ti) {
-	this.ti = ti;
-}
-public FPTS getFpts() {
-	return fpts;
-}
-public void setFpts(FPTS fpts) {
-	this.fpts = fpts;
-}
-public String getFptsNo() {
-	return fptsNo;
-}
-public void setFptsNo(String fptsNo) {
-	this.fptsNo = fptsNo;
-}
-public PurchaseOrderDetailHelper getPoDetailsHelper() {
-	return poDetailsHelper;
-}
-public void setPoDetailsHelper(PurchaseOrderDetailHelper poDetailsHelper) {
-	this.poDetailsHelper = poDetailsHelper;
-}
-public PurchaseOrderDetailHelper getPoDetailsHelperToCompare() {
-	return poDetailsHelperToCompare;
-}
-public void setPoDetailsHelperToCompare(
-		PurchaseOrderDetailHelper poDetailsHelperToCompare) {
-	this.poDetailsHelperToCompare = poDetailsHelperToCompare;
-}
-public RequisitionForm getRf() {
-	return rf;
-}
-public void setRf(RequisitionForm rf) {
-	this.rf = rf;
-}
-public String getRfNo() {
-	return rfNo;
-}
-public void setRfNo(String rfNo) {
-	this.rfNo = rfNo;
-}
-public ReturnSlip getRs() {
-	return rs;
-}
-public void setRs(ReturnSlip rs) {
-	this.rs = rs;
-}
-public String getRsNo() {
-	return rsNo;
-}
-public void setRsNo(String rsNo) {
-	this.rsNo = rsNo;
-}
-public PurchaseOrderDetailHelper getPoDetailsHelperDraft() {
-	return poDetailsHelperDraft;
-}
-public void setPoDetailsHelperDraft(
-		PurchaseOrderDetailHelper poDetailsHelperDraft) {
-	this.poDetailsHelperDraft = poDetailsHelperDraft;
-}
-public List getItemCodeList() {
-	return itemCodeList;
-}
-public void setItemCodeList(List itemCodeList) {
-	this.itemCodeList = itemCodeList;
-}
-public Utensils getU() {
-	return u;
-}
-public void setU(Utensils u) {
-	this.u = u;
-}
-public UnlistedItem getUnl() {
-	return unl;
-}
-public void setUnl(UnlistedItem unl) {
-	this.unl = unl;
-}
-public OfficeSupplies getOs() {
-	return os;
-}
-public void setOs(OfficeSupplies os) {
-	this.os = os;
-}
+	public RawMaterial getRm() {
+		return rm;
+	}
+	
+	public void setRm(RawMaterial rm) {
+		this.rm = rm;
+	}
+	
+	public FinishedGood getFg() {
+		return fg;
+	}
+	
+	public void setFg(FinishedGood fg) {
+		this.fg = fg;
+	}
+	
+	public String getProductNo() {
+		return productNo;
+	}
+	
+	public void setProductNo(String productNo) {
+		this.productNo = productNo;
+	}
+	
+	public String getItemNo() {
+		return itemNo;
+	}
+	
+	public void setItemNo(String itemNo) {
+		this.itemNo = itemNo;
+	}
+	
+	public String getSubModule() {
+		return subModule;
+	}
+	
+	public void setSubModule(String subModule) {
+		this.subModule = subModule;
+	}
+	
+	public String getForWhat() {
+		return forWhat;
+	}
+	
+	public void setForWhat(String forWhat) {
+		this.forWhat = forWhat;
+	}
+	
+	public List<Ingredient> getIngredients() {
+		return ingredients;
+	}
+	
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
+	}
+	public TradedItem getTi() {
+		return ti;
+	}
+	public void setTi(TradedItem ti) {
+		this.ti = ti;
+	}
+	public FPTS getFpts() {
+		return fpts;
+	}
+	public void setFpts(FPTS fpts) {
+		this.fpts = fpts;
+	}
+	public String getFptsNo() {
+		return fptsNo;
+	}
+	public void setFptsNo(String fptsNo) {
+		this.fptsNo = fptsNo;
+	}
+	public PurchaseOrderDetailHelper getPoDetailsHelper() {
+		return poDetailsHelper;
+	}
+	public void setPoDetailsHelper(PurchaseOrderDetailHelper poDetailsHelper) {
+		this.poDetailsHelper = poDetailsHelper;
+	}
+	public PurchaseOrderDetailHelper getPoDetailsHelperToCompare() {
+		return poDetailsHelperToCompare;
+	}
+	public void setPoDetailsHelperToCompare(
+			PurchaseOrderDetailHelper poDetailsHelperToCompare) {
+		this.poDetailsHelperToCompare = poDetailsHelperToCompare;
+	}
+	public RequisitionForm getRf() {
+		return rf;
+	}
+	public void setRf(RequisitionForm rf) {
+		this.rf = rf;
+	}
+	public String getRfNo() {
+		return rfNo;
+	}
+	public void setRfNo(String rfNo) {
+		this.rfNo = rfNo;
+	}
+	public ReturnSlip getRs() {
+		return rs;
+	}
+	public void setRs(ReturnSlip rs) {
+		this.rs = rs;
+	}
+	public String getRsNo() {
+		return rsNo;
+	}
+	public void setRsNo(String rsNo) {
+		this.rsNo = rsNo;
+	}
+	public PurchaseOrderDetailHelper getPoDetailsHelperDraft() {
+		return poDetailsHelperDraft;
+	}
+	public void setPoDetailsHelperDraft(
+			PurchaseOrderDetailHelper poDetailsHelperDraft) {
+		this.poDetailsHelperDraft = poDetailsHelperDraft;
+	}
+	public List getItemCodeList() {
+		return itemCodeList;
+	}
+	public void setItemCodeList(List itemCodeList) {
+		this.itemCodeList = itemCodeList;
+	}
+	public Utensils getU() {
+		return u;
+	}
+	public void setU(Utensils u) {
+		this.u = u;
+	}
+	public UnlistedItem getUnl() {
+		return unl;
+	}
+	public void setUnl(UnlistedItem unl) {
+		this.unl = unl;
+	}
+	public OfficeSupplies getOs() {
+		return os;
+	}
+	public void setOs(OfficeSupplies os) {
+		this.os = os;
+	}
 
 
 }

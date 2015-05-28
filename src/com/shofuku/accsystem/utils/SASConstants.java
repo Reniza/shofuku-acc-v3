@@ -509,6 +509,7 @@ public class SASConstants {
 	 */
 	public static final String LOCATION_MANILA = "MNL";
 	
+	public static final String DEFAULT_TIN = "000-000-000-000";
 
 
 	

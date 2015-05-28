@@ -10,12 +10,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.hibernate.Session;
-import org.hibernate.engine.loading.internal.LoadContexts;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.CustomerManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
@@ -39,10 +40,7 @@ import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
-import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
-import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.DoubleConverter;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
@@ -50,12 +48,63 @@ import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class AddInventoryAction extends ActionSupport {
+public class AddInventoryAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	FinancialsManager financialsManager;	
+	LookupManager lookupManager;
+	CustomerManager customerManager;
+	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		customerManager = (CustomerManager) actionSession.get("customerManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		lookupManager = (LookupManager) actionSession.get("lookupManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		
+	}
+	
+	
 
 	private String subModule;
 	private String forWhat;
@@ -79,14 +128,6 @@ public class AddInventoryAction extends ActionSupport {
 	private String productNo;
 	private String itemNo;
 	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");;
-	CustomerManager customerManager = (CustomerManager) actionSession.get("customerManager");;
-	
-	InventoryUtil invUtil = new InventoryUtil(actionSession);
 
 	Ingredient sangkap;
 	Ingredient returnSlipSearchItem;
@@ -107,11 +148,6 @@ public class AddInventoryAction extends ActionSupport {
 	double actualTotalsOnTable;
 
 	private boolean otherUOMSelected;
-	
-	PurchaseOrderDetailHelper poDetailsHelper;
-	PurchaseOrderDetailHelper poDetailsHelperToCompare;	
-	PurchaseOrderDetailHelper poDetailsHelperDraft;
-	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;

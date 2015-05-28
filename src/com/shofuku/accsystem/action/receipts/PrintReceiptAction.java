@@ -14,8 +14,11 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.controllers.ReportAndSummaryManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
@@ -23,11 +26,25 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class PrintReceiptAction extends ActionSupport{
-private static final long serialVersionUID = 1L;
+public class PrintReceiptAction extends ActionSupport implements Preparable{
 
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	private static final long serialVersionUID = 1L;
+
+	Map actionSession;
+	UserAccount user;
+
+	ReceiptsManager receiptsManager;
+	ReportAndSummaryManager reportAndSummaryManager;
+	
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+		reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
+	}
 	
 	InputStream excelStream;
 	String contentDisposition;
@@ -42,9 +59,6 @@ private static final long serialVersionUID = 1L;
 	ORSales orSales;
 	OROthers orOthers;
 	CashCheckReceipts ccReceipts;
-	
-	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
-	ReportAndSummaryManager reportAndSummaryManager = (ReportAndSummaryManager) actionSession.get("reportAndSummaryManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();

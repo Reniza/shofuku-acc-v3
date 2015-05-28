@@ -9,15 +9,12 @@ import java.util.Set;
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.action.AddOrderDetailsAction;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
-import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
-import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
-import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
@@ -30,21 +27,57 @@ import com.shofuku.accsystem.domain.inventory.ReturnSlip;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
 import com.shofuku.accsystem.domain.inventory.UnlistedItem;
 import com.shofuku.accsystem.domain.inventory.Utensils;
-import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
-import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditInventoryAction extends AddOrderDetailsAction{
+public class EditInventoryAction extends AddOrderDetailsAction implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	InventoryManager inventoryManager;
+	LookupManager lookupManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	PurchaseOrderDetailHelper poDetailsHelperDraft;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		lookupManager = (LookupManager) actionSession.get("lookupManager");
+		
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		if(poDetailsHelperDraft==null) {
+			poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperDraft.setActionSession(actionSession);
+		}
+		
+	}
 	
 	private String subModule;
 	private String forWhat;
@@ -63,52 +96,24 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 	List itemCodeList;
 	
 	//START 2013 - PHASE 3 : PROJECT 1: MARK
-			List accountProfileCodeList;
-			List<Transaction> transactionList;
-			List<Transaction> transactions;
-			Iterator itr;
-			
-			//END 2013 - PHASE 3 : PROJECT 1: MARK 
-
-	InventoryManager inventoryManager=(InventoryManager) actionSession.get("inventoryManager");
-	LookupManager lookupManager = (LookupManager) actionSession.get("lookupManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
+	List accountProfileCodeList;
+	List<Transaction> transactionList;
+	List<Transaction> transactions;
+	Iterator itr;
 	
+	//END 2013 - PHASE 3 : PROJECT 1: MARK 
+
 	
 	String itemCode;
 	String isGeneralSearch;
-	public String getItemCode() {
-		return itemCode;
-	}
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode;
-	}
-	public String getIsGeneralSearch() {
-		return isGeneralSearch;
-	}
-	public void setIsGeneralSearch(String isGeneralSearch) {
-		this.isGeneralSearch = isGeneralSearch;
-	}
+
 	private String requestingModule;
-	PurchaseOrderDetailHelper poDetailsHelper;
-	PurchaseOrderDetailHelper poDetailsHelperToCompare;
 	
 	List UOMList;
-	
 	List itemSubClassificationList;
 	
-	PurchaseOrderDetailHelper poDetailsHelperDraft;
 	private String parentPage;
-	
-	
-	
-	public List getUOMList() {
-		return UOMList;
-	}
-	public void setUOMList(List uOMList) {
-		UOMList = uOMList;
-	}
+
 	private List generateUOMStrings(List uomList){
 		List uomStringsList=new ArrayList();
 		Iterator iterator = uomList.iterator();
@@ -118,6 +123,7 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 		}
 		return uomStringsList;
 	}
+	
 	public String loadLookLists(){
 		Session session = getSession();
 		
@@ -290,15 +296,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					fpts.setReturnSlipList(null);
 				}
 				
-				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
-				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelper.generatePODetailsListFromSet(fpts.getPurchaseOrderDetailsTransferred());
 				poDetailsHelper.generateCommaDelimitedValues();
 			
@@ -343,15 +343,9 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					rf.setReturnSlipList(null);
 				}
 				
-				if(null==poDetailsHelperToCompare) {
-					poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelperToCompare.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsReceived());
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				
-				if(null==poDetailsHelper) {
-					poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-				}
 				poDetailsHelper.generatePODetailsListFromSet(rf.getPurchaseOrderDetailsOrdered());
 				poDetailsHelper.generateCommaDelimitedValues();
 			
@@ -383,7 +377,6 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 				rs = (ReturnSlip) inventoryManager.listInventoryByParameter(ReturnSlip .class, "returnSlipNo",
 						this.getRs().getReturnSlipNo(),session).get(0);
 				
-				poDetailsHelperDraft = new PurchaseOrderDetailHelper(actionSession);
 				poDetailsHelperDraft.generatePODetailsListFromSet(rs.getPurchaseOrderDetails());
 				poDetailsHelperDraft.generateCommaDelimitedValues();
 				
@@ -394,7 +387,6 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 					this.itemCodeList.add(tempDetails.getItemCode());
 				}
 				
-				poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 				poDetailsHelperToCompare.generatePODetailsListFromSet(loadOrdersByReferenceNo(rs));
 				poDetailsHelperToCompare.generateCommaDelimitedValues();
 				//2014 - ITEM COLORING
@@ -630,6 +622,25 @@ public class EditInventoryAction extends AddOrderDetailsAction{
 			}
 			public void setOs(OfficeSupplies os) {
 				this.os = os;
+			}
+			public String getItemCode() {
+				return itemCode;
+			}
+			public void setItemCode(String itemCode) {
+				this.itemCode = itemCode;
+			}
+			public String getIsGeneralSearch() {
+				return isGeneralSearch;
+			}
+			public void setIsGeneralSearch(String isGeneralSearch) {
+				this.isGeneralSearch = isGeneralSearch;
+			}
+			
+			public List getUOMList() {
+				return UOMList;
+			}
+			public void setUOMList(List uOMList) {
+				UOMList = uOMList;
 			}
 			
 

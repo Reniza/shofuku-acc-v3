@@ -278,9 +278,6 @@ public class AddSupplierAction extends ActionSupport implements Preparable {
 						} else {
 							invoice.setReceivingReport((ReceivingReport) supInv2
 									.get(0));
-							if (null == poDetailsHelperToCompare) {
-								poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-							}
 							poDetailsHelperToCompare
 									.generatePODetailsListFromSet(invoice
 											.getReceivingReport()
@@ -300,7 +297,6 @@ public class AddSupplierAction extends ActionSupport implements Preparable {
 										.persistNewSetElements(session);
 								invoice.setPurchaseOrderDetails(podetailSet);
 								//2014 - ITEM COLORING
-								poDetailsHelper.setActionSession(actionSession);
 			 					poDetailsHelper.generateItemTypesForExistingItems(session);
 
 							}
@@ -396,9 +392,6 @@ public class AddSupplierAction extends ActionSupport implements Preparable {
 				} else {
 					rr.setSupplierPurchaseOrder((SupplierPurchaseOrder) supRr2
 							.get(0));
-					if (null == poDetailsHelperToCompare) {
-						poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
-					}
 					poDetailsHelperToCompare
 							.generatePODetailsListFromSet(rr
 									.getSupplierPurchaseOrder()

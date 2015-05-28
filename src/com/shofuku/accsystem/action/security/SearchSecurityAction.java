@@ -13,6 +13,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.SecurityManager;
 import com.shofuku.accsystem.domain.inventory.Ingredient;
 import com.shofuku.accsystem.domain.inventory.TradedItem;
@@ -23,15 +24,26 @@ import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchSecurityAction extends ActionSupport{
+public class SearchSecurityAction extends ActionSupport implements Preparable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5977333283601416207L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SecurityManager securityManager;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		securityManager = (SecurityManager) actionSession.get("securityManager");
+		
+	}
 
 	private String securityModule;
 	private String moduleParameter;
@@ -43,9 +55,7 @@ public class SearchSecurityAction extends ActionSupport{
 	private List modulesGrantedList= new ArrayList<>();
 	
 	private Map modulesGrantedMap;
-	
 
-	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 	UserRoleHelper roleHelper = new UserRoleHelper();
 
 	private Session getSession() {

@@ -10,7 +10,11 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
+import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
+import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.TransactionManager;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
 import com.shofuku.accsystem.domain.inventory.Item;
@@ -24,17 +28,30 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchInventoryAction extends ActionSupport{
+public class SearchInventoryAction extends ActionSupport implements Preparable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1121251364643576096L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	InventoryManager inventoryManager;
+	
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		
+	}
 	
 	private String subModule;
 	private String moduleParameter;
@@ -51,7 +68,6 @@ public class SearchInventoryAction extends ActionSupport{
 	RequisitionForm rf;
 	List<Item> resultList = new ArrayList<Item>();
 	
-	InventoryManager inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 	
 	HashMap<String,HashMap<String,ArrayList<Item>>> itemMap = new HashMap<String,HashMap<String,ArrayList<Item>>>(); 
 	String orderingFormType;

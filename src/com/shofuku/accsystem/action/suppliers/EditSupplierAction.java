@@ -10,8 +10,10 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
+import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
@@ -27,17 +29,59 @@ import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditSupplierAction extends ActionSupport{
+public class EditSupplierAction extends ActionSupport implements Preparable{
 
 	Supplier supplier;
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(EditSupplierAction.class);
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	DisbursementManager disbursementManager;
+	TransactionManager transactionManager;
+	InventoryManager inventoryManager;
+	FinancialsManager financialsManager;	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		
+	}
 	
 	private String supplierModule;
 	private String moduleParameter;
@@ -60,21 +104,11 @@ public class EditSupplierAction extends ActionSupport{
 		Iterator itr;
 		//END 2013 - PHASE 3 : PROJECT 1: MARK  
 
-	PurchaseOrderDetailHelper poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
-	PurchaseOrderDetailHelper poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
 	
 	SupplierInvoice invoice;
 	ReceivingReport rr;
 	CheckPayments chp;
 	SupplierPurchaseOrder po;
-	
-	//START 2013 - PHASE 3 : PROJECT 1: MARK
-	SupplierManager supplierManager = (SupplierManager) actionSession.get("supplierManager");
-	AccountEntryManager accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
-	TransactionManager transactionManager = (TransactionManager) actionSession.get("transactionManager");
-	DisbursementManager disbursementManager = (DisbursementManager) actionSession.get("disbursementManager");
-	
-	//END 2013 - PHASE 3 : PROJECT 1: MARK  
 	
 	
 	DateFormatHelper df = new DateFormatHelper();

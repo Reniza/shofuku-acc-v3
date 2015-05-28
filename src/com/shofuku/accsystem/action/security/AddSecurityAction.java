@@ -35,8 +35,6 @@ public class AddSecurityAction extends ActionSupport implements Preparable{
 	private static final Logger logger = Logger
 			.getLogger(AddSecurityAction.class);
 
-	private static final Logger logger2 = logger.getRootLogger();
-
 	SecurityManager securityManager = (SecurityManager) actionSession.get("securityManager");
 	RecordCountHelper rch = new RecordCountHelper(actionSession);
 	UserRoleHelper roleHelper = new UserRoleHelper();

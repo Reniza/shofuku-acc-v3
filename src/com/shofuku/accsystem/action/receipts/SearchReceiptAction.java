@@ -7,6 +7,7 @@ import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
@@ -16,11 +17,23 @@ import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class SearchReceiptAction extends ActionSupport{
+public class SearchReceiptAction extends ActionSupport implements Preparable{
+	
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
+	Map actionSession;
+	UserAccount user;
+
+	ReceiptsManager receiptsManager;
+	
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+	}
 
 	private String receiptModule;
 	private String moduleParameter;
@@ -31,7 +44,6 @@ public class SearchReceiptAction extends ActionSupport{
 	private String clicked;
 	List receiptList;
 
-	ReceiptsManager receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
 	
 	private Session getSession() {
 		return HibernateUtil.getSessionFactory().getCurrentSession();
