@@ -1,6 +1,5 @@
 package com.shofuku.accsystem.action.disbursement;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.hibernate.annotations.Check;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
@@ -34,7 +33,7 @@ import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class AddDisbursementAction extends ActionSupport {
+public class AddDisbursementAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = -5808746491946120539L;
 	

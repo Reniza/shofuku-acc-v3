@@ -511,11 +511,10 @@ public class SASConstants {
 	public static final String LOCATION_MANILA = "MNL";
 	public static final String LOCATION = "location";
 	public static final String ARRAY_CLASS_WITHOUT_LOCATION[] = {
-			"Module.class", "UserAccount.class", "RawMaterials.class",
-			"UnitOfMeasurements.class", "ExpenseClassification.class",
-			"InventoryClassification.class","PaymentClassification.class",
-			"PaymentTerms.class","Remarks.class","SupplierStatus.class",
-			"UnitOfMeasurements.class,CustomerStockLevel.class"
+			"Module.class", "UserAccount.class", 
+			"RawMaterial.class","FinishedGood.class","TradedItem.class","Utensils.class","OfficeSupplies.class",
+			"UnitOfMeasurements.class", "ExpenseClassification.class","InventoryClassification.class","PaymentClassification.class", "PaymentTerms.class","Remarks.class",
+			"SupplierStatus.class",	"UnitOfMeasurements.class,CustomerStockLevel.class"
 	};
 	public static final String SHOFUKU_PACKAGE_NAME = "com.shofuku.accsystem.";
 	public static final String ARRAY_PACKAGES_WITHOUT_LOCATION [] = {"utils","helpers","security,financials"};
