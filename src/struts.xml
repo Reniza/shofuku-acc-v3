@@ -12,21 +12,45 @@
 	<constant name="struts.ui.theme" value="makyong" />
 	<constant name="struts.ui.templateDir" value="template" />
 
-
+	
+	
+	   
 	<package name="default" extends="struts-default">
+
+
 
 		<!-- Redirect Action -->
 		<result-types>
 			<result-type name="tiles"
 				class="org.apache.struts2.views.tiles.TilesResult" />
 		</result-types>
+		
+		<interceptors>
+		 
+		 <interceptor name="sessionCheckerInterceptor" class="com.shofuku.accsystem.utils.SessionInterceptor" />
+		
+		 <interceptor-stack name="sessionExpirayStack">
+		  <interceptor-ref name="sessionCheckerInterceptor"/>
+		  <interceptor-ref name="defaultStack"/>
+		 </interceptor-stack>
+		 
+		</interceptors>
+		
+		<default-interceptor-ref name="sessionExpirayStack"/>
+
+		<global-results>
+		   <result name="loginRedirect">/jsp/util/loginForm.jsp</result>
+		</global-results>
+
 
 		<!-- LOGIN -->
 
 		<action name="showLoginForm">
 			<result>/jsp/util/loginForm.jsp</result>
 		</action>
+		
 		<action name="login" class="com.shofuku.accsystem.action.LoginAction">
+			<interceptor-ref name="defaultStack"/>
 			<result name="input">/jsp/util/loginForm.jsp</result>
 			<result name="error">/jsp/util/loginForm.jsp</result>
 			<result name="cancel" type="redirect">/jsp/util/loginForm.jsp</result>
@@ -73,6 +97,7 @@
 		<!-- SUPPLIER MODULE -->
 
 		<action name="showSupplierProfileForm">
+		 	<interceptor-ref name="sessionExpirayStack" />
 			<result type="tiles">showSupplierForm.tiles</result>
 		</action>
 
