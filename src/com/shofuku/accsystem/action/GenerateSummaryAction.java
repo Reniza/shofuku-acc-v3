@@ -85,7 +85,7 @@ public class GenerateSummaryAction extends ActionSupport implements Preparable{
 	List cashCheckList;
 	String referenceNo;
 	String pettyCashSearchType;
-	String searchByStatus;
+	String searchByStatus="Y";
 	
 
 	boolean byRef = false;
@@ -274,10 +274,12 @@ public class GenerateSummaryAction extends ActionSupport implements Preparable{
 							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
 						}
-					}else if(isInventorySummaryReport) {
-						excelStream = reportAndSummaryManager.generateInventorySummaryByStatus(servletContext,
-								dateFrom, dateTo, subModule,searchByStatus,session);
-					}else {
+					}
+					else if(isInventorySummaryReport) {
+						excelStream = reportAndSummaryManager.generateSummary(servletContext,
+								dateFrom, dateTo, subModule,session);
+					}
+					else {
 						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo, subModule,session);
 					}

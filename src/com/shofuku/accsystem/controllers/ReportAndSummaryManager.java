@@ -276,13 +276,13 @@ public class ReportAndSummaryManager extends BaseController{
 		return null;
 	}
 	
-	public InputStream generateInventorySummaryByStatus(ServletContext servletContext,
+	/*public InputStream generateInventorySummaryWithActiveStatus(ServletContext servletContext,
 			String dateFrom, String dateTo, String subModule,String searchByStatus,Session session) {
 
 		try {
 			List list = new ArrayList();
 			
-			list= inventoryDao.listInventoryItemsByStatus(subModule,searchByStatus,session);
+			list= inventoryDao.listInventoryItemsWithActiveStatus(subModule,searchByStatus,session);
 			
 			HSSFWorkbook wb = new HSSFWorkbook();
 			wb = initializePoiHelper().generateSummary(servletContext, subModule, list);
@@ -290,15 +290,15 @@ public class ReportAndSummaryManager extends BaseController{
 			wb.write(baos);
 			return new ByteArrayInputStream(baos.toByteArray());
 		} catch (IOException ioex) {
-			logger.debug("generateInventorySummaryByStatus" + ioex.toString());
+			logger.debug("generateInventorySummaryWithActiveStatus" + ioex.toString());
 			ioex.printStackTrace();
 		}catch (NullPointerException npe) {
-			logger.debug("generateInventorySummaryByStatus" + npe.toString());
+			logger.debug("generateInventorySummaryWithActiveStatus" + npe.toString());
 			npe.printStackTrace();
 		}
 
 		return null;
-	}
+	}*/
 	
 	private List setReturnSlipsForEachObj(List list,Session session) {
 		InventoryManager invManager = new InventoryManager();
@@ -366,15 +366,15 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(subModule.equalsIgnoreCase("Customer")) {
 			list = baseHibernateDao.listAlphabeticalAscByParameter(Customer.class,"customerName",session);
 		}else if(subModule.equalsIgnoreCase("RawMaterials")) {
-			list = baseHibernateDao.listAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
+			list = baseHibernateDao.listInventoryAlphabeticalAscByParameter(RawMaterial.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("TradedItems")) {
-			list = baseHibernateDao.listAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
+			list = baseHibernateDao.listInventoryAlphabeticalAscByParameter(TradedItem.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("Utensils")) {
-			list = baseHibernateDao.listAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
+			list = baseHibernateDao.listInventoryAlphabeticalAscByParameter(Utensils.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("OfficeSupplies")) {
-			list = baseHibernateDao.listAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
+			list = baseHibernateDao.listInventoryAlphabeticalAscByParameter(OfficeSupplies.class,"itemCode",session);
 		}else if(subModule.equalsIgnoreCase("FinishedGoods")) {
-			list = baseHibernateDao.listAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
+			list = baseHibernateDao.listInventoryAlphabeticalAscByParameter(FinishedGood.class,"productCode",session);
 		}else if(subModule.equalsIgnoreCase("AccountEntryProfile")) {
 			list = baseHibernateDao.listAlphabeticalAscByParameter(AccountEntryProfile.class,"accountCode",session);
 		}else {
@@ -383,7 +383,7 @@ public class ReportAndSummaryManager extends BaseController{
 		}
 		return list;
 	}
-
+	
 	private List getDataListByDateRange(String dateFrom, String dateTo,
 			String subModule, Session session) {
 		

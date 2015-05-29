@@ -210,7 +210,8 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 				//END: 2015 - PHASE 3a - stock level per customer
 				
 				//START: 2013 - PHASE 3 : PROJECT 4: MARK
-				tempList.add(new Item(rawMaterial.getItemCode(), rawMaterial.getDescription(), rawMaterial.getUnitOfMeasurement(),rawMaterial.getClassification(), rawMaterial.getSubClassification(),rawMaterial.getIsVattable(),tempStockLevelValue));
+				tempList.add(new Item(rawMaterial.getItemCode(), rawMaterial.getDescription(), rawMaterial.getUnitOfMeasurement(),rawMaterial.getClassification(),
+						rawMaterial.getSubClassification(),rawMaterial.getIsVattable(),tempStockLevelValue));
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 				subClassMap.put(rawMaterial.getSubClassification(), tempList);
 				itemMap.put(rawMaterial.getClassification(), subClassMap);
@@ -254,7 +255,8 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 				//END: 2015 - PHASE 3a - stock level per customer
 				
 				//START: 2013 - PHASE 3 : PROJECT 4: MARK
-				tempList.add(new Item(tradedItem.getItemCode(), tradedItem.getDescription(), tradedItem.getUnitOfMeasurement(),tradedItem.getClassification(), tradedItem.getSubClassification(),tradedItem.getIsVattable(),tempStockLevelValue));
+				tempList.add(new Item(tradedItem.getItemCode(), tradedItem.getDescription(), tradedItem.getUnitOfMeasurement(),
+						tradedItem.getClassification(), tradedItem.getSubClassification(),tradedItem.getIsVattable(),tempStockLevelValue));
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 				subClassMap.put(tradedItem.getSubClassification(), tempList);
 				itemMap.put(tradedItem.getClassification(), subClassMap);
@@ -385,7 +387,8 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 				
 				
 				//START: 2013 - PHASE 3 : PROJECT 4: MARK
-				tempList.add(new Item(finGood.getProductCode(), finGood.getDescription(), finGood.getUnitOfMeasurement(),finGood.getClassification(),finGood.getSubClassification(),finGood.getIsVattable(),tempStockLevelValue));
+				tempList.add(new Item(finGood.getProductCode(), finGood.getDescription(), finGood.getUnitOfMeasurement(),
+						finGood.getClassification(),finGood.getSubClassification(),finGood.getIsVattable(),tempStockLevelValue));
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 				subClassMap.put(finGood.getSubClassification(), tempList);
 				itemMap.put(finGood.getClassification(),subClassMap);

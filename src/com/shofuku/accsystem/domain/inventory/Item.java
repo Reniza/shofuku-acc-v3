@@ -19,6 +19,8 @@ public class Item  implements Serializable{
 	private String itemType;
 	private String isVattable;
 	private String isShared;
+	private String isActive;
+	private String location;
 	
 	private double customerStockLevel;
 
@@ -52,8 +54,6 @@ public class Item  implements Serializable{
 		
 	}
 
-
-	
 	/*
 	 * getters setters
 	 */
@@ -143,5 +143,22 @@ public class Item  implements Serializable{
 	public void setIsShared(String isShared) {
 		this.isShared = isShared;
 	}
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
 	
 }

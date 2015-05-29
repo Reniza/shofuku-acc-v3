@@ -61,19 +61,18 @@
 						</td>
 						<td>
 							<s:textfield style="visibility:hidden" disabled="true" id="UOMTextField" name="rm.unitOfMeasurementText" size="10" />
-									
 						</td>
-							<td><s:select disabled="%{forWhat}" label="Template :" name="rm.template" value="%{rm.template}" list="#{'N':'None','C':'Commissary','S':'Store','B':'Both'}" ></s:select>
-					
+						<td><s:select disabled="%{forWhat}" label="Template :" name="rm.template" value="%{rm.template}" 
+							list="#{'N':'None','C':'Commissary','S':'Store','B':'Both'}" ></s:select>
+						</td>
+						
 						</s:if>
 
 						<s:else>
 								<td><s:textfield label="Unit of Measurement:" value="%{rm.unitOfMeasurement}"/></td>
-								
-								
 						</s:else>
 					
-						</tr>
+					</tr>
 					</table>
 					<table class="form">
 					<tr>
@@ -89,6 +88,7 @@
 						</tr>
 						<tr>
 							<td><s:textfield label="Is Vatable? :" name="rm.isVattable"/></td>
+							<td><s:textfield label="Is Active? :" name="rm.isActive"/></td>
 						</tr>
 					</table>
 				</s:if>
@@ -106,7 +106,10 @@
 					</tr>
 					<tr>	
 							<td>
-									<s:select disabled="%{forWhat}" label="Is Vatable? :" name="rm.isVattable" list="#{'N':'NO','Y':'YES'}" headerKey="-1"></s:select>			
+									<s:select disabled="%{forWhat}" label="Is Vatable? :" name="rm.isVattable" list="#{'Y':'YES','N':'NO'}" headerKey="-1"></s:select>			
+							</td>
+							<td><s:select disabled="%{forWhat}" label="Is Active? :" name="rm.isActive" value="%{rm.isActive}" 
+							list="#{'Y':'YES','N':'NO'}" ></s:select>
 							</td>
 						</tr>
 					</table>

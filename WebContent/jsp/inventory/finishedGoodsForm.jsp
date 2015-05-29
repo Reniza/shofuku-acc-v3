@@ -100,6 +100,9 @@
 							</tr>
 							<tr>	
 								<td><s:select disabled="%{forWhat}" label="Is Vatable? :" name="fg.isVattable" list="#{'N':'NO','Y':'YES'}" headerKey="-1"></s:select></td>
+								<td><s:select disabled="%{forWhat}" label="Is Active? :" name="fg.isActive" value="%{fg.isActive}" 
+										list="#{'Y':'YES','N':'NO'}" ></s:select>
+							</td>
 							</tr>
 						</table>
 
@@ -382,6 +385,7 @@
 					<td><s:textfield label="Mark Up %:" value="%{fg.markUp}"
 							size="5" /></td>
 				<td><s:textfield size="10"  label="Is Vatable? :" name="fg.isVattable"/></td>
+				<td><s:textfield label="Is Active? :" name="fg.isActive"/></td>
 								
 				</tr>
 			</table>

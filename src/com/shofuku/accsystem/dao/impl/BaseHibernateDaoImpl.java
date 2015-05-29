@@ -428,6 +428,26 @@ public class BaseHibernateDaoImpl extends HibernateUtil implements
 		return null;
 	}
 	
+	public List listInventoryAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
+		Transaction tx = null;
+		try {
+			tx=getCurrentTransaction(session);
+			Criteria criteria = session.createCriteria(clazz);
+			criteria.add(Restrictions.eq("isActive", "Y"));
+			//add location criteria
+			if(beanContainsLocationProperty(clazz,"listInventoryAlphabeticalAscByParameter")) {
+				// access individual properties
+				criteria.add(addLocationCriteria(clazz));
+			}
+			criteria.addOrder(Order.asc(parameter));
+			return criteria.list();
+		} catch (RuntimeException re) {
+			tx.rollback();
+			re.printStackTrace();
+		}
+		return null;
+	}
+	
 	public List getBetweenDates(Date startDate, Date endDate, String className,
 			String field,Session session,String orderBy) {
 		Transaction tx = null;

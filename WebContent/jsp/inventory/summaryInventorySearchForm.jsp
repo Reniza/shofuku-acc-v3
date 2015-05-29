@@ -58,14 +58,14 @@
 							</tr>
 							
 						</table>
-						<table class="form" id="searchByStatusTbl">
+						<!--  <table class="form" id="searchByStatusTbl">
 						<tr>
 								<td class="others">Date From:</td>
 								<td>
 									<td><s:select label="Status :" name="searchByStatus" value="%{searchByStatus}" list="#{'A':'Active','I':'Inactive','B':'All'}" ></s:select>
 								</td>
 							</tr>
-						</table>
+						</table>-->
 						
 					</p>
 				</div>

@@ -512,7 +512,7 @@ public class SASConstants {
 	public static final String LOCATION = "location";
 	public static final String ARRAY_CLASS_WITHOUT_LOCATION[] = {
 			"Module.class", "UserAccount.class", 
-			"RawMaterial.class","FinishedGood.class","TradedItem.class","Utensils.class","OfficeSupplies.class",
+		"FinishedGood.class","TradedItem.class","Utensils.class","OfficeSupplies.class",
 			"UnitOfMeasurements.class", "ExpenseClassification.class","InventoryClassification.class","PaymentClassification.class", "PaymentTerms.class","Remarks.class",
 			"SupplierStatus.class",	"UnitOfMeasurements.class,CustomerStockLevel.class"
 	};

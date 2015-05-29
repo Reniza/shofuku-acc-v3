@@ -872,7 +872,8 @@ public class InventoryManager extends BaseController{
 		while(iterator.hasNext()) {
 			RawMaterial rawMaterial = (RawMaterial) iterator.next();
 				//START: 2013 - PHASE 3 : PROJECT 4: MARK
-				Item item = new Item(rawMaterial.getItemCode(), rawMaterial.getDescription(), rawMaterial.getUnitOfMeasurement(),rawMaterial.getClassification(), rawMaterial.getSubClassification(),rawMaterial.getIsVattable());
+				Item item = new Item(rawMaterial.getItemCode(), rawMaterial.getDescription(), rawMaterial.getUnitOfMeasurement(),
+						rawMaterial.getClassification(), rawMaterial.getSubClassification(),rawMaterial.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 				item.setItemType("rawMat");
 				tempList.add(item);
@@ -883,7 +884,8 @@ public class InventoryManager extends BaseController{
 		while(iterator.hasNext()) {
 			TradedItem tradedItem = (TradedItem) iterator.next();
 				//START: 2013 - PHASE 3 : PROJECT 4: AZ
-				Item item = new Item(tradedItem.getItemCode(), tradedItem.getDescription(), tradedItem.getUnitOfMeasurement(),tradedItem.getClassification(), tradedItem.getSubClassification(),tradedItem.getIsVattable());
+				Item item = new Item(tradedItem.getItemCode(), tradedItem.getDescription(), tradedItem.getUnitOfMeasurement(),
+						tradedItem.getClassification(), tradedItem.getSubClassification(),tradedItem.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("tradedItems");
 				tempList.add(item);
@@ -893,7 +895,8 @@ public class InventoryManager extends BaseController{
 		while(iterator.hasNext()) {
 			Utensils u = (Utensils) iterator.next();
 				//START: 2013 - PHASE 3 : PROJECT 4: AZ
-				Item item = new Item(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(),u.getClassification(), u.getSubClassification(),u.getIsVattable());
+				Item item = new Item(u.getItemCode(), u.getDescription(), u.getUnitOfMeasurement(),u.getClassification(),
+						u.getSubClassification(),u.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("utensils");
 				tempList.add(item);
@@ -903,7 +906,8 @@ public class InventoryManager extends BaseController{
 		while(iterator.hasNext()) {
 			OfficeSupplies os = (OfficeSupplies) iterator.next();
 				//START: 2013 - PHASE 3 : PROJECT 4: AZ
-				Item item = new Item(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(),os.getClassification(), os.getSubClassification(),os.getIsVattable());
+				Item item = new Item(os.getItemCode(), os.getDescription(), os.getUnitOfMeasurement(),os.getClassification(), os.getSubClassification(),
+						os.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: AZ
 				item.setItemType("ofcSup");
 				tempList.add(item);
@@ -913,7 +917,8 @@ public class InventoryManager extends BaseController{
 		while(iterator.hasNext()){
 			FinishedGood finGood = (FinishedGood) iterator.next();
 				//START: 2013 - PHASE 3 : PROJECT 4: MARK
-				Item item = new Item(finGood.getProductCode(), finGood.getDescription(), finGood.getUnitOfMeasurement(),finGood.getClassification(),finGood.getSubClassification(),finGood.getIsVattable());
+				Item item = new Item(finGood.getProductCode(), finGood.getDescription(), finGood.getUnitOfMeasurement(),finGood.getClassification(),
+						finGood.getSubClassification(),finGood.getIsVattable());
 				//END: 2013 - PHASE 3 : PROJECT 4: MARK
 				item.setItemType("finGood");
 				tempList.add(item);

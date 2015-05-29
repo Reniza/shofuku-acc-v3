@@ -89,6 +89,7 @@
 						</tr>
 						<tr>
 							<td><s:textfield label="Is Vatable? :" name="u.isVattable"/></td>
+							<td><s:textfield label="Is Active? :" name="u.isActive"/></td>
 						</tr>
 					</table>
 				</s:if>
@@ -107,6 +108,8 @@
 							<td>
 								<s:select disabled="%{forWhat}" label="Is Vatable? :" name="u.isVattable" list="#{'N':'NO','Y':'YES'}" headerKey="-1"></s:select>
 							</td>
+							<td><s:select disabled="%{forWhat}" label="Is Active? :" name="u.isActive" value="%{u.isActive}" 
+										list="#{'Y':'YES','N':'NO'}" ></s:select></td>
 						</tr>
 					</table>
 				</s:else>
