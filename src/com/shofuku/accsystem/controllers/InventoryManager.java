@@ -25,6 +25,7 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.SASConstants;
 
 /*
  * add business side logic in this class
@@ -548,32 +549,47 @@ public class InventoryManager extends BaseController{
 		Object object= null;
 		object = (RawMaterial)inventoryDao.load(poDetails.getItemCode(), RawMaterial.class);
 		if(object!=null) {
+			if(inventoryMovement.equalsIgnoreCase(SASConstants.ADD)) {
 			((RawMaterial)object).setQuantityIn(poDetails.getQuantity());
+			}else {
 			((RawMaterial)object).setQuantityOut(poDetails.getQuantity());
+			}
 			return object;
 		}else {
 			object = (TradedItem)inventoryDao.load(poDetails.getItemCode(),TradedItem.class);
 			if(object!=null) {
+				if(inventoryMovement.equalsIgnoreCase(SASConstants.ADD)) {
 				((TradedItem)object).setQuantityIn(poDetails.getQuantity());
+				}else {
 				((TradedItem)object).setQuantityOut(poDetails.getQuantity());
+				}
 				return object;
 			}else {
 				object = (FinishedGood)inventoryDao.load(poDetails.getItemCode(),FinishedGood.class);
 				if(object!=null) {
+					if(inventoryMovement.equalsIgnoreCase(SASConstants.ADD)) {
 					((FinishedGood)object).setQuantityIn(poDetails.getQuantity());
+					}else {
 					((FinishedGood)object).setQuantityOut(poDetails.getQuantity());
+					}
 					return object;
 				}else {
 					object = (Utensils)inventoryDao.load(poDetails.getItemCode(),Utensils.class);
 					if(object!=null) {
+						if(inventoryMovement.equalsIgnoreCase(SASConstants.ADD)) {
 						((Utensils)object).setQuantityIn(poDetails.getQuantity());
+						}else{
 						((Utensils)object).setQuantityOut(poDetails.getQuantity());
+						}
 						return object;
 					}else{
 						object = (OfficeSupplies)inventoryDao.load(poDetails.getItemCode(),OfficeSupplies.class);
 						if(object!=null) {
+							if(inventoryMovement.equalsIgnoreCase(SASConstants.ADD)) {
 							((OfficeSupplies)object).setQuantityIn(poDetails.getQuantity());
+							}else{
 							((OfficeSupplies)object).setQuantityOut(poDetails.getQuantity());
+							}
 							return object;
 						}else{
 							return null;

@@ -712,18 +712,14 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 	}
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) {
-		inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails),session);
-		inventoryManager.commitChanges(session);
-/*		
 			if(rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_CUSTOMER_TO_WAREHOUSE) || rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_PRODUCTION_TO_WAREHOUSE)){
-					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails,SASConstants.ADD),session);
 					inventoryManager.commitChanges(session);
 			}else if(rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_WAREHOUSE_TO_SUPPLIER)||rs.getReturnSlipTo().equalsIgnoreCase(SASConstants.RS_WAREHOUSE_TO_PRODUCTION)) {
-					inventoryManager.deductInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails,SASConstants.SUBTRACT),session);
 					inventoryManager.commitChanges(session);
 			}else {
 			}
-			*/
 			
 	}
 

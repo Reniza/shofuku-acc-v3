@@ -546,14 +546,11 @@ public class UpdateInventoryAction extends ActionSupport implements Preparable{
 
 	private void updateInventoryItems(PurchaseOrderDetails poDetails,Session session) throws Exception {
 			
-		inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails),session);
-		/*
-		if(rs.getReturnSlipTo().equalsIgnoreCase("CTOW")){
-					inventoryManager.addInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+			if(rs.getReturnSlipTo().equalsIgnoreCase("CTOW")){
+					inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails,SASConstants.ADD),session);
 			}else {
-					inventoryManager.deductInventoryItem(inventoryManager.determineItemTypeFromPoDetails(poDetails),session);
+					inventoryManager.updateInventoryItemRecordCountFromOrder(inventoryManager.setQinAndQoutBasedOnItemType(poDetails,SASConstants.SUBTRACT),session);
 			}
-		*/
 	}
 	private String updateRF() {
 		Session session = getSession();
