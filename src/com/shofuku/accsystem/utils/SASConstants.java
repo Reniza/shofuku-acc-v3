@@ -524,6 +524,8 @@ public class SASConstants {
 	 * MISCELANEAOUS CONSTANTS
 	 * */
 	public static final String PROPERTY_FILE_PATH = "c://ShofukuAppLogs//ShofukuAccountingSystemDatabase.properties";
+	public static final String ADD = "ADD";
+	public static final String SUBTRACT = "SUBTRACT";
 
 
 	

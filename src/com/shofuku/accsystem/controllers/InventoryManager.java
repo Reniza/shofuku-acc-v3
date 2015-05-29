@@ -544,7 +544,7 @@ public class InventoryManager extends BaseController{
 		return itemFound;
 	}
 
-	public Object setQinAndQoutBasedOnItemType(PurchaseOrderDetails poDetails) {
+	public Object setQinAndQoutBasedOnItemType(PurchaseOrderDetails poDetails,String inventoryMovement) {
 		Object object= null;
 		object = (RawMaterial)inventoryDao.load(poDetails.getItemCode(), RawMaterial.class);
 		if(object!=null) {
