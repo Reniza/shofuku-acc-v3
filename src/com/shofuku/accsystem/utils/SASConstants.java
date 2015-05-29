@@ -518,6 +518,12 @@ public class SASConstants {
 	};
 	public static final String SHOFUKU_PACKAGE_NAME = "com.shofuku.accsystem.";
 	public static final String ARRAY_PACKAGES_WITHOUT_LOCATION [] = {"utils","helpers","security,financials"};
+	
+	
+	/*
+	 * MISCELANEAOUS CONSTANTS
+	 * */
+	public static final String PROPERTY_FILE_PATH = "c://ShofukuAppLogs//ShofukuAccountingSystemDatabase.properties";
 
 
 	

@@ -16,9 +16,6 @@ public class Transaction implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map actionSession = ActionContext.getContext().getSession();
-	UserAccount user = (UserAccount) actionSession.get("user");
-	
 	private int id;
 	private String transactionReferenceNumber;
 	private String transactionType;

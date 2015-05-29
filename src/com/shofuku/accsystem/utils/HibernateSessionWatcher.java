@@ -62,7 +62,7 @@ public class HibernateSessionWatcher {
 		
 			  try {
 				  Properties prop = new Properties();
-				  prop.load(new FileInputStream("c://ShofukuAccountingSystemDatabase.properties"));
+				  prop.load(new FileInputStream(SASConstants.PROPERTY_FILE_PATH));
 				  dbName = (String)prop.getProperty("dbName");
 				  url = (String)prop.getProperty("mysql_url");
 				  driver = (String)prop.getProperty("mysql_driver");

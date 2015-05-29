@@ -377,7 +377,8 @@ public class GenerateStockStatusReportAction extends ActionSupport implements Pr
 		return finalCombinedList;
 	}
 	
-
+	
+	
 	//treats every list as a beginning balance. use it either as a beginngin list or ending list on joinStockStausBeginningAndEnding()
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List generateStockStatusListByDate(List stockStatusList,
@@ -398,7 +399,7 @@ public class GenerateStockStatusReportAction extends ActionSupport implements Pr
 					if(rm.getStockStatusDay().equals(endDay)) {
 							String itemCode = rm.getItemCode();
 							ssReport = new StockStatusReport(rm.getItemCode(),rm.getDescription(),rm.getUnitOfMeasurement(),
-									rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),rm.getWarehouse().getQuantityPerRecord(),rm.getWarehouse().getQuantityPerRecord()*rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,rm.getClassification(),rm.getSubClassification(),SASConstants.RAW_MATERIAL_ABBR);
+									rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),inventoryManager.getWarehouseBasedOnUserLocation(rm.getItemCode(), rm.getWarehouses()).getQuantityPerRecord(),inventoryManager.getWarehouseBasedOnUserLocation(rm.getItemCode(), rm.getWarehouses()).getQuantityPerRecord()*rm.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,rm.getClassification(),rm.getSubClassification(),SASConstants.RAW_MATERIAL_ABBR);
 					}else {
 						continue;
 					}
@@ -407,7 +408,7 @@ public class GenerateStockStatusReportAction extends ActionSupport implements Pr
 					if(fg.getStockStatusDay().equals(endDay)) {
 							String itemCode = fg.getProductCode();
 							ssReport = new StockStatusReport(fg.getProductCode(),fg.getDescription(),fg.getUnitOfMeasurement(),
-									fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),fg.getWarehouse().getQuantityPerRecord(),fg.getWarehouse().getQuantityPerRecord()*fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,fg.getClassification(),fg.getSubClassification(),SASConstants.FINISHED_GOOD_ABBR);
+									fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),inventoryManager.getWarehouseBasedOnUserLocation(fg.getProductCode(), fg.getWarehouses()).getQuantityPerRecord(),inventoryManager.getWarehouseBasedOnUserLocation(fg.getProductCode(), fg.getWarehouses()).getQuantityPerRecord()*fg.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,fg.getClassification(),fg.getSubClassification(),SASConstants.FINISHED_GOOD_ABBR);
 					}else {
 						continue;
 					}
@@ -416,7 +417,7 @@ public class GenerateStockStatusReportAction extends ActionSupport implements Pr
 					if(ti.getStockStatusDay().equals(endDay)) {
 							String itemCode = ti.getItemCode();
 							ssReport = new StockStatusReport(ti.getItemCode(),ti.getDescription(),ti.getUnitOfMeasurement(),
-									ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),ti.getWarehouse().getQuantityPerRecord(),ti.getWarehouse().getQuantityPerRecord()*ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,ti.getClassification(),ti.getSubClassification(),SASConstants.TRADED_ITEM_ABBR);
+									ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),inventoryManager.getWarehouseBasedOnUserLocation(ti.getItemCode(), ti.getWarehouses()).getQuantityPerRecord(),inventoryManager.getWarehouseBasedOnUserLocation(ti.getItemCode(), ti.getWarehouses()).getQuantityPerRecord()*ti.getItemPricing().getCompanyOwnedStandardPricePerUnit(),0.0,0.0,0.0,0.0,0.0,0.0,ti.getClassification(),ti.getSubClassification(),SASConstants.TRADED_ITEM_ABBR);
 					}else {
 						continue;
 					}

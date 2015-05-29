@@ -21,7 +21,7 @@ public class MySQLConnectionUtil {
 		
 		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream("c://ShofukuAccountingSystemDatabase.properties"));
+			prop.load(new FileInputStream(SASConstants.PROPERTY_FILE_PATH));
 		} catch (FileNotFoundException e1) {
 			logger.error("Property File Not Found");
 			logger.error(e1.getStackTrace());

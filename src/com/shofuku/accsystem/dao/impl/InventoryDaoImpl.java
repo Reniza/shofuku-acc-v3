@@ -50,6 +50,7 @@ import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.HibernateUtil;
+import com.shofuku.accsystem.utils.SASConstants;
 
 public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 
@@ -318,7 +319,7 @@ public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream(
-					"c://ShofukuAccountingSystemDatabase.properties"));
+					SASConstants.PROPERTY_FILE_PATH));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -378,7 +379,7 @@ public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream(
-					"c://ShofukuAccountingSystemDatabase.properties"));
+					SASConstants.PROPERTY_FILE_PATH));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -467,7 +468,7 @@ public class InventoryDaoImpl extends BaseHibernateDaoImpl {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream(
-					"c://ShofukuAccountingSystemDatabase.properties"));
+					SASConstants.PROPERTY_FILE_PATH));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
