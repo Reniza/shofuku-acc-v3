@@ -19,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -138,7 +139,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		
 		//GENERATE FILE
 		excelStream = generateCurrentOrderingFormTemplate(); 
-		logger.error("THIS IS A TEST LOG");
+//		logger.error("THIS IS A TEST LOG");
 		
 		return SUCCESS;
 	}
@@ -183,7 +184,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 					(!rawMaterial.getTemplate().equalsIgnoreCase(orderingFormType)
 					&& (!rawMaterial.getTemplate().equalsIgnoreCase("B")  
 						|| rawMaterial.getTemplate().equalsIgnoreCase("N"))))  {
-				System.out.println(rawMaterial.getDescription()+" : not included");
+//				System.out.println(rawMaterial.getDescription()+" : not included");
 			} else {
 
 				if (itemMap.get(rawMaterial.getClassification()) == null) {
@@ -222,13 +223,13 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		while(iterator.hasNext()) {
 			TradedItem tradedItem = (TradedItem) iterator.next();
 			if(tradedItem.getItemCode().equalsIgnoreCase("FD01")) {
-				System.out.println("FOUND");
+//				System.out.println("FOUND");
 			}	
 			if  (tradedItem.getClassification() == null ||
 					(!tradedItem.getTemplate().equalsIgnoreCase(orderingFormType)
 					&& (!tradedItem.getTemplate().equalsIgnoreCase("B")  
 						|| tradedItem.getTemplate().equalsIgnoreCase("N"))))  {
-				System.out.println(tradedItem.getDescription()+" : not included");
+//				System.out.println(tradedItem.getDescription()+" : not included");
 			} else {
 
 				if (itemMap.get(tradedItem.getClassification()) == null) {
@@ -267,13 +268,13 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		while(iterator.hasNext()) {
 			Utensils utensils = (Utensils) iterator.next();
 			if(utensils.getItemCode().equalsIgnoreCase("FD01")) {
-				System.out.println("FOUND");
+//				System.out.println("FOUND");
 			}	
 			if  (utensils.getClassification() == null ||
 					(!utensils.getTemplate().equalsIgnoreCase(orderingFormType)
 					&& (!utensils.getTemplate().equalsIgnoreCase("B")  
 						|| utensils.getTemplate().equalsIgnoreCase("N"))))  {
-				System.out.println(utensils.getDescription()+" : not included");
+//				System.out.println(utensils.getDescription()+" : not included");
 			} else {
 
 				if (itemMap.get(utensils.getClassification()) == null) {
@@ -312,13 +313,13 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		while(iterator.hasNext()) {
 			OfficeSupplies ofcSup = (OfficeSupplies) iterator.next();
 			if(ofcSup.getItemCode().equalsIgnoreCase("FD01")) {
-				System.out.println("FOUND");
+//				System.out.println("FOUND");
 			}	
 			if  (ofcSup.getClassification() == null ||
 					(!ofcSup.getTemplate().equalsIgnoreCase(orderingFormType)
 					&& (!ofcSup.getTemplate().equalsIgnoreCase("B")  
 						|| ofcSup.getTemplate().equalsIgnoreCase("N"))))  {
-				System.out.println(ofcSup.getDescription()+" : not included");
+//				System.out.println(ofcSup.getDescription()+" : not included");
 			} else {
 
 				if (itemMap.get(ofcSup.getClassification()) == null) {
@@ -361,7 +362,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 					(!finGood.getTemplate().equalsIgnoreCase(orderingFormType)
 					&& (!finGood.getTemplate().equalsIgnoreCase("B")  
 						|| finGood.getTemplate().equalsIgnoreCase("N"))))  {
-				System.out.println(finGood.getDescription()+" : not included");	
+//				System.out.println(finGood.getDescription()+" : not included");	
 			}else {
 				if(itemMap.get(finGood.getClassification())==null) {
 					tempList = new ArrayList<Item>();
@@ -399,7 +400,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		while(iterator.hasNext()) {
 			UnlistedItem unlistedItem = (UnlistedItem) iterator.next();
 			if(unlistedItem.getClassification() == null) {
-				System.out.println(unlistedItem.getDescription()+" : not included");	
+//				System.out.println(unlistedItem.getDescription()+" : not included");	
 			}else {
 				if (itemMap.get(unlistedItem.getClassification()) == null) {
 					tempList = new ArrayList<Item>();
@@ -454,6 +455,8 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 	}
 	HSSFCellStyle subCategoryCellStyle ;
 	HSSFCellStyle itemListStyle;
+	HSSFCellStyle itemListStyleUnLockedWithBorder;
+	HSSFCellStyle itemListStyleUnLockedWithBottomBorder;
 	HSSFCellStyle headerListStyle;
 	HSSFCellStyle noStyle;
 	
@@ -469,27 +472,76 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		int lastRow=0;
 		
 		HSSFSheet sheet = wb.getSheetAt(sheetCtr);
-		
+		sheet.protectSheet("makoy");
 		
 		//subcategory style
 		HSSFRow row = sheet.getRow(1);
 		HSSFCell cell = row.getCell(15);
 		subCategoryCellStyle = cell.getCellStyle();
+		subCategoryCellStyle.setLocked(true);
 		
 		//headeritem style
 		row = sheet.getRow(2);
 		cell = row.getCell(15);
 		headerListStyle = cell.getCellStyle();
+		headerListStyle.setLocked(true);
 		
 		//normal item style
 		row = sheet.getRow(3);
 		cell = row.getCell(15);
 		itemListStyle = cell.getCellStyle();
+		itemListStyle.setLocked(true);
 		
 		//no style
 		row = sheet.getRow(4);
 		cell = row.getCell(15);
 		noStyle = cell.getCellStyle();
+		noStyle.setLocked(true);
+		
+		
+		
+		//normal item style (not Locked)
+		itemListStyleUnLockedWithBorder = wb.createCellStyle();
+		itemListStyleUnLockedWithBorder.setLocked(false);
+		itemListStyleUnLockedWithBorder.setBorderBottom(CellStyle.BORDER_THIN);
+		itemListStyleUnLockedWithBorder.setBorderLeft(CellStyle.BORDER_THIN);
+		itemListStyleUnLockedWithBorder.setBorderRight(CellStyle.BORDER_THIN);
+		itemListStyleUnLockedWithBorder.setBorderTop(CellStyle.BORDER_THIN);
+		
+		//normal item style (not Locked)
+		itemListStyleUnLockedWithBottomBorder = wb.createCellStyle();
+		itemListStyleUnLockedWithBottomBorder.setLocked(false);
+		itemListStyleUnLockedWithBottomBorder.setBorderBottom(CellStyle.BORDER_THIN);
+		itemListStyleUnLockedWithBottomBorder.setBorderLeft(CellStyle.BORDER_NONE);
+		itemListStyleUnLockedWithBottomBorder.setBorderRight(CellStyle.BORDER_NONE);
+		itemListStyleUnLockedWithBottomBorder.setBorderTop(CellStyle.BORDER_NONE);
+		
+		//write customer name
+		row = sheet.getRow(2);
+		cell = row.getCell(9);
+		cell.setCellStyle(itemListStyleUnLockedWithBottomBorder);
+		poiUtil.putCellValue(cell, customer.getCustomerNo());
+		
+		row = sheet.getRow(3);
+		cell = row.getCell(9);
+		cell.setCellStyle(itemListStyleUnLockedWithBottomBorder);
+		poiUtil.putCellValue(cell, "<BLANK>");
+		
+		row = sheet.getRow(4);
+		cell = row.getCell(9);
+		cell.setCellStyle(itemListStyleUnLockedWithBottomBorder);
+		poiUtil.putCellValue(cell, "<BLANK>");
+		
+		row = sheet.getRow(5);
+		cell = row.getCell(9);
+		cell.setCellStyle(itemListStyleUnLockedWithBottomBorder);
+		poiUtil.putCellValue(cell, "<BLANK>");
+		
+		row = sheet.getRow(6);
+		cell = row.getCell(9);
+		cell.setCellStyle(itemListStyleUnLockedWithBottomBorder);
+		poiUtil.putCellValue(cell, "<BLANK>");
+		
 		
 		
 		for(HashMap<String, ArrayList<Item>> subClassessMap : itemMap.values()) {
@@ -497,7 +549,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 			sheet = wb.getSheetAt(sheetCtr++);
 			rowLimit = getRowLimit(subClassessMap);
 			String sheetName = sheet.getSheetName();
-			System.out.println("NOW PROCESSING SHEET: "+ sheetName);
+//			System.out.println("NOW PROCESSING SHEET: "+ sheetName);
 			ArrayList<Item> unlistedItemList= new ArrayList<Item>();
 			for(ArrayList<Item> itemArrayListPerSubClass : subClassessMap.values()) {
 				//create sub class header
@@ -569,6 +621,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		cell = row.getCell(15);
 		cell.setCellValue("");
 		cell.setCellStyle(noStyle);
+		
 	}
 	private int getRowLimit(HashMap<String, ArrayList<Item>> subClassessMap) {
 		int ctr =0;
@@ -606,7 +659,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 			cell.setCellStyle(itemListStyle);
 			poiUtil.putCellValue(cell, tempItem.getCustomerStockLevel());
 			cell = poiUtil.getCurrentCell(row,5);
-			cell.setCellStyle(itemListStyle);
+			cell.setCellStyle(itemListStyleUnLockedWithBorder);
 			poiUtil.putCellValue(cell, "");
 			
 		}else if (currentColumn ==2) {
@@ -627,7 +680,7 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 			cell.setCellStyle(itemListStyle);
 			poiUtil.putCellValue(cell, tempItem.getCustomerStockLevel());
 			cell = poiUtil.getCurrentCell(row,12);
-			cell.setCellStyle(itemListStyle);
+			cell.setCellStyle(itemListStyleUnLockedWithBorder);
 			poiUtil.putCellValue(cell, "");
 		}
 		

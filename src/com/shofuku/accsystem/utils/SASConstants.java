@@ -511,7 +511,7 @@ public class SASConstants {
 	public static final String LOCATION_MANILA = "MNL";
 	public static final String LOCATION = "location";
 	public static final String ARRAY_CLASS_WITHOUT_LOCATION[] = {
-			"Module.class", "UserAccount.class", 
+			"Module.class", "UserAccount.class","UnlistedItem.class", 
 			"UnitOfMeasurements.class", "ExpenseClassification.class","InventoryClassification.class","PaymentClassification.class", "PaymentTerms.class","Remarks.class",
 			"SupplierStatus.class",	"UnitOfMeasurements.class,CustomerStockLevel.class"
 	};
@@ -522,7 +522,7 @@ public class SASConstants {
 	/*
 	 * MISCELANEAOUS CONSTANTS
 	 * */
-	public static final String PROPERTY_FILE_PATH = "c://ShofukuAppLogs//ShofukuAccountingSystemDatabase.properties";
+	public static final String PROPERTY_FILE_PATH = "c://ShofukuApp//ShofukuAccountingSystemDatabase.properties";
 	public static final String ADD = "ADD";
 	public static final String SUBTRACT = "SUBTRACT";
 

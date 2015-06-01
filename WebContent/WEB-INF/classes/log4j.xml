@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 	<appender name="rolling-file" class="org.apache.log4j.RollingFileAppender">
-		<param name="file" value="c:\\ShofukuAppLogs\\SHOFUKUAPP.log" />
+		<param name="file" value="c:\\ShofukuApp\\Logs\\SHOFUKUAPP.log" />
 		<param name="MaxFileSize" value="900KB" />
 		<param name="MaxBackupIndex" value="500" />
 		<layout class="org.apache.log4j.PatternLayout">

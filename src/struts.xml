@@ -168,6 +168,7 @@
 		<action name="exportSupplierSearchAction"
 			class="com.shofuku.accsystem.action.suppliers.SearchSupplierAction"
 			method="exportResults">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -214,6 +215,7 @@
 		<action name="printSupplierInExcelAction"
 			class="com.shofuku.accsystem.action.suppliers.PrintSupplierAction"
 			method="printSupplierPurchaseOrder">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -224,6 +226,7 @@
 
 		<action name="generateSummaryAction"
 			class="com.shofuku.accsystem.action.GenerateSummaryAction" method="execute">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -410,6 +413,7 @@
 		<action name="printCustomerInExcelAction"
 			class="com.shofuku.accsystem.action.customer.PrintCustomerAction"
 			method="printInvoice">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -443,6 +447,7 @@
 		
 		<action name="generateXMLAction"
 			class="com.shofuku.accsystem.action.inventory.GenerateStockStatusReportAction" method="generateXML">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">text/xml</param>
 				<param name="inputName">xmlStreamOut</param>
@@ -453,6 +458,7 @@
 		
 		<action name="generateStockStatusReportAction"
 			class="com.shofuku.accsystem.action.inventory.GenerateStockStatusReportAction" method="generateStockStatusReport">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -582,6 +588,7 @@
 		<action name="printDisbursementInExcelAction"
 			class="com.shofuku.accsystem.action.disbursement.PrintDisbursementAction"
 			method="printCheckPayments">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -683,6 +690,7 @@
 		<action name="printReceiptInExcelAction"
 			class="com.shofuku.accsystem.action.receipts.PrintReceiptAction"
 			method="printReceipt">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -1045,6 +1053,7 @@
 		<action name="exportOrderingFormTemplateAction"
 			class="com.shofuku.accsystem.action.ExportOrderingFormTemplateAction"
 			method="execute">
+			<interceptor-ref name="defaultStack"/>
 			<result type="stream">
 				<param name="contentType">${excelContentType}</param>
 				<param name="inputName">excelStream</param>
@@ -1142,6 +1151,7 @@
 		</action>
 		
 		<action name="generateFinancialReportsAction" class="com.shofuku.accsystem.action.financials.GenerateFinancialReportsAction" method="execute">
+			<interceptor-ref name="defaultStack"/>
 			<result name="success" type="tiles">showGenerateFinancialReportsForm.tiles</result>
 			<result name="input" type="tiles">showGenerateFinancialReportsForm.tiles</result>
 			<result type="stream">
