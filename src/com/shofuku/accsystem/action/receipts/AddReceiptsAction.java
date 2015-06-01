@@ -10,16 +10,19 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.DisbursementManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
 import com.shofuku.accsystem.controllers.ReceiptsManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
+import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.financials.Vat;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
 import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.RecordCountHelper;
 import com.shofuku.accsystem.utils.SASConstants;
@@ -32,6 +35,7 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 	UserAccount user;
 
 	ReceiptsManager receiptsManager;
+	CustomerManager customerManager;
 	AccountEntryManager accountEntryManager;
 	TransactionManager transactionManager;
 	FinancialsManager financialsManager;	
@@ -45,6 +49,7 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 		user = (UserAccount) actionSession.get("user");
 
 		receiptsManager = (ReceiptsManager) actionSession.get("receiptsManager");
+		customerManager = (CustomerManager) actionSession.get("customerManager");
 		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
 		transactionManager = (TransactionManager) actionSession.get("transactionManager");
 		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
@@ -53,8 +58,6 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 		rch = new RecordCountHelper(actionSession);
 		
 	}
-	
-
 	private String subModule;
 	private String moduleParameter;
 	private String forWhat;
@@ -63,7 +66,10 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 	ORSales orSales;
 	OROthers orOthers;
 	CashCheckReceipts ccReceipts;
-	//START 2013 - PHASE 3 : PROJECT 1: MARK
+	List customerList;
+	Customer customer;
+
+		//START 2013 - PHASE 3 : PROJECT 1: MARK
 		List accountProfileCodeList;
 		List<Transaction> transactionList;
 		List<Transaction> transactions;
@@ -71,12 +77,21 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 
 
 	public String newReceiptEntry() {
-
-		ccReceipts = new CashCheckReceipts();
-		ccReceipts.setCashReceiptNo(rch.getPrefix(
-				SASConstants.CASHCHECKRECEIPTS,
-				SASConstants.CASHCHECKRECEIPTS_PREFIX));
+		Session session = getSession();
+		customerList = customerManager.listAlphabeticalAscByParameter(Customer.class, "customerName", session);
+		if (getSubModule().equalsIgnoreCase("orSales")){
+			orSales = new ORSales();
+			return "orSales";
+		}
+		else if(getSubModule().equalsIgnoreCase("orOthers")){
+			return "orOthers";
+		}else{
+			ccReceipts = new CashCheckReceipts();
+			ccReceipts.setCashReceiptNo(rch.getPrefix(
+					SASConstants.CASHCHECKRECEIPTS,
+					SASConstants.CASHCHECKRECEIPTS_PREFIX));
 		return "cashCheckReceipts";
+		}
 	}
 
 	private Session getSession() {
@@ -97,7 +112,8 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 					if (!(orsList.isEmpty())) {
 						addActionMessage(SASConstants.EXISTS);
 					} else {
-						
+						customer = (Customer) customerManager.listByParameter(Customer.class, "customerName", orSales.getReceivedFrom(), session).get(0);
+						orSales.setTin(customer.getTin());
 						//START - 2013 - PHASE 3 : PROJECT 1: MARK
 						transactionList = new ArrayList();
 						Transaction transaction = new Transaction();
@@ -107,7 +123,7 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 						Vat vatDetails = new Vat();
 						vatDetails.setAddress(orSales.getAddress());
 						//TEST ONLY WHILE WAITING FOR TIN FOR SUPPLIER
-						vatDetails.setTinNumber(orSales.getTin());
+						vatDetails.setTinNumber(customer.getTin());
 						vatDetails.setAmount(orSales.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(orSales.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
@@ -140,6 +156,8 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 					if (!(oroList.isEmpty())) {
 						addActionMessage(SASConstants.EXISTS);
 					} else {
+						customer = (Customer) customerManager.listByParameter(Customer.class, "customerName", orOthers.getReceivedFrom(), session);
+						orOthers.setTin(customer.getTin());
 						//START - 2013 - PHASE 3 : PROJECT 1: MARK
 						transactionList = new ArrayList();
 						Transaction transaction = new Transaction();
@@ -148,7 +166,7 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 						//START: 2013 - PHASE 3 : PROJECT 4: AZ
 						Vat vatDetails = new Vat();
 						vatDetails.setAddress(orOthers.getAddress());
-						vatDetails.setTinNumber(orOthers.getTin());
+						vatDetails.setTinNumber(customer.getTin());
 						vatDetails.setAmount(orOthers.getAmount());
 						vatDetails.setVattableAmount(disbursementManager.computeVat(orOthers.getAmount()));
 						vatDetails.setVatAmount(disbursementManager.computeVatAmount(vatDetails.getVattableAmount()));
@@ -414,4 +432,11 @@ public class AddReceiptsAction extends ActionSupport implements Preparable{
 		}
 		
 		//END 2013 - PHASE 3 : PROJECT 1: MARK 
+		public List getCustomerList() {
+			return customerList;
+		}
+
+		public void setCustomerList(List customerList) {
+			this.customerList = customerList;
+		}
 }

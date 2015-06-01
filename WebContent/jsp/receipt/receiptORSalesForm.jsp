@@ -49,9 +49,21 @@
 					</table>
 					<table class="form">
 					<tr>
-						<td class="others">Received From:</td>
-						<td colspan="5"><s:textfield disabled="%{forWhat}" size="90" name="orSales.receivedFrom"/></td>
+						<!-- <td colspan="5"><s:textfield disabled="%{forWhat}" size="90" name="orSales.receivedFrom"/></td>  -->
+						<s:if test="%{forWhatDisplay == 'edit'}">	
+							<td>
+								<s:textfield disabled="%{forWhat}" label ="Received From" size="90" name="orSales.receivedFrom"></s:textfield>
+							</td> 
+						</s:if> 
+						<s:else>  
+						    <td>Received From: </td>
+						    <td>
+					    	<sx:autocompleter listValue="customerName" list="customerList" name="orSales.receivedFrom"></sx:autocompleter>
+							</td>
+						</s:else> 
 					</tr>
+					</table>
+					<table class="form">
 					<tr>
 						<td class="others">Address</td>
 						<td colspan="5"><s:textfield disabled="%{forWhat}" size="90" name="orSales.address"/></td>

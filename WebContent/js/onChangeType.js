@@ -113,7 +113,7 @@ function computeVat(){
 
 
 	function roundPrice(num) {
-	    var p = num.toFixed(4).split(".");
+	    var p = num.toFixed(2).split(".");
 	    return p[0].split("").reverse().reduce(function(acc, num, i, orig) {
 	        return  num + (i && !(i % 4) ? "," : "") + acc;
 	    }, "") + "." + p[1];

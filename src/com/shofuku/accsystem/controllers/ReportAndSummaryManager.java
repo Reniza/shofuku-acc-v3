@@ -20,6 +20,8 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.domain.customers.Customer;
 import com.shofuku.accsystem.domain.customers.CustomerPurchaseOrder;
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
@@ -40,28 +42,72 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.receipts.CashCheckReceipts;
 import com.shofuku.accsystem.domain.receipts.OROthers;
 import com.shofuku.accsystem.domain.receipts.ORSales;
+import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
 import com.shofuku.accsystem.domain.suppliers.SupplierInvoice;
 import com.shofuku.accsystem.domain.suppliers.SupplierPurchaseOrder;
 import com.shofuku.accsystem.utils.DateFormatHelper;
 import com.shofuku.accsystem.utils.ExportSearchResultsHelper;
+import com.shofuku.accsystem.utils.InventoryUtil;
 import com.shofuku.accsystem.utils.POIUtil;
+import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
+import com.shofuku.accsystem.utils.RecordCountHelper;
 
 @SuppressWarnings("rawtypes")
-public class ReportAndSummaryManager extends BaseController{
+public class ReportAndSummaryManager extends BaseController implements Preparable{
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	Map<String,Object> actionSession;
 	
 	
 	DateFormatHelper dfh = new DateFormatHelper();
+	InventoryManager inventoryManager = new InventoryManager();
 	
 	public ReportAndSummaryManager(Map<String, Object> actionSession) {
 		this.actionSession = actionSession;
 	}
 	
 	POIUtil poiHelper;
+	
+	Map actionSession;
+	UserAccount user;
+
+	SupplierManager supplierManager;
+	AccountEntryManager accountEntryManager;
+	TransactionManager transactionManager;
+	FinancialsManager financialsManager;	
+	RecordCountHelper rch;
+	InventoryUtil invUtil;
+	
+	PurchaseOrderDetailHelper poDetailsHelperToCompare;
+	PurchaseOrderDetailHelper poDetailsHelper;
+	
+	@Override
+	public void prepare() throws Exception {
+		actionSession = ActionContext.getContext().getSession();
+		user = (UserAccount) actionSession.get("user");
+
+		supplierManager = (SupplierManager) actionSession.get("supplierManager");
+		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		transactionManager = (TransactionManager) actionSession.get("transactionManager");
+		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
+		financialsManager = (FinancialsManager) actionSession.get("financialsManager");
+		
+		rch = new RecordCountHelper(actionSession);
+		invUtil = new InventoryUtil(actionSession);
+		
+		if(poDetailsHelper==null) {
+			poDetailsHelper = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelper.setActionSession(actionSession);
+		}
+		if(poDetailsHelperToCompare==null) {
+			poDetailsHelperToCompare = new PurchaseOrderDetailHelper(actionSession);
+		}else {
+			poDetailsHelperToCompare.setActionSession(actionSession);
+		}
+		
+	}
 	
 	private POIUtil initializePoiHelper() {
 		if(poiHelper==null) {
@@ -301,13 +347,17 @@ public class ReportAndSummaryManager extends BaseController{
 	}*/
 	
 	private List setReturnSlipsForEachObj(List list,Session session) {
-		InventoryManager invManager = new InventoryManager();
+		
 		List revisedList= new ArrayList();
+		if (list == null || list.size() < 1){
+			
+			return new ArrayList();
+		}
 		Object obj = (Object)list.get(0);
-		if(obj instanceof ReceivingReport){
+				if(obj instanceof ReceivingReport){
 			List<ReceivingReport> tempList= list;
 			for(ReceivingReport rr: tempList) {
-				rr.setReturnSlipList(invManager.listInventoryByParameter(
+				rr.setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						rr.getReceivingReportNo(), session));
 				revisedList.add(rr);
@@ -315,7 +365,7 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(obj instanceof DeliveryReceipt){
 			List<DeliveryReceipt> tempList= list;
 			for(DeliveryReceipt dr: tempList) {
-				dr.setReturnSlipList(invManager.listInventoryByParameter(
+				dr.setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						dr.getDeliveryReceiptNo(), session));
 				revisedList.add(dr);
@@ -323,7 +373,7 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(obj instanceof FPTS){
 			List<FPTS> tempList= list;
 			for(FPTS fpts: tempList) {
-				fpts.setReturnSlipList(invManager.listInventoryByParameter(
+				fpts.setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						fpts.getFptsNo(), session));
 				revisedList.add(fpts);
@@ -331,7 +381,7 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(obj instanceof RequisitionForm){
 			List<RequisitionForm> tempList= list;
 			for(RequisitionForm rf: tempList) {
-				rf.setReturnSlipList(invManager.listInventoryByParameter(
+				rf.setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						rf.getRequisitionNo(), session));
 				revisedList.add(rf);
@@ -339,7 +389,7 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(obj instanceof SupplierInvoice){
 			List<SupplierInvoice> tempList= list;
 			for(SupplierInvoice si: tempList) {
-				si.getReceivingReport().setReturnSlipList(invManager.listInventoryByParameter(
+				si.getReceivingReport().setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						si.getReceivingReport().getReceivingReportNo(), session));
 				revisedList.add(si);
@@ -347,12 +397,13 @@ public class ReportAndSummaryManager extends BaseController{
 		}else if(obj instanceof CustomerSalesInvoice){
 			List<CustomerSalesInvoice> tempList= list;
 			for(CustomerSalesInvoice ci: tempList) {
-				ci.getDeliveryReceipt().setReturnSlipList(invManager.listInventoryByParameter(
+				ci.getDeliveryReceipt().setReturnSlipList(inventoryManager.listInventoryByParameter(
 						ReturnSlip.class, "returnSlipReferenceOrderNo",
 						ci.getDeliveryReceipt().getDeliveryReceiptNo(), session));
 				revisedList.add(ci);
 			}
 		}
+		
 		return revisedList;
 
 	} 

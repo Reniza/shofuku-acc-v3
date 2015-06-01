@@ -59,6 +59,7 @@ public class UpdateReceiptAction extends ActionSupport implements Preparable{
 	private String crNo;
 	private String subModule;
 	
+	
 	ORSales orSales;
 	OROthers orOthers;
 	CashCheckReceipts ccReceipts;

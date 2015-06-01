@@ -49,11 +49,22 @@
 				</table>
 				<table class="form">
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Received from" size="95" name="orOthers.receivedFrom"/></td>
+						<s:if test="%{forWhatDisplay == 'edit'}">	
+							<td>
+								<s:textfield disabled="%{forWhat}" label ="Received From" size="90" name="orOthers.receivedFrom"></s:textfield>
+							</td> 
+						</s:if> 
+						<s:else>  
+						    <td>Received From: </td>
+						    <td>
+					    	<sx:autocompleter listValue="customerName" list="customerList" name="orOthers.receivedFrom"></sx:autocompleter>
+							</td>
+						</s:else> 
 					</tr>
+				</table>
+				<table class="form">		
 					<tr>
 						<td><s:textfield label="Address:" disabled="%{forWhat}" size="95" name="orOthers.address"/></td>
-						
 					</tr>
 				</table>
 				<table class="form">

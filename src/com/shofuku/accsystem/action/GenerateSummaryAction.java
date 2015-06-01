@@ -253,7 +253,7 @@ public class GenerateSummaryAction extends ActionSupport implements Preparable{
 							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo,subModule, checkList,isFormatReport,session);
 							}
-						}else {
+					}else {
 							
 							excelStream = reportAndSummaryManager.generateSummary(servletContext,
 									dateFrom, dateTo, subModule,session);
@@ -283,10 +283,12 @@ public class GenerateSummaryAction extends ActionSupport implements Preparable{
 						excelStream = reportAndSummaryManager.generateSummary(servletContext,
 								dateFrom, dateTo, subModule,session);
 					}
+					
 					addActionError("Summary Report already created...");	
 				}
 				
 			}
+			
 			// TODO: get from manager
 			contentDisposition = "filename=\""+subModule+"_summary.xls\"";
 			

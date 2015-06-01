@@ -62,9 +62,9 @@
 	  </li>
 	  <li>RECEIPTS
 	    <ol id="receiptsMenu">
-	     <auth:isAuth role="24"> <li id="receiptsMenu0"><a href="showORSalesForm.action">OR-SALES</a></li></auth:isAuth>
-	     <auth:isAuth role="25"> <li id="receiptsMenu1"><a href="showOROtherIncomeForm.action">OR-OTHER INCOMES</a></li></auth:isAuth>
-	     <auth:isAuth role="26"> <li id="receiptsMenu2"><a href="newReceiptEntry.action">CASH/CHECK</a></li></auth:isAuth>
+	     <auth:isAuth role="24"> <li id="receiptsMenu0"><a href="<s:url action="newReceiptEntry.action"><s:param name="subModule" value="%{'orSales'}"/></s:url>">OR-SALES</a></li></auth:isAuth>
+	     <auth:isAuth role="25"> <li id="receiptsMenu1"><a href="<s:url action="newReceiptEntry.action"><s:param name="subModule" value="%{'orOthers'}"/></s:url>">OR-OTHER INCOMES</a></li></auth:isAuth>
+	     <auth:isAuth role="26"> <li id="receiptsMenu2"><a href="<s:url action="newReceiptEntry.action"><s:param name="subModule" value="%{'ccReceipts'}"/></s:url>">CASH/CHECK</a></li></auth:isAuth>
 	     <auth:isAuth role="40"> <li id="receiptsMenu3"><a href="showSearchReceiptForm.action">--Search--</a></li></auth:isAuth>
 		 <auth:isAuth role="27"> <li id="receiptsMenu4"><a href="<s:url action="showReceiptSummaryForm.action"><s:param name="receiptsModule" value="%{'ORSales'}"/></s:url>">--Summary Report--</a></li></auth:isAuth>
 	    </ol>
