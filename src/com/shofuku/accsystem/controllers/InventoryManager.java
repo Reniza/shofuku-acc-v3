@@ -115,6 +115,9 @@ public class InventoryManager extends BaseController{
 	public List listAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
 		return inventoryDao.listAlphabeticalAscByParameter(clazz, parameter,session);
 	}
+	public List listInventoryAlphabeticalAscByParameter(Class clazz, String parameter,Session session) {
+		return inventoryDao.listInventoryAlphabeticalAscByParameter(clazz, parameter,session);
+	}
 	
 	public List searchFPTSByOrderRequisitionNo(Class clazz, String parameter, String value,Session session){
 		return inventoryDao.searchFPTSByOrderRequisitionNo(clazz, parameter, value, session);
@@ -876,11 +879,11 @@ public class InventoryManager extends BaseController{
 	public ArrayList<Item> getAllItemList(Session session) {
 		Iterator iterator = null;
 		
-		List<RawMaterial> rawMatList =listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
-		List<TradedItem> tradedItemList =listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
-		List<Utensils> utensilsList =listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<OfficeSupplies> ofcSupList =listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
-		List<FinishedGood> finList = listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
+		List<RawMaterial> rawMatList =listInventoryAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
+		List<TradedItem> tradedItemList =listInventoryAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =listInventoryAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =listInventoryAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<FinishedGood> finList = listInventoryAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		
 		ArrayList<Item> tempList = new ArrayList<Item>();
 		

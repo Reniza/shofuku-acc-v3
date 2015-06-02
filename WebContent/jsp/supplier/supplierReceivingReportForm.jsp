@@ -247,8 +247,8 @@
 						</tr>
 					</s:iterator>
 					<tr>
-							<td colspan="7" class="total">Total: PHP</td>
-							<td class="totalAmount"><s:property value="%{poDetailsHelper.totalAmount}" /></td>
+							<td colspan="7" class="total">Total Vated Amount: PHP</td>
+							<td class="totalAmount"><s:property value="%{poDetailsHelper.getTotalVatedAmount}" /></td>
 					<!--START: 2013 - PHASE 3 : PROJECT 4: MARK-->
 					</tr>
 					<tr>

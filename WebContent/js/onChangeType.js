@@ -104,7 +104,7 @@ function computeVat(){
 		document.getElementById("vatAmount").value = 0;
 	}else{
 		vatableAmount = amount.replace(/\,/g,"") / 1.12;
-		vatAmount = amount.replace(/\,/g,"") - vatableAmount;
+		vatAmount = vatableAmount * 0.12;
 		
 		document.getElementById("vattableAmount").value = roundPrice(vatableAmount);
 		document.getElementById("vatAmount").value = roundPrice(vatAmount);

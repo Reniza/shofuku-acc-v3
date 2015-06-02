@@ -164,9 +164,9 @@ public class EditSupplierAction extends ActionSupport implements Preparable{
 				 * Checking and fetching existing return slips
 				 */
 				
-				InventoryManager invManager= new InventoryManager();
+				
 				Session rsSession = getSession();
-				List returnSlipList = invManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rr.getReceivingReportNo(), rsSession);
+				List returnSlipList = inventoryManager.listInventoryByParameter(ReturnSlip.class, "returnSlipReferenceOrderNo", rr.getReceivingReportNo(), rsSession);
 				
 				if(returnSlipList.size()>0) {
 					rr.setReturnSlipList(returnSlipList);

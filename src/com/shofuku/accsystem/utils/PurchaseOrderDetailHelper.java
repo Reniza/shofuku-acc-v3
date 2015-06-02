@@ -638,5 +638,10 @@ public class PurchaseOrderDetailHelper {
 		total = getTotalAmount() - (getTotalVattableAmount() + getTotalVatAmount());
 		return total;
 	}
+	public double getTotalVatedAmount() {
+		double total = 0;
+		total = getTotalVattableAmount() + getTotalVatAmount();
+		return total;
+	}
 	//END: 2013 - PHASE 3 : PROJECT 4: MARK
 }

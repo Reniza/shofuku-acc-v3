@@ -166,11 +166,11 @@ public class ExportOrderingFormTemplateAction extends ActionSupport implements P
 		}
 		
 		
-		List<RawMaterial> rawMatList =inventoryManager.listAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
-		List<TradedItem> tradedItemList =inventoryManager.listAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
-		List<Utensils> utensilsList =inventoryManager.listAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
-		List<OfficeSupplies> ofcSupList =inventoryManager.listAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
-		List<FinishedGood> finList = inventoryManager.listAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
+		List<RawMaterial> rawMatList =inventoryManager.listInventoryAlphabeticalAscByParameter(RawMaterial.class, "subClassification",session);
+		List<TradedItem> tradedItemList =inventoryManager.listInventoryAlphabeticalAscByParameter(TradedItem.class, "subClassification",session);
+		List<Utensils> utensilsList =inventoryManager.listInventoryAlphabeticalAscByParameter(Utensils.class, "subClassification",session);
+		List<OfficeSupplies> ofcSupList =inventoryManager.listInventoryAlphabeticalAscByParameter(OfficeSupplies.class, "subClassification",session);
+		List<FinishedGood> finList = inventoryManager.listInventoryAlphabeticalAscByParameter(FinishedGood.class, "subClassification", session);
 		List<UnlistedItem> ulList = inventoryManager.listAlphabeticalAscByParameter(UnlistedItem.class, "description", session); 
 		
 		HashMap<String,ArrayList<Item>> subClassMap = new HashMap<String,ArrayList<Item>>();

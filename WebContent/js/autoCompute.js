@@ -35,7 +35,7 @@ function computeVat(){
 		    
 		   
 		    vattedAmount = parseFloat(fnum / 1.12).toFixed(2);
-			vatAmount = parseFloat(fnum).toFixed(2) - parseFloat(vattedAmount).toFixed(2);
+			vatAmount = parseFloat(vattedAmount).toFixed(2) * .12;
 		  
 			vatAmount = putCommas(vatAmount);
 			vattedAmount = putCommas(vattedAmount);
