@@ -58,11 +58,14 @@
 						<tr>
 							<td><s:textfield disabled="%{forWhat}" label="Full Name:" name="user.fullName" size="50"></s:textfield></td>
 						</tr>
+						<tr>
+							<td><s:textfield disabled="%{forWhat}" label="Location (MNL/CEB):" name="user.location" size="50"></s:textfield></td>
+						</tr>
 					</table>
 					<table class="form">
 						<tr>
 							<td>Role Name:</td>
-							<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" listValue="roleName" list="roleList" maxlength="50"  name="user.role.roleName"></sx:autocompleter> 
+							<td><sx:autocompleter headerValue="Choose One" dropdownHeight="50px" listValue="roleName" list="roleList" maxlength="10"  name="user.role.roleName"></sx:autocompleter> 
 							</td>
 						</tr>
 					</table>

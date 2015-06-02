@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.servlet.jsp.tagext.Tag;
+
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -39,8 +41,10 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.inventory.Warehouse;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
+import com.shofuku.accsystem.domain.security.Module;
 import com.shofuku.accsystem.domain.security.UserAccount;
 import com.shofuku.accsystem.domain.suppliers.Supplier;
+import com.shofuku.accsystem.helpers.UserRoleHelper;
 import com.shofuku.accsystem.utils.DoubleConverter;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.InventoryUtil;
@@ -69,6 +73,8 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;
 	PurchaseOrderDetailHelper poDetailsHelper;
 	PurchaseOrderDetailHelper poDetailsHelperDraft;
+	
+	UserRoleHelper roleHelper;
 	
 	@Override
 	public void prepare() throws Exception {
@@ -102,12 +108,20 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 			poDetailsHelperDraft.setActionSession(actionSession);
 		}
 		
+		// itemPriceEditor role is "44" , returning false means readonly="false"
+		roleHelper = new UserRoleHelper();
+		if(roleHelper.isUserAuth("44", user.getRole(), (List<Module>) actionSession.get("rolesList"))) {
+			itemPriceEditor="false";
+		}else {
+			itemPriceEditor="true";
+		}
 	}
 	
 	
 
 	private String subModule;
 	private String forWhat;
+	private String itemPriceEditor;
 	private String forWhatDisplay;
 
 	RawMaterial rm;
@@ -2088,6 +2102,14 @@ public class AddInventoryAction extends ActionSupport implements Preparable{
 
 		public void setOs(OfficeSupplies os) {
 			this.os = os;
+		}
+
+		public String getItemPriceEditor() {
+			return itemPriceEditor;
+		}
+
+		public void setItemPriceEditor(String itemPriceEditor) {
+			this.itemPriceEditor = itemPriceEditor;
 		}
 		
 		

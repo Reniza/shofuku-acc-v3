@@ -125,9 +125,9 @@
 						<th colspan="6">Company Owned Prices</th>
 					</tr>
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Standard Price:" name="ti.itemPricing.companyOwnedStandardPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Actual Price:" name="ti.itemPricing.companyOwnedActualPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Transfer Price:" name="ti.itemPricing.companyOwnedTransferPricePerUnit"/></td>		
+						<td><s:textfield readonly="%{itemPriceEditor}" label="Standard Price:" name="ti.itemPricing.companyOwnedStandardPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}" label="Actual Price:" name="ti.itemPricing.companyOwnedActualPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Transfer Price:" name="ti.itemPricing.companyOwnedTransferPricePerUnit"/></td>		
 					</tr>
 					</table>
 					<p></p>
@@ -136,9 +136,9 @@
 						<th colspan="6">Franchise Prices</th>
 					</tr>
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Standard Price:" name="ti.itemPricing.franchiseStandardPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Actual Price:" name="ti.itemPricing.franchiseActualPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Transfer Price:" name="ti.itemPricing.franchiseTransferPricePerUnit"/></td>		
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Standard Price:" name="ti.itemPricing.franchiseStandardPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Actual Price:" name="ti.itemPricing.franchiseActualPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Transfer Price:" name="ti.itemPricing.franchiseTransferPricePerUnit"/></td>		
 					</tr>
 					</table>
 					<p></p>

@@ -112,7 +112,7 @@
 								<th colspan="6">Company Owned Prices</th>
 							</tr>
 							<tr>
-								<td><s:textfield label="Standard Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Standard Price:"
 										name="fg.itemPricing.companyOwnedStandardPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 									<s:hidden
@@ -120,14 +120,14 @@
 										value="%{fg.itemPricing.companyOwnedStandardPricePerUnit}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Actual Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Actual Price:"
 										name="fg.itemPricing.companyOwnedActualPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.itemPricing.companyOwnedActualPricePerUnit"
 											value="%{fg.itemPricing.companyOwnedActualPricePerUnit}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Transfer Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}"  label="Transfer Price:"
 										name="fg.itemPricing.companyOwnedTransferPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 									<s:hidden name="fg.itemPricing.companyOwnedTransferPricePerUnit"
@@ -139,21 +139,21 @@
 								<th colspan="6">Franchise Prices</th>
 							</tr>
 							<tr>
-								<td><s:textfield label="Standard Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Standard Price:"
 										name="fg.itemPricing.franchiseStandardPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.itemPricing.franchiseStandardPricePerUnit"
 										value="%{fg.itemPricing.franchiseStandardPricePerUnit}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Actual Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Actual Price:"
 										name="fg.itemPricing.franchiseActualPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.itemPricing.franchiseActualPricePerUnit"
 											value="%{fg.itemPricing.franchiseActualPricePerUnit}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Transfer Price:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Transfer Price:"
 										name="fg.itemPricing.franchiseTransferPricePerUnit" />
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.itemPricing.franchiseTransferPricePerUnit"
@@ -165,21 +165,21 @@
 								<th colspan="6">Ingredients Total Costs</th>
 							</tr>
 							<tr>
-								<td><s:textfield label="Standard Total Cost:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Standard Total Cost:"
 										name="fg.standardTotalCost"></s:textfield>
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.standardTotalCost"
 											value="%{fg.standardTotalCost}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Actual Total Cost:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Actual Total Cost:"
 										name="fg.actualTotalCost"></s:textfield>
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.actualTotalCost"
 											value="%{fg.actualTotalCost}" />
 									</s:if>
 								</td>
-								<td><s:textfield label="Transfer Total Cost:"
+								<td><s:textfield readonly="%{itemPriceEditor}" label="Transfer Total Cost:"
 										name="fg.transferTotalCost"></s:textfield>
 									<s:if test="%{forWhat == 'true'}">
 										<s:hidden name="fg.transferTotalCost"

@@ -4,6 +4,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags"%>
 <%@ taglib prefix="c" uri="/tld/c.tld"%>
+<%@ taglib prefix="auth" uri="/tld/Authorization.tld"%>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -114,15 +115,14 @@
 						</tr>
 					</table>
 				</s:else>
-					
 					<table class="form">
 					<tr>
-						<th colspan="6">Company Owned Prices</th>
+						<th colspan="6">Company Owned Prices</th>						
 					</tr>
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Standard Price:" name="rm.itemPricing.companyOwnedStandardPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Actual Price:" name="rm.itemPricing.companyOwnedActualPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Transfer Price:" name="rm.itemPricing.companyOwnedTransferPricePerUnit"/></td>		
+						<td><s:textfield readonly="%{itemPriceEditor}" label="Standard Price:" name="rm.itemPricing.companyOwnedStandardPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}" label="Actual Price:" name="rm.itemPricing.companyOwnedActualPricePerUnit"/></td>
+						<td><s:textfield readonly	="%{itemPriceEditor}" label="Transfer Price:" name="rm.itemPricing.companyOwnedTransferPricePerUnit"/></td>		
 					</tr>
 					</table>
 					<p></p>
@@ -131,9 +131,9 @@
 						<th colspan="6">Franchise Prices</th>
 					</tr>
 					<tr>
-						<td><s:textfield disabled="%{forWhat}" label="Standard Price:" name="rm.itemPricing.franchiseStandardPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Actual Price:" name="rm.itemPricing.franchiseActualPricePerUnit"/></td>
-						<td><s:textfield disabled="%{forWhat}" label="Transfer Price:" name="rm.itemPricing.franchiseTransferPricePerUnit"/></td>		
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Standard Price:" name="rm.itemPricing.franchiseStandardPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Actual Price:" name="rm.itemPricing.franchiseActualPricePerUnit"/></td>
+						<td><s:textfield readonly="%{itemPriceEditor}"  label="Transfer Price:" name="rm.itemPricing.franchiseTransferPricePerUnit"/></td>		
 					</tr>
 					</table>
 					<p></p>

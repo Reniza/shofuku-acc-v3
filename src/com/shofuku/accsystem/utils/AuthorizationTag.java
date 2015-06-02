@@ -35,7 +35,7 @@ public class AuthorizationTag extends BodyTagSupport  {
 			if(user==null) {
 			}else {
 				
-				Map allowedRoles = roleHelper.parseModulesListToMap(roleHelper.addRolesAccessStringToGrantedList(user.getRole(), roleHelper.parseModulesListToMap(modulesList)));
+				Map allowedRoles = roleHelper.parseModulesListToMap(roleHelper.rolesAccessStringToGrantedList(user.getRole(), roleHelper.parseModulesListToMap(modulesList)));
 				if(allowedRoles.get(Integer.valueOf(role))==null) {
 					 return Tag.SKIP_BODY;
 				}else {

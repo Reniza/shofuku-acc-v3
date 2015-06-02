@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.jsp.tagext.Tag;
+
 import org.hibernate.Session;
 
 import com.shofuku.accsystem.controllers.SecurityManager;
@@ -33,14 +35,22 @@ public class UserRoleHelper {
 		return roleAccessString;
 	}
 	
+	public boolean isUserAuth(String roleId,Role userRole,List modulesList) {
+		Map allowedRoles = parseModulesListToMap(rolesAccessStringToGrantedList(userRole, parseModulesListToMap(modulesList)));
 	
+		if(allowedRoles.get(Integer.valueOf(roleId))==null) {
+			return false;
+		}else {
+			 return true;
+		}
+	}
 	
-	public List addRolesAccessStringToGrantedList(Role role,Map modulesGrantedMap) {
+	public List<Module> rolesAccessStringToGrantedList(Role role,Map modulesGrantedMap) {
 		
 		String[] roleSplit;
 		roleSplit = role.getRoleAccessString().split(",");
 		
-		List modulesGrantedList = new ArrayList<>();
+		List<Module> modulesGrantedList = new ArrayList<Module>();
 		
 		for(int x=0;x<roleSplit.length;x ++) {
 			modulesGrantedList.add( new Module(Integer.valueOf(roleSplit[x]), (String)modulesGrantedMap.get(Integer.valueOf(roleSplit[x])) ));

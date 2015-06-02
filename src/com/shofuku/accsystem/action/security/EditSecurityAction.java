@@ -91,7 +91,7 @@ public class EditSecurityAction extends ActionSupport implements Preparable{
 
 				modulesNotGrantedList=roleHelper.loadModules();
 				modulesGrantedMap = roleHelper.parseModulesListToMap(modulesNotGrantedList);
-				modulesGrantedList = roleHelper.addRolesAccessStringToGrantedList(role,modulesGrantedMap);
+				modulesGrantedList = roleHelper.rolesAccessStringToGrantedList(role,modulesGrantedMap);
 				modulesNotGrantedList = roleHelper.removeGrantedModulesToAvailableModulesList(modulesGrantedList,modulesNotGrantedList);
 				
 				
