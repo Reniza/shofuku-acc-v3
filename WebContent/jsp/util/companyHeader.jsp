@@ -12,6 +12,7 @@
 			<h4 align="center">SHOFUKU TRADING CORP<br>
 			2877 Finlandia St. cor Newton St.<br> 
 			San Isidro Makati City, Philippines<br>
+			Vat Reg. TIN: 008-370-484-000<br>
 			Telefax: (02) 885-7912</h4>
 			</p>
 </div>
