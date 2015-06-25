@@ -9,12 +9,16 @@ import java.util.Set;
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 import com.shofuku.accsystem.action.AddOrderDetailsAction;
 import com.shofuku.accsystem.controllers.AccountEntryManager;
+import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.InventoryManager;
 import com.shofuku.accsystem.controllers.LookupManager;
+import com.shofuku.accsystem.controllers.SupplierManager;
 import com.shofuku.accsystem.controllers.TransactionManager;
+import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
 import com.shofuku.accsystem.domain.financials.Transaction;
 import com.shofuku.accsystem.domain.inventory.FPTS;
 import com.shofuku.accsystem.domain.inventory.FinishedGood;
@@ -30,11 +34,12 @@ import com.shofuku.accsystem.domain.inventory.Utensils;
 import com.shofuku.accsystem.domain.lookups.InventoryClassification;
 import com.shofuku.accsystem.domain.lookups.UnitOfMeasurements;
 import com.shofuku.accsystem.domain.security.UserAccount;
+import com.shofuku.accsystem.domain.suppliers.ReceivingReport;
 import com.shofuku.accsystem.utils.HibernateUtil;
 import com.shofuku.accsystem.utils.PurchaseOrderDetailHelper;
 import com.shofuku.accsystem.utils.SASConstants;
 
-public class EditInventoryAction extends AddOrderDetailsAction implements Preparable{
+public class EditInventoryAction extends ActionSupport implements Preparable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -45,6 +50,8 @@ public class EditInventoryAction extends AddOrderDetailsAction implements Prepar
 	LookupManager lookupManager;
 	AccountEntryManager accountEntryManager;
 	TransactionManager transactionManager;
+	SupplierManager supplierManager;
+	CustomerManager customerManager;
 	
 	PurchaseOrderDetailHelper poDetailsHelperToCompare;
 	PurchaseOrderDetailHelper poDetailsHelper;
@@ -57,6 +64,8 @@ public class EditInventoryAction extends AddOrderDetailsAction implements Prepar
 
 		inventoryManager = (InventoryManager) actionSession.get("inventoryManager");
 		accountEntryManager = (AccountEntryManager) actionSession.get("accountEntryManager");
+		supplierManager 		= (SupplierManager) 	actionSession.get("supplierManager");
+		customerManager 		= (CustomerManager) 	actionSession.get("customerManager");
 		transactionManager = (TransactionManager) actionSession.get("transactionManager");
 		lookupManager = (LookupManager) actionSession.get("lookupManager");
 		
@@ -472,6 +481,53 @@ public class EditInventoryAction extends AddOrderDetailsAction implements Prepar
 			}
 		}
 
+	}
+	
+	public Set<PurchaseOrderDetails> loadOrdersByReferenceNo(ReturnSlip rs){
+		Session session = getSession();
+		accountProfileCodeList = accountEntryManager.listAlphabeticalAccountEntryProfileChildrenAscByParameter(session);
+		
+		Set <PurchaseOrderDetails> purchaseOrderDetails = null;
+		if(rs==null) {
+			addActionError("NO RS");
+		}else {
+						
+			try {
+			ReceivingReport rr = (ReceivingReport)supplierManager.listSuppliersByParameter(
+					ReceivingReport.class,
+					"receivingReportNo",
+					rs.getReturnSlipReferenceOrderNo(),session).get(0);
+			
+			purchaseOrderDetails = rr.getPurchaseOrderDetails();
+			
+			}catch(IndexOutOfBoundsException e) {
+				try {
+				DeliveryReceipt dr =  (DeliveryReceipt)customerManager.listByParameter(DeliveryReceipt.class, "deliveryReceiptNo", 
+						rs.getReturnSlipReferenceOrderNo(),session).get(0);
+				purchaseOrderDetails = dr.getPurchaseOrderDetails();
+				
+				}catch(IndexOutOfBoundsException e2) {
+					//addActionError("NOT EXISTING RECEVING REPORT OR DELIVERY RECEIPT");
+					try {
+						RequisitionForm rf =  (RequisitionForm)inventoryManager.listByParameter(RequisitionForm.class, "requisitionNo", 
+								rs.getReturnSlipReferenceOrderNo(),session).get(0);
+						purchaseOrderDetails = rf.getPurchaseOrderDetailsOrdered();
+						
+						}catch(IndexOutOfBoundsException e3) {
+							//addActionError("NOT EXISTING Order Requistion No");
+							try{
+								FPTS fpts =  (FPTS)inventoryManager.listByParameter(FPTS.class, "fptsNo", 
+									rs.getReturnSlipReferenceOrderNo(),session).get(0);
+								purchaseOrderDetails = fpts.getPurchaseOrderDetailsTransferred();
+							}catch (Exception e4){
+								addActionError("NOT EXISTING RECORD");
+							}
+						}
+				}
+				
+			}			
+		}
+		return purchaseOrderDetails;
 	}
 
 	public String getSubModule() {

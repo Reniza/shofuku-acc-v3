@@ -1,12 +1,15 @@
 package com.shofuku.accsystem.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
+import org.hibernate.type.StringType;
 
 import com.shofuku.accsystem.domain.customers.CustomerSalesInvoice;
 import com.shofuku.accsystem.domain.customers.DeliveryReceipt;
@@ -94,6 +97,21 @@ public class CustomerDaoImpl extends BaseHibernateDaoImpl {
 			
 		}
 		return null;
+	}
+	
+	public List<String> getListOfCustomerByInitialLetter(char lastLetter,Session session){
+		int x = 0;
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Query query = session.createSQLQuery("SELECT CUSTOMER_ID as CUSTOMER_ID FROM T201_CUSTOMERS WHERE CUSTOMER_ID LIKE "+super.getUser().getLocation() +"'-C"+ lastLetter+"%' ORDER BY CUSTOMER_ID ASC")
+			 .addScalar("CUSTOMER_ID", StringType.INSTANCE);
+			return query.list();
+		} catch (RuntimeException re) {
+			re.printStackTrace();
+			return new ArrayList<String>();
+		} 
+
 	}
 	
 	}
