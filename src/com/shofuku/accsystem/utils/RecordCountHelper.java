@@ -1,5 +1,8 @@
 package com.shofuku.accsystem.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
@@ -8,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.shofuku.accsystem.controllers.AccountEntryManager;
 import com.shofuku.accsystem.controllers.BaseController;
+import com.shofuku.accsystem.controllers.CustomerManager;
 import com.shofuku.accsystem.controllers.FinancialsManager;
 
 public class RecordCountHelper {
@@ -17,8 +21,11 @@ public class RecordCountHelper {
 	
 	Map<String,Object> actionSession;
 	BaseController manager;
+	CustomerManager customerManager;
+	
 	private void initializeController() {
 		manager = (BaseController) actionSession.get("manager");
+		customerManager = (CustomerManager) actionSession.get("customerManager");
 	}
 	
 	public RecordCountHelper(Map<String,Object> actionSession){
@@ -26,15 +33,31 @@ public class RecordCountHelper {
 	}
 	
 	
-	
 	public String getLastCustomerByInitialLetter(char firstLetter){
 		Session session = getSession();
+		List<String> customerIdList = new ArrayList<String>();
 		try{
 			firstLetter = String.valueOf(firstLetter).toUpperCase().charAt(0);
-			String lastSupplier = manager.getBaseHibernateDao().getLastCustomerByInitialLetter(firstLetter,session);
+			
+			customerIdList = customerManager.getCustomerDao().getListOfCustomerByInitialLetter(firstLetter,session);
+			
 		int maxCount=0;
 		try{
-		maxCount = Integer.valueOf(lastSupplier.substring(2,lastSupplier.length()))+1;
+		Iterator itr = customerIdList.iterator();
+		List<Integer> intList = new ArrayList<Integer>();
+
+		while(itr.hasNext()) {
+			String customerId = (String)itr.next();
+			Integer customerIdNumber = Integer.valueOf(customerId.substring(2,customerId.length()));
+			intList.add(customerIdNumber);
+		}
+		
+		if(intList.size()>0) {
+			maxCount=intList.get(intList.size());
+		}else {
+			maxCount = 0;
+		}
+		
 		}catch(Exception e){
 			maxCount=1;
 		}
@@ -48,6 +71,7 @@ public class RecordCountHelper {
 			}
 		}
 	}
+	
 	
 	public String getLastSupplierByInitialLetter(char firstLetter){
 		Session session = getSession();
